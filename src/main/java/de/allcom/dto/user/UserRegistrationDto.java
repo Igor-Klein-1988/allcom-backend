@@ -1,4 +1,4 @@
-package de.allcom.dto;
+package de.allcom.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -16,25 +16,25 @@ import lombok.NoArgsConstructor;
 @Builder
 @Schema(name = "UserRegistration", description = "Registration data")
 public class UserRegistrationDto {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-    @Schema(description = "Username of the user", example = "Igor123")
-    private String username;
+    @NotBlank(message = "First name is required")
+    @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
+    @Schema(description = "User first name", example = "Alex")
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 1, max = 50, message = "Last name must be between 1 and 50 characters")
+    @Schema(description = "User last name", example = "Schmidt")
+    private String lastName;
 
     @NotBlank(message = "Password is required")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "Password must be at least 8 characters long and include letters, numbers, and special characters")
+            message = "Password must be at least 8 characters long and include letters, numbers,"
+                    + " and special characters")
     @Schema(description = "User's password", example = "Qwerty007!")
     private String password;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
-    @Schema(description = "User's email", example = "user@mail.com")
+    @Email(message = "Email address must be in a valid format (e.g., user@example.com)")
+    @Schema(description = "User's email", example = "alex-schmidt@mail.com")
     private String email;
-
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\+?\\d{1,3}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}?[-.\\s]?\\d{1,4}?[-.\\s]?\\d{1,9}$",
-            message = "Invalid phone number format")
-    @Schema(description = "Phone number of the user", example = "+1234567890")
-    private String phone;
 }
