@@ -32,7 +32,7 @@
     <!-- https://checkstyle.org/filters/suppressionfilter.html -->
     <module name="SuppressionFilter">
         <property name="file" value="${org.checkstyle.google.suppressionfilter.config}"
-                  default="checkstyle-suppressions.xml" />
+                  default="checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
 
@@ -42,13 +42,16 @@
         <property name="eachLine" value="true"/>
     </module>
 
+    <!-- Custom Settings -->
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
-        <property name="max" value="100"/>
+        <property name="max" value="120"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
 
     <module name="TreeWalker">
+        <!-- Custom UnusedImports Settings -->
+        <module name="UnusedImports"/>
         <module name="OuterTypeFilename"/>
         <module name="IllegalTokenText">
             <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
@@ -284,7 +287,8 @@
         <module name="CustomImportOrder">
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="separateLineBetweenGroups" value="true"/>
-            <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
+            <!-- Custom Settings -->
+            <property name="customImportOrderRules" value="THIRD_PARTY_PACKAGE###STATIC"/>
             <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>
         </module>
         <module name="MethodParamPad">
@@ -345,14 +349,15 @@
             <property name="allowedAnnotations" value="Override, Test"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
         </module>
-        <module name="MissingJavadocMethod">
-            <property name="scope" value="public"/>
-            <property name="minLineCount" value="2"/>
-            <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF,
-                                   COMPACT_CTOR_DEF"/>
-        </module>
-        <!-- Custom Indentation Settings -->
+        <!-- Custom Settings -->
+        <!--        <module name="MissingJavadocMethod">-->
+        <!--            <property name="scope" value="public"/>-->
+        <!--            <property name="minLineCount" value="2"/>-->
+        <!--            <property name="allowedAnnotations" value="Override, Test"/>-->
+        <!--            <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF,-->
+        <!--                                   COMPACT_CTOR_DEF"/>-->
+        <!--        </module>-->
+        <!-- Custom Settings -->
         <!--        <module name="MissingJavadocType">-->
         <!--            <property name="scope" value="protected"/>-->
         <!--            <property name="tokens"-->
@@ -375,14 +380,14 @@
         <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
         <module name="SuppressionXpathFilter">
             <property name="file" value="${org.checkstyle.google.suppressionxpathfilter.config}"
-                      default="checkstyle-xpath-suppressions.xml" />
+                      default="checkstyle-xpath-suppressions.xml"/>
             <property name="optional" value="true"/>
         </module>
-        <module name="SuppressWarningsHolder" />
+        <module name="SuppressWarningsHolder"/>
         <module name="SuppressionCommentFilter">
-            <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)" />
-            <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)" />
-            <property name="checkFormat" value="$1" />
+            <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
+            <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
+            <property name="checkFormat" value="$1"/>
         </module>
         <module name="SuppressWithNearbyCommentFilter">
             <property name="commentFormat" value="CHECKSTYLE.SUPPRESS\: ([\w\|]+)"/>
