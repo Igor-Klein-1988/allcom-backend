@@ -1,7 +1,7 @@
 package de.allcom.services;
 
 import de.allcom.dto.user.UserDto;
-import de.allcom.dto.user.UserRegistrationDto;
+import de.allcom.dto.user.UserAddressRegistrationDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.repositories.UsersRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ public class UsersServiceTest {
 
         @Test
         public void return_saved_new_user() {
-            UserRegistrationDto newUser = getNewUserRegistrationDto();
+            UserAddressRegistrationDto newUser = getNewUserRegistrationDto();
             when(usersRepository.existsByEmail(newUser.getEmail())).thenReturn(false);
 
             UserDto actual = usersService.register(newUser);
@@ -63,7 +63,7 @@ public class UsersServiceTest {
 
         @Test
         public void throws_exception_for_exists_email() {
-            UserRegistrationDto newUser = getNewUserRegistrationDto();
+            UserAddressRegistrationDto newUser = getNewUserRegistrationDto();
             when(usersRepository.existsByEmail(newUser.getEmail())).thenReturn(true);
 
             assertAll(() -> assertThrows(RestException.class, () -> usersService.register(newUser)),
@@ -71,11 +71,11 @@ public class UsersServiceTest {
         }
     }
 
-    private UserRegistrationDto getNewUserRegistrationDto() {
+    private UserAddressRegistrationDto getNewUserRegistrationDto() {
         String newUserFirstName = "new First Name";
         String newUserLastName = "LastName";
         String newUserEmail = "user1@mail.com";
-        return UserRegistrationDto.builder()
+        return UserAddressRegistrationDto.builder()
                                   .firstName(newUserFirstName)
                                   .lastName(newUserLastName)
                                   .email(newUserEmail)

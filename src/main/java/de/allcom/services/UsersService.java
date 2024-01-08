@@ -1,13 +1,15 @@
 package de.allcom.services;
 
 import de.allcom.dto.user.UserDto;
-import de.allcom.dto.user.UserRegistrationDto;
+import de.allcom.dto.user.UserAddressRegistrationDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.User;
 import de.allcom.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static de.allcom.dto.user.UserDto.from;
 
@@ -16,10 +18,8 @@ import static de.allcom.dto.user.UserDto.from;
 @RequiredArgsConstructor
 public class UsersService {
     private final UsersRepository usersRepository;
-    //    private final PasswordEncoder passwordEncoder;
 
-
-    public UserDto register(UserRegistrationDto newUser) {
+    public UserDto register(UserAddressRegistrationDto newUser) {
         checkIfExistsByEmail(newUser);
 
         User user = saveNewUser(newUser);
@@ -27,12 +27,11 @@ public class UsersService {
         return from(user);
     }
 
-    private User saveNewUser(UserRegistrationDto newUser) {
+    private User saveNewUser(UserAddressRegistrationDto newUser) {
         User user = User.builder()
                         .firstName(newUser.getFirstName())
                         .lastName(newUser.getLastName())
                         .email(newUser.getEmail())
-                        //.hashPassword(passwordEncoder.encode(newUser.getPassword()))
                         .hashPassword(newUser.getPassword())
                         .build();
 
@@ -41,7 +40,7 @@ public class UsersService {
         return user;
     }
 
-    private void checkIfExistsByEmail(UserRegistrationDto newUser) {
+    private void checkIfExistsByEmail(UserAddressRegistrationDto newUser) {
         if (usersRepository.existsByEmail(newUser.getEmail())) {
             throw new RestException(HttpStatus.CONFLICT, "User with email <" + newUser.getEmail() + "> already exists");
         }
@@ -50,5 +49,12 @@ public class UsersService {
     public UserDto getUserById(Long currentUserId) {
         return from(usersRepository.findById(currentUserId)
                                    .orElseThrow());
+    }
+
+    public List<UserDto> getAll() {
+        return usersRepository.findAll()
+                              .stream()
+                              .map(UserDto::from)
+                              .toList();
     }
 }
