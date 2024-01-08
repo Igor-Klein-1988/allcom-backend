@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Schema(name = "UserRegistration", description = "Registration data")
-public class UserRegistrationDto {
+public class UserAddressRegistrationDto {
     @NotBlank(message = "First name is required")
-    @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
+    @Size(min = 1, max = 100, message = "First name must be between 1 and 50 characters")
     @Schema(description = "User first name", example = "Alex")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
-    @Size(min = 1, max = 50, message = "Last name must be between 1 and 50 characters")
+    @Size(min = 1, max = 100, message = "Last name must be between 1 and 50 characters")
     @Schema(description = "User last name", example = "Schmidt")
     private String lastName;
 
@@ -37,4 +37,28 @@ public class UserRegistrationDto {
     @Email(message = "Email address must be in a valid format (e.g., user@example.com)")
     @Schema(description = "User's email", example = "alex-schmidt@mail.com")
     private String email;
+
+    @Schema(description = "User's phone number", example = "0123456789")
+    private String phoneNumber;
+
+    @Schema(description = "Company name", example = "Allcom GmbH")
+    private String companyName;
+
+    @Schema(description = "User's position", example = "Manager")
+    private String position;
+
+    @Schema(description = "Company's inn", example = "123456789")
+    private String inn;
+
+    @Schema(description = "Company's index", example = "10176")
+    private String postIndex;
+
+    @Schema(description = "Company's city", example = "Berlin")
+    private String city;
+
+    @Schema(description = "Company's street", example = "Alexanderplatz")
+    private String street;
+
+    @Schema(description = "Company's house number", example = "1")
+    private String houseNumber;
 }
