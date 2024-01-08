@@ -21,9 +21,8 @@ public class AuthentificationRequest {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "Password must be at least 8 characters long and include at least one uppercase letter, "
-                    + "numbers, and special characters")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$", message = "Password must be at least 8 characters long and include at least one uppercase letter, "
+            + "numbers, and special characters")
     @Schema(description = "User's password", example = "Qwerty007!")
 
     private String password;

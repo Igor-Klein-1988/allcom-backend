@@ -18,18 +18,20 @@ import lombok.NoArgsConstructor;
 public class UserAddressRegistrationDto {
     @NotBlank(message = "First name is required")
     @Size(min = 1, max = 100, message = "First name must be between 1 and 100 characters")
+
     @Schema(description = "User first name", example = "Alex")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
     @Size(min = 1, max = 100, message = "Last name must be between 1 and 100 characters")
+
     @Schema(description = "User last name", example = "Schmidt")
     private String lastName;
 
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[A-Za-zßäöüÄÖÜ])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "Password must be at least 8 characters long and include letters, numbers,"
-                    + " and special characters")
+    @Pattern(regexp = "^(?=.*[A-Za-zßäöüÄÖÜ])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$", message = "Password must be at least 8 characters long and include letters, numbers,"
+            + " and special characters")
+
     @Schema(description = "User's password", example = "Qwerty007!")
     private String password;
 
