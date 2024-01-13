@@ -5,7 +5,6 @@ import de.allcom.dto.AuctionResponseDto;
 import de.allcom.dto.NewBetDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.jobs.MyBackgroundJob;
-import de.allcom.jobs.MyJob;
 import de.allcom.models.Auction;
 import de.allcom.models.Bet;
 import de.allcom.models.Product;
@@ -19,23 +18,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
-import java.util.concurrent.ScheduledExecutorService;
+
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.JobScheduler;
-import org.quartz.Scheduler;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 
-import org.quartz.DateBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-
-import static org.quartz.DateBuilder.futureDate;
 import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +37,7 @@ public class AuctionService {
     private final ProductRepository productRepository;
 
 
-    private JobScheduler jobScheduler;
+    private final JobScheduler jobScheduler;
     private final MyBackgroundJob myBackgroundJob;
 
 //    public void enqueueTask() {

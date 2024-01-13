@@ -108,11 +108,13 @@
         </dependency>
 
 <!--         https://mvnrepository.com/artifact/org.jobrunr/jobrunr -->
+        <!-- https://mvnrepository.com/artifact/org.jobrunr/jobrunr-spring-boot-3-starter -->
         <dependency>
             <groupId>org.jobrunr</groupId>
-            <artifactId>jobrunr-spring-boot-starter</artifactId>
-            <version>5.1.6</version>
+            <artifactId>jobrunr-spring-boot-3-starter</artifactId>
+            <version>6.3.4</version>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
