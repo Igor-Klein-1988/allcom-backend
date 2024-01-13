@@ -11,4 +11,11 @@
 
     <include file="changes/202312251910-account-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202312261920-insert-users-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401041703-product-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401041704-insert-products-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401041705-auction-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401041706-insert-auctions-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401041707-bet-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401041708-insert-bets-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+<!--    <include file="changes/202401091149-quartz-init.xml" relativeToChangelogFile="true"/>-->
 </databaseChangeLog>

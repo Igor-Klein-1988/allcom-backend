@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Insert initial data for Auction -->
+    <changeSet id="202401041706-insert-auctions" author="IgorKlein" context="@dev">
+        <insert tableName="auction">
+            <column name="id" value="1"/>
+            <column name="number" value="AU1001"/>
+            <column name="start_price" value="100"/>
+            <column name="start_at" value="2024-01-01T12:00:00"/>
+            <column name="planned_end_at" value="2024-01-02T14:00:00"/>
+            <column name="actual_end_at" value="2024-01-02T14:30:00"/>
+            <column name="state" value="SUCCESSFUL"/>
+            <column name="product_id" value="1"/>
+            <column name="winner_id" value="2"/>
+            <column name="update_at" value="2024-01-02T15:30:00"/>
+            <column name="created_at" value="2024-01-01T10:00:00"/>
+        </insert>
+        <insert tableName="auction">
+            <column name="id" value="2"/>
+            <column name="number" value="AU1002"/>
+            <column name="start_price" value="300"/>
+            <column name="start_at" value="2024-01-02T12:00:00"/>
+            <column name="planned_end_at" value="2024-01-09T14:00:00"/>
+            <column name="actual_end_at"/>
+            <column name="state" value="ACTIVE"/>
+            <column name="product_id" value="2"/>
+            <column name="winner_id"/>
+            <column name="update_at" value="2024-01-01T11:00:00"/>
+            <column name="created_at" value="2024-01-01T11:00:00"/>
+        </insert>
+        <insert tableName="auction">
+            <column name="id" value="3"/>
+            <column name="number" value="AU1003"/>
+            <column name="start_price" value="500"/>
+            <column name="start_at" value="2024-01-02T12:00:00"/>
+            <column name="planned_end_at" value="2024-01-09T14:00:00"/>
+            <column name="actual_end_at"/>
+            <column name="state" value="ACTIVE"/>
+            <column name="product_id" value="3"/>
+            <column name="winner_id"/>
+            <column name="update_at" value="2024-01-01T11:34:00"/>
+            <column name="created_at" value="2024-01-01T11:34:00"/>
+        </insert>
+        <insert tableName="auction">
+            <column name="id" value="4"/>
+            <column name="number" value="AU1003"/>
+            <column name="start_price" value="1666"/>
+            <column name="start_at" value="2024-01-09T12:00:00"/>
+            <column name="planned_end_at" value="2024-01-16T14:00:00"/>
+            <column name="actual_end_at"/>
+            <column name="state" value="PENDING"/>
+            <column name="product_id" value="4"/>
+            <column name="winner_id"/>
+            <column name="update_at" value="2024-01-01T13:54:34"/>
+            <column name="created_at" value="2024-01-01T13:54:34"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

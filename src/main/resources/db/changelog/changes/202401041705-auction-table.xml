@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ChangeSet for Auction -->
+    <changeSet id="202401041705-create-auction-table" author="IgorKlein">
+        <createTable tableName="auction">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="number" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_price" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="planned_end_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actual_end_at" type="TIMESTAMP">
+            </column>
+            <column name="state" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="winner_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="update_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202401041705-add-fk_auction_product" author="IgorKlein">
+        <addForeignKeyConstraint constraintName="fk_auction_product"
+                                 baseTableName="auction"
+                                 baseColumnNames="product_id"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="202401041705-add-fk_auction_winner" author="IgorKlein">
+        <addForeignKeyConstraint constraintName="fk_auction_winner"
+                                 baseTableName="auction"
+                                 baseColumnNames="winner_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

@@ -5,6 +5,7 @@ import de.allcom.dto.user.UserRegistrationDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.User;
 import de.allcom.repositories.UsersRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
