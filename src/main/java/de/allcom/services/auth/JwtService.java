@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -38,9 +40,8 @@ public class JwtService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-//                .addClaims(Map.of("role", userDetails.getAuthorities().stream().map(Object::toString).toList()))
-                .setIssuedAt(new java.util.Date())
-                .setExpiration(new java.util.Date(System.currentTimeMillis() + LIFE_TIME))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + LIFE_TIME))
                 .signWith(getSignInKey(), io.jsonwebtoken.SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -51,7 +52,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new java.util.Date());
+        return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
