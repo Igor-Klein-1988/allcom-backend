@@ -3,8 +3,6 @@ package de.allcom.models;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Set;
-
 @RequiredArgsConstructor
 public enum Role {
 

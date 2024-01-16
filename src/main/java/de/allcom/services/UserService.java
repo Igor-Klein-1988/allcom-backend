@@ -1,7 +1,7 @@
 package de.allcom.services;
 
 import de.allcom.dto.user.UserAddressResponseDto;
-import de.allcom.dto.user.UserDto;
+
 import de.allcom.dto.user.UserAddressRegistrationDto;
 import de.allcom.exceptions.NotFoundException;
 import de.allcom.exceptions.RestException;
@@ -19,23 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.allcom.dto.user.UserDto.from;
-
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
-
-
-    private void checkIfExistsByEmail(UserAddressRegistrationDto newUser) {
-        if (userRepository.existsByEmail(newUser.getEmail())) {
-            throw new RestException(HttpStatus.CONFLICT, "User with email <" + newUser.getEmail() + "> already exists");
-        }
-    }
-
 
     public List<UserAddressResponseDto> getAll() {
         List<Object[]> results = userRepository.findAllUsersWithAddresses();
