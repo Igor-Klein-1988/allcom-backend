@@ -52,7 +52,7 @@
             <column name="company_name" type="varchar(255)">
                 <!-- Add constraints if needed -->
             </column>
-            <column name="inn" type="varchar(13)">
+            <column name="tax_number" type="varchar(13)">
                 <!-- Add constraints if needed -->
             </column>
             <column name="position" type="varchar(100)">

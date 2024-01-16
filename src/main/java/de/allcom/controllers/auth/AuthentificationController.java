@@ -37,7 +37,7 @@ public class AuthentificationController {
         return ResponseEntity.ok(authentificationService.register(request));
     }
 
-    @Operation(summary = "Login and authenticate user", description = "Available to everyone. Default role is Client")
+    @Operation(summary = "Login and authenticate user", description = "Available to everyone.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User authenticated", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = AuthentificationResponse.class))),

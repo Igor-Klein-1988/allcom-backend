@@ -16,37 +16,80 @@
         </insert>
         <insert tableName="address">
             <column name="id" valueNumeric="2"/>
-            <column name="post_index" value="10176"/>
-            <column name="city" value="Berlin"/>
-            <column name="street" value="Alexanderplatz"/>
-            <column name="house_number" value="1"/>
+            <column name="post_index" value="10234"/>
+            <column name="city" value="Munich"/>
+            <column name="street" value="Marienplatz"/>
+            <column name="house_number" value="5"/>
             <column name="user_id" valueNumeric="2"/>
         </insert>
         <insert tableName="address">
             <column name="id" valueNumeric="3"/>
-            <column name="post_index" value="10176"/>
-            <column name="city" value="Berlin"/>
-            <column name="street" value="Alexanderplatz"/>
-            <column name="house_number" value="1"/>
+            <column name="post_index" value="10345"/>
+            <column name="city" value="Hamburg"/>
+            <column name="street" value="Reeperbahn"/>
+            <column name="house_number" value="12"/>
             <column name="user_id" valueNumeric="3"/>
         </insert>
         <insert tableName="address">
             <column name="id" valueNumeric="4"/>
-            <column name="post_index" value="10176"/>
-            <column name="city" value="Berlin"/>
-            <column name="street" value="Alexanderplatz"/>
-            <column name="house_number" value="1"/>
+            <column name="post_index" value="10456"/>
+            <column name="city" value="Cologne"/>
+            <column name="street" value="Domplatz"/>
+            <column name="house_number" value="8"/>
             <column name="user_id" valueNumeric="4"/>
         </insert>
         <insert tableName="address">
             <column name="id" valueNumeric="5"/>
-            <column name="post_index" value="10176"/>
-            <column name="city" value="Berlin"/>
-            <column name="street" value="Alexanderplatz"/>
-            <column name="house_number" value="1"/>
+            <column name="post_index" value="10567"/>
+            <column name="city" value="Frankfurt"/>
+            <column name="street" value="Römerplatz"/>
+            <column name="house_number" value="3"/>
             <column name="user_id" valueNumeric="5"/>
         </insert>
+
+        <!-- Additional 5 addresses -->
+        <insert tableName="address">
+            <column name="id" valueNumeric="6"/>
+            <column name="post_index" value="10678"/>
+            <column name="city" value="Stuttgart"/>
+            <column name="street" value="Schlossplatz"/>
+            <column name="house_number" value="10"/>
+            <column name="user_id" valueNumeric="6"/>
+        </insert>
+        <insert tableName="address">
+            <column name="id" valueNumeric="7"/>
+            <column name="post_index" value="10789"/>
+            <column name="city" value="Dresden"/>
+            <column name="street" value="Zwinger"/>
+            <column name="house_number" value="15"/>
+            <column name="user_id" valueNumeric="7"/>
+        </insert>
+        <insert tableName="address">
+            <column name="id" valueNumeric="8"/>
+            <column name="post_index" value="10890"/>
+            <column name="city" value="Leipzig"/>
+            <column name="street" value="Augustusplatz"/>
+            <column name="house_number" value="7"/>
+            <column name="user_id" valueNumeric="8"/>
+        </insert>
+        <insert tableName="address">
+            <column name="id" valueNumeric="9"/>
+            <column name="post_index" value="10901"/>
+            <column name="city" value="Hannover"/>
+            <column name="street" value="Herrenhäuser Allee"/>
+            <column name="house_number" value="25"/>
+            <column name="user_id" valueNumeric="9"/>
+        </insert>
+        <insert tableName="address">
+            <column name="id" valueNumeric="10"/>
+            <column name="post_index" value="11012"/>
+            <column name="city" value="Nuremberg"/>
+            <column name="street" value="Lorenzkirche"/>
+            <column name="house_number" value="6"/>
+            <column name="user_id" valueNumeric="10"/>
+        </insert>
     </changeSet>
+
     <!-- Insert initial data for User -->
     <!-- hash password qwerty007! - $2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW.-->
     <changeSet id="2024-01-03-13:46-insert-users" author="VolodymyrMaiorov" context="@dev">
@@ -65,8 +108,8 @@
             <column name="last_name" value="Johnson"/>
             <column name="email" value="maryJohnson@mail.com"/>
             <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
-            <column name="phone_number" value="+491757778899"/>
-            <column name="role" value="STOREKEEPER"/>
+            <column name="phone_number" value="+491151118800"/>
+            <column name="role" value="ADMIN"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="3"/>
@@ -74,8 +117,8 @@
             <column name="last_name" value="Williams"/>
             <column name="email" value="robertwilliams@mail.com"/>
             <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
-            <column name="phone_number" value="+491757778899"/>
-            <column name="role" value="CLIENT"/>
+            <column name="phone_number" value="+491753287491"/>
+            <column name="role" value="STOREKEEPER"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="4"/>
@@ -83,8 +126,8 @@
             <column name="last_name" value="Brown"/>
             <column name="email" value="patricia-brown@mail.com"/>
             <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
-            <column name="phone_number" value="+491757778899"/>
-            <column name="role" value="CLIENT"/>
+            <column name="phone_number" value="+491765253418"/>
+            <column name="role" value="STOREKEEPER"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="5"/>
@@ -92,7 +135,62 @@
             <column name="last_name" value="Moore"/>
             <column name="email" value="michael-moore@mail.com"/>
             <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
-            <column name="phone_number" value="+491757778899"/>
+            <column name="phone_number" value="+491558746512"/>
+            <column name="role" value="CLIENT"/>
+            <column name="company_name" value="Schnee GmBH"/>
+            <column name="tax_number" value="6565161651"/>
+            <column name="position" value="DIRECTOR"/>
+        </insert>
+
+        <insert tableName="account">
+            <column name="id" valueNumeric="6"/>
+            <column name="first_name" value="Emma"/>
+            <column name="last_name" value="Johnson"/>
+            <column name="email" value="emma-johnson@mail.com"/>
+            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="phone_number" value="+491354482314"/>
+            <column name="role" value="CLIENT"/>
+            <column name="company_name" value="Regenboden GmBH"/>
+            <column name="tax_number" value="8491689484"/>
+            <column name="position" value="DIRECTOR"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="7"/>
+            <column name="first_name" value="William"/>
+            <column name="last_name" value="Smith"/>
+            <column name="email" value="william-smith@mail.com"/>
+            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="phone_number" value="+491257271819"/>
+            <column name="role" value="CLIENT"/>
+            <column name="company_name" value="Eulen GmBH"/>
+            <column name="tax_number" value="98489484654"/>
+            <column name="position" value="DIRECTOR"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="8"/>
+            <column name="first_name" value="Olivia"/>
+            <column name="last_name" value="Miller"/>
+            <column name="email" value="olivia-miller@mail.com"/>
+            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="phone_number" value="+491756343457"/>
+            <column name="role" value="CLIENT"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="9"/>
+            <column name="first_name" value="Liam"/>
+            <column name="last_name" value="Taylor"/>
+            <column name="email" value="liam-taylor@mail.com"/>
+            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="phone_number" value="+491753418911"/>
+            <column name="role" value="CLIENT"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" valueNumeric="10"/>
+            <column name="first_name" value="Ava"/>
+            <column name="last_name" value="Anderson"/>
+            <column name="email" value="ava-anderson@mail.com"/>
+            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="phone_number" value="+491454472209"/>
             <column name="role" value="CLIENT"/>
         </insert>
     </changeSet>

@@ -11,7 +11,7 @@ import de.allcom.models.token.Token;
 import de.allcom.models.token.TokenType;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.TokenRepository;
-import de.allcom.repositories.UsersRepository;
+import de.allcom.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthentificationService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
     private final AddressRepository addressRepository;
 
@@ -44,12 +44,11 @@ public class AuthentificationService {
                 .companyName(request.getCompanyName())
                 .position(request.getPosition())
                 .hashPassword(passwordEncoder.encode(request.getPassword()))
-                .inn(request.getInn())
+                .taxNumber(request.getTaxNumber())
                 .role(Role.CLIENT)
-//                .address(savedAddress)
                 .build();
 
-        var savedUser = usersRepository.save(user);
+        var savedUser = userRepository.save(user);
 
         var address = Address.builder()
                 .postIndex(request.getPostIndex())
@@ -59,11 +58,7 @@ public class AuthentificationService {
                 .user(savedUser)
                 .build();
 
-        var savedAddress = addressRepository.save(address);  // Save the address
-
-        // Update the user with the address
-        savedUser.setAddress(savedAddress);
-        savedUser = usersRepository.save(savedUser);
+        addressRepository.save(address);
 
         var jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken);
@@ -79,7 +74,7 @@ public class AuthentificationService {
                         request.getPassword()
                 )
         );
-        var user = usersRepository
+        var user = userRepository
                 .findUserByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);

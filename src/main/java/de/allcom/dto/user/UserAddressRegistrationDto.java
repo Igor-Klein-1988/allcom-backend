@@ -47,8 +47,8 @@ public class UserAddressRegistrationDto {
     @Schema(description = "User's position", example = "Manager")
     private String position;
 
-    @Schema(description = "Company's inn", example = "123456789")
-    private String inn;
+    @Schema(description = "Company's tax's number", example = "123456789")
+    private String taxNumber;
 
     @Schema(description = "Company's index", example = "10176")
     private String postIndex;

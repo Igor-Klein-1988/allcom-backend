@@ -1,6 +1,6 @@
 package de.allcom.config;
 
-import de.allcom.repositories.UsersRepository;
+import de.allcom.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig {
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> usersRepository.findUserByEmail(username)
+        return username -> userRepository.findUserByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 

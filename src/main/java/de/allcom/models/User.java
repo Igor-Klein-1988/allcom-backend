@@ -4,13 +4,13 @@ import de.allcom.models.token.Token;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString(exclude = {"tokens","hashPassword"})
 @Table(name = "account")
 public class User implements UserDetails {
     @Id
@@ -39,17 +40,14 @@ public class User implements UserDetails {
     @Column(nullable = false,length = 20)
     private String phoneNumber;
 
-    @Column(length = 255)
+    @Column
     private String companyName;
 
     @Column(length = 13)
-    private String inn;
+    private String taxNumber;
 
     @Column(length = 100)
     private String position;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private Address address;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -79,7 +77,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+//        return List.of(new SimpleGrantedAuthority(role.name()));
+        return Collections.singleton(role.getAuthorities());
     }
 
     @Override
