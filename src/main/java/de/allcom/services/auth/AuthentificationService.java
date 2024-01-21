@@ -4,6 +4,7 @@ package de.allcom.services.auth;
 import de.allcom.controllers.auth.AuthentificationRequest;
 import de.allcom.controllers.auth.AuthentificationResponse;
 import de.allcom.dto.user.UserAddressRegistrationDto;
+import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.Role;
 import de.allcom.models.User;
@@ -13,6 +14,7 @@ import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +38,9 @@ public class AuthentificationService {
 
 
     public AuthentificationResponse register(UserAddressRegistrationDto request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RestException(HttpStatus.CONFLICT, "User with email " + request.getEmail() + " already exists!");
+        }
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -72,6 +77,12 @@ public class AuthentificationService {
     }
 
     public AuthentificationResponse login(AuthentificationRequest request) {
+        if (request.getEmail() == null || request.getPassword() == null) {
+            throw new RestException(HttpStatus.BAD_REQUEST, "Email and password are required!");
+        } else if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
+            throw new RestException(HttpStatus.NOT_FOUND, "User with email " + request.getEmail() + " not found!");
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

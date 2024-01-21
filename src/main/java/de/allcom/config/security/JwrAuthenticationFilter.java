@@ -1,6 +1,6 @@
 package de.allcom.config.security;
 
-import de.allcom.exceptions.UnauthorizedException;
+import de.allcom.exceptions.RestException;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -58,7 +59,7 @@ public class JwrAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } else {
             // If the token is not valid or revoked, you can throw an UnauthorizedException
-            throw new UnauthorizedException("Access is denied. Please check your credentials.");
+            throw new RestException(HttpStatus.FORBIDDEN,"Access is denied. Please check your credentials.");
         }
         }
         filterChain.doFilter(request, response);

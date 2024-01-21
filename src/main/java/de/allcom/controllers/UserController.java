@@ -16,8 +16,8 @@ public class UserController implements UsersApi {
     private final UserService userService;
 
     @Override
-    public ResponseEntity<List<UserAddressResponseDto>> getAll() {
-        return ResponseEntity.ok(userService.getAll());
+    public ResponseEntity<List<UserAddressResponseDto>> getAll(int limit, int skip) {
+        return ResponseEntity.ok(userService.getAll(limit, skip));
     }
 
     @Override
@@ -28,5 +28,20 @@ public class UserController implements UsersApi {
     @Override
     public ResponseEntity<UserAddressResponseDto> getUserProfile() {
         return ResponseEntity.ok(userService.getUserProfile());
+    }
+
+    @Override
+    public ResponseEntity<UserAddressResponseDto> foundUserByEmail(String userEmail) {
+        return ResponseEntity.ok(userService.foundUserByEmail(userEmail));
+    }
+
+    @Override
+    public ResponseEntity<UserAddressResponseDto> foundUserById(Long userId) {
+        return ResponseEntity.ok(userService.foundUserById(userId));
+    }
+
+    @Override
+    public ResponseEntity<UserAddressResponseDto> changeStatus(Long userId, String status) {
+        return ResponseEntity.ok(userService.changeStatus(userId, status));
     }
 }

@@ -30,7 +30,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 public interface UsersApi {
 
-    @Operation(summary = "Get all users")
+    @Operation(summary = "Get all users (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
     @GetMapping("/getAll")
@@ -42,9 +42,12 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<List<UserAddressResponseDto>> getAll();
+    ResponseEntity<List<UserAddressResponseDto>> getAll(
+            @RequestParam(name = "limit", defaultValue = "5") int limit,
+            @RequestParam(name = "skip", defaultValue = "0") int skip
+    );
 
-    @Operation(summary = "Update user")
+    @Operation(summary = "Update user (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
     @PutMapping("/updateUser/{userId}")
@@ -75,4 +78,59 @@ public interface UsersApi {
     })
     ResponseEntity<UserAddressResponseDto> getUserProfile();
 
+    @Operation(summary = "Found user (ADMIN only)")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
+    @GetMapping("/foundUserByEmail/{userEmail}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class)))
+    })
+    ResponseEntity<UserAddressResponseDto> foundUserByEmail(@PathVariable String userEmail);
+
+    @Operation(summary = "Found user by ID (ADMIN only)")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
+    @GetMapping("/foundUserById/{userId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class)))
+    })
+    ResponseEntity<UserAddressResponseDto> foundUserById(@PathVariable Long userId);
+    @Operation(summary = "Change status of user account (lock/unlock and ADMIN only)")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
+    @PutMapping("/changeStatus/{userId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status of User updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class)))
+    })
+    ResponseEntity<UserAddressResponseDto> changeStatus(@PathVariable Long userId, @RequestParam String status);
 }

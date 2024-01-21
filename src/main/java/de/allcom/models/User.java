@@ -53,6 +53,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isBlocked;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Token> tokens;
 
@@ -99,7 +102,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isBlocked;
     }
 
     @Override

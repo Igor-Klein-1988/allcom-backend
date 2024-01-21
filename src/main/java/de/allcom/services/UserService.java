@@ -3,15 +3,19 @@ package de.allcom.services;
 import de.allcom.dto.user.UserAddressResponseDto;
 
 import de.allcom.dto.user.UserAddressRegistrationDto;
-import de.allcom.exceptions.NotFoundException;
+import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.User;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +28,9 @@ public class UserService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List<UserAddressResponseDto> getAll() {
-        List<Object[]> results = userRepository.findAllUsersWithAddresses();
+    public List<UserAddressResponseDto> getAll(int limit, int skip) {
+        Pageable pageable = PageRequest.of(skip, limit);
+        List<Object[]> results  = userRepository.findAllUsersWithAddresses(pageable);
 
         List<UserAddressResponseDto> dtos = new ArrayList<>();
 
@@ -47,7 +52,7 @@ public class UserService {
 
     public UserAddressResponseDto updateUser(UserAddressRegistrationDto request, Long userId) {
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User with id " + userId + " not found!"));
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
         existingUser.setFirstName(request.getFirstName());
         existingUser.setLastName(request.getLastName());
         existingUser.setEmail(request.getEmail());
@@ -74,4 +79,25 @@ public class UserService {
         return UserAddressResponseDto.from(savedUser, address);
     }
 
+    public UserAddressResponseDto foundUserByEmail(String userEmail) {
+        User user = (User) userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with email " + userEmail + " not found!"));
+        Address address = addressRepository.findByUser(user);
+        return UserAddressResponseDto.from(user, address);
+    }
+
+    public UserAddressResponseDto foundUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
+        Address address = addressRepository.findByUser(user);
+        return UserAddressResponseDto.from(user, address);
+    }
+
+    public UserAddressResponseDto changeStatus(Long userId, String status) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
+        user.setBlocked(Boolean.parseBoolean(status));
+        userRepository.save(user);
+        return UserAddressResponseDto.from(user, addressRepository.findByUser(user));
+    }
 }

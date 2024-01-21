@@ -43,6 +43,10 @@ public class AuthentificationController {
             @ApiResponse(responseCode = "200", description = "User authenticated", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = AuthentificationResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))
     })
     @PostMapping("/login")

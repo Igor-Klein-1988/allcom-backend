@@ -8,7 +8,8 @@ import lombok.Data;
 @Data
 public class UserAddressResponseDto {
 
-    private Long userId;
+    @Schema(description = "User identifier", example = "1")
+    private Long Id;
     @Schema(description = "User first name", example = "Alex")
     private String firstName;
     @Schema(description = "User last name", example = "Schmidt")
@@ -31,10 +32,12 @@ public class UserAddressResponseDto {
     private String street;
     @Schema(description = "Company's house number", example = "1")
     private String houseNumber;
+    @Schema(description = "User blocked status", example = "false")
+    private boolean isBlocked;
 
     public static UserAddressResponseDto from(User user, Address address) {
         UserAddressResponseDto dto = new UserAddressResponseDto();
-        dto.setUserId(user.getId());
+        dto.setId(user.getId());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
@@ -46,6 +49,7 @@ public class UserAddressResponseDto {
         dto.setCity(address.getCity());
         dto.setStreet(address.getStreet());
         dto.setHouseNumber(address.getHouseNumber());
+        dto.setBlocked(user.isBlocked());
         return dto;
     }
 }
