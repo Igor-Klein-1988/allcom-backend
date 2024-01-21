@@ -91,14 +91,14 @@
     </changeSet>
 
     <!-- Insert initial data for User -->
-    <!-- hash password qwerty007! - $2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW.-->
+    <!-- hash password Qwerty007! - $2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe-->
     <changeSet id="2024-01-03-13:46-insert-users" author="VolodymyrMaiorov" context="@dev">
         <insert tableName="account">
             <column name="id" valueNumeric="1"/>
             <column name="first_name" value="James"/>
             <column name="last_name" value="Smith"/>
             <column name="email" value="james-smith@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491757778899"/>
             <column name="role" value="ADMIN"/>
         </insert>
@@ -107,7 +107,7 @@
             <column name="first_name" value="Mary"/>
             <column name="last_name" value="Johnson"/>
             <column name="email" value="maryJohnson@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491151118800"/>
             <column name="role" value="ADMIN"/>
         </insert>
@@ -116,7 +116,7 @@
             <column name="first_name" value="Robert"/>
             <column name="last_name" value="Williams"/>
             <column name="email" value="robertwilliams@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491753287491"/>
             <column name="role" value="STOREKEEPER"/>
         </insert>
@@ -125,7 +125,7 @@
             <column name="first_name" value="Patricia"/>
             <column name="last_name" value="Brown"/>
             <column name="email" value="patricia-brown@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491765253418"/>
             <column name="role" value="STOREKEEPER"/>
         </insert>
@@ -134,7 +134,7 @@
             <column name="first_name" value="Michael"/>
             <column name="last_name" value="Moore"/>
             <column name="email" value="michael-moore@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491558746512"/>
             <column name="role" value="CLIENT"/>
             <column name="company_name" value="Schnee GmBH"/>
@@ -147,7 +147,7 @@
             <column name="first_name" value="Emma"/>
             <column name="last_name" value="Johnson"/>
             <column name="email" value="emma-johnson@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491354482314"/>
             <column name="role" value="CLIENT"/>
             <column name="company_name" value="Regenboden GmBH"/>
@@ -159,7 +159,7 @@
             <column name="first_name" value="William"/>
             <column name="last_name" value="Smith"/>
             <column name="email" value="william-smith@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491257271819"/>
             <column name="role" value="CLIENT"/>
             <column name="company_name" value="Eulen GmBH"/>
@@ -171,7 +171,7 @@
             <column name="first_name" value="Olivia"/>
             <column name="last_name" value="Miller"/>
             <column name="email" value="olivia-miller@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491756343457"/>
             <column name="role" value="CLIENT"/>
         </insert>
@@ -180,7 +180,7 @@
             <column name="first_name" value="Liam"/>
             <column name="last_name" value="Taylor"/>
             <column name="email" value="liam-taylor@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491753418911"/>
             <column name="role" value="CLIENT"/>
         </insert>
@@ -189,7 +189,7 @@
             <column name="first_name" value="Ava"/>
             <column name="last_name" value="Anderson"/>
             <column name="email" value="ava-anderson@mail.com"/>
-            <column name="hash_password" value="$2a$10$HuSmiBwH12qCgev846WwUuxOlxRnQ/Zz7kWBeZDzXPYZx7oWE4GW."/>
+            <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="+491454472209"/>
             <column name="role" value="CLIENT"/>
         </insert>

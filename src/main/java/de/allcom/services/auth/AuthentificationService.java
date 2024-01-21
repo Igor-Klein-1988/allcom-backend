@@ -63,6 +63,10 @@ public class AuthentificationService {
         var jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken);
         return AuthentificationResponse.builder()
+                .id(savedUser.getId())
+                .firstName(savedUser.getFirstName())
+                .lastName(savedUser.getLastName())
+                .email(savedUser.getEmail())
                 .token(jwtToken)
                 .build();
     }
@@ -81,6 +85,10 @@ public class AuthentificationService {
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);
         return AuthentificationResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
                 .token(jwtToken)
                 .build();
     }
