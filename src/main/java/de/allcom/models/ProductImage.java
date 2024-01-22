@@ -1,7 +1,21 @@
 package de.allcom.models;
 
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -13,8 +27,8 @@ import java.util.Objects;
 @ToString
 @Entity
 @Builder
-@Table(name = "images")
-public class PhotoProduct {
+@Table(name = "product_images")
+public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +37,7 @@ public class PhotoProduct {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
-    @Column(length = 1000)
+    @Column
     private String link;
 
     @Override
