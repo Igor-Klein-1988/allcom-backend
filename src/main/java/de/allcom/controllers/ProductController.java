@@ -10,24 +10,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RequiredArgsConstructor
 @RestController
 public class ProductController implements ProductApi {
     private final ProductService productService;
 
+    @Override
     public Page<ProductDto> getAllProducts(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return productService.getAllProducts(pageRequest);
     }
 
     @Override
-    public ResponseEntity<ProductDto> updateProduct(UpdateProductRequestDto request) {
-        ProductDto updatedProduct = productService.updateProduct(request);
+    public ResponseEntity<ProductDto> updateProduct(UpdateProductRequestDto request, Long productId) {
+        ProductDto updatedProduct = productService.updateProduct(request, productId);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
+    @Override
     public ResponseEntity<ProductDto> createProduct(CreateProductRequestDto request) {
         ProductDto createdProduct = productService.createProductWithPhotos(request);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);

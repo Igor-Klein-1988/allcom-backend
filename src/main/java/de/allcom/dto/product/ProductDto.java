@@ -3,12 +3,14 @@ package de.allcom.dto.product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,10 +25,9 @@ public class ProductDto {
     @Schema(description = "Description of products", example = "Good")
     private String description;
 
-    @Schema(description = "Category name of product", example = "Phone")//id_category
-    private String categoryName;
+    @Schema(description = "Category id of product", example = "3")
+    private Long categoryId;
 
-    @Schema(description = "Images", example = "[]")//photos переименовать
+    @Schema(description = "Images", example = "[]")
     private List<String> photoLinks;
-
 }

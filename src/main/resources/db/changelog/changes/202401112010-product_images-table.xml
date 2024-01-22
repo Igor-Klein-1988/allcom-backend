@@ -4,8 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="2024-01-11-20:10-images-table" author="DariaLavrushko">
-        <createTable tableName="images">
+    <changeSet id="2024-01-11-20:10-product_images-table" author="DariaLavrushko">
+        <createTable tableName="product_images">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

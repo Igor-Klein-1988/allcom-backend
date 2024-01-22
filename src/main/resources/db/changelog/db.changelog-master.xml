@@ -15,9 +15,6 @@
     <include file="changes/202401111225-insert-categories-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401111310-products-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202401111320-insert-products-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>
-    <include file="changes/202401112010-images-table.xml" relativeToChangelogFile="true"/>
-<!--    <include file="changes/202401112020-insert-images-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>-->
-
-
+    <include file="changes/202401112010-product_images-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

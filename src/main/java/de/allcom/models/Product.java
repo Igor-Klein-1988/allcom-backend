@@ -1,8 +1,24 @@
 package de.allcom.models;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -18,7 +34,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
+    @Size(min = 3, max = 50)
     private String name;
 
     @Column(nullable = false)
@@ -28,6 +45,7 @@ public class Product {
     private Float weight;
 
     @Column
+    @Size(min = 3, max = 10)
     private String color;
 
     @ManyToOne
@@ -35,13 +53,9 @@ public class Product {
     private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<PhotoProduct> photos;
+    @ToString.Exclude
+    private List<ProductImage> images;
 
-    public String getCategoryName() {
-        return category.getNameDe();
-    }
-
-    public List<String> getLinksOfPhotos() {
-        return this.photos.stream().map(PhotoProduct::getLink).toList();
-    }
+    @Column
+    private LocalDateTime updateAt;
 }
