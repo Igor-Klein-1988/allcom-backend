@@ -28,7 +28,10 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
             "/",
-            "/api/auth/**",
+            "/api/auth/login",
+            "/api/auth/refresh",
+            "/api/auth/logout",
+            "/api/users/register",
             "/api-docs",
             "/api-docs/**",
             "/v2/api-docs",
@@ -53,7 +56,8 @@ public class SecurityConfiguration {
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers("/api/users/getAll").hasAuthority(ADMIN.name())
                         .requestMatchers("/api/users/updateUser/**").hasAuthority(ADMIN.name())
-                        .requestMatchers("/api/users/getUserProfile").hasAnyAuthority(ADMIN.name(), CLIENT.name(),STOREKEEPER.name())
+                        .requestMatchers("/api/users/getUserProfile").hasAnyAuthority(
+                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -61,7 +65,8 @@ public class SecurityConfiguration {
                 .logout(logout ->
                         logout.logoutUrl("/api/auth/logout")
                                 .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                                .logoutSuccessHandler((request, response, authentication) ->
+                                        SecurityContextHolder.clearContext())
                 );
         return http.build();
     }

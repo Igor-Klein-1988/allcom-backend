@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserAddressResponseDto {
 
     @Schema(description = "User identifier", example = "1")
-    private Long Id;
+    private Long id;
     @Schema(description = "User first name", example = "Alex")
     private String firstName;
     @Schema(description = "User last name", example = "Schmidt")

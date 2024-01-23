@@ -1,25 +1,22 @@
 package de.allcom.services;
 
-import de.allcom.dto.user.UserAddressResponseDto;
-
 import de.allcom.dto.user.UserAddressRegistrationDto;
+import de.allcom.dto.user.UserAddressResponseDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.User;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -81,14 +78,16 @@ public class UserService {
 
     public UserAddressResponseDto foundUserByEmail(String userEmail) {
         User user = (User) userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with email " + userEmail + " not found!"));
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                        "User with email " + userEmail + " not found!"));
         Address address = addressRepository.findByUser(user);
         return UserAddressResponseDto.from(user, address);
     }
 
     public UserAddressResponseDto foundUserById(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                        "User with id " + userId + " not found!"));
         Address address = addressRepository.findByUser(user);
         return UserAddressResponseDto.from(user, address);
     }

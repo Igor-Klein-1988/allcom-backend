@@ -14,11 +14,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @SecurityScheme(
         name = "bearerAuth",
@@ -29,6 +32,9 @@ import java.util.List;
 @Tags(@Tag(name = "Users"))
 @RequestMapping("/api/users")
 public interface UsersApi {
+
+    String DEFAULT_LIMIT = "5";
+    String DEFAULT_SKIP = "0";
 
     @Operation(summary = "Get all users (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -42,9 +48,9 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<List<UserAddressResponseDto>> getAll(
-            @RequestParam(name = "limit", defaultValue = "5") int limit,
-            @RequestParam(name = "skip", defaultValue = "0") int skip
+    List<UserAddressResponseDto> getAll(
+            @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
+            @RequestParam(name = "skip", defaultValue = DEFAULT_SKIP) int skip
     );
 
     @Operation(summary = "Update user (ADMIN only)")
@@ -62,7 +68,7 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<UserAddressResponseDto> updateUser(@RequestBody UserAddressRegistrationDto request, @PathVariable Long userId);
+    UserAddressResponseDto updateUser(@RequestBody UserAddressRegistrationDto request, @PathVariable Long userId);
 
     @Operation(summary = "Get user profile")
     @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN','STOREKEEPER')")
@@ -76,7 +82,7 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<UserAddressResponseDto> getUserProfile();
+    UserAddressResponseDto getUserProfile();
 
     @Operation(summary = "Found user (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -96,7 +102,7 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<UserAddressResponseDto> foundUserByEmail(@PathVariable String userEmail);
+    UserAddressResponseDto foundUserByEmail(@PathVariable String userEmail);
 
     @Operation(summary = "Found user by ID (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -116,7 +122,8 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<UserAddressResponseDto> foundUserById(@PathVariable Long userId);
+    UserAddressResponseDto foundUserById(@PathVariable Long userId);
+
     @Operation(summary = "Change status of user account (lock/unlock and ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
@@ -128,9 +135,12 @@ public interface UsersApi {
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    ResponseEntity<UserAddressResponseDto> changeStatus(@PathVariable Long userId, @RequestParam String status);
+    UserAddressResponseDto changeStatus(@PathVariable Long userId, @RequestParam String status);
 }
