@@ -39,7 +39,8 @@ public class AuthentificationService {
 
     public AuthentificationResponse register(UserAddressRegistrationDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RestException(HttpStatus.CONFLICT, "User with email " + request.getEmail() + " already exists!");
+            throw new RestException(HttpStatus.CONFLICT,
+                    "User with email " + request.getEmail() + " already exists!");
         }
         var user = User.builder()
                 .firstName(request.getFirstName())
@@ -78,20 +79,27 @@ public class AuthentificationService {
 
     public AuthentificationResponse login(AuthentificationRequest request) {
         if (request.getEmail() == null || request.getPassword() == null) {
-            throw new RestException(HttpStatus.BAD_REQUEST, "Email and password are required!");
+            throw new RestException(HttpStatus.BAD_REQUEST,
+                    "Email and password are required!");
         } else if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
-            throw new RestException(HttpStatus.NOT_FOUND, "User with email " + request.getEmail() + " not found!");
+            throw new RestException(HttpStatus.NOT_FOUND,
+                    "User with email " + request.getEmail() + " not found!");
         }
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = userRepository
-                .findUserByEmail(request.getEmail())
-                .orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+        var user = (User) userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                        "User with email " + request.getEmail() + " not found!"));
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);
@@ -104,7 +112,7 @@ public class AuthentificationService {
                 .build();
     }
 
-    private  void revokeAllUserTokens(User user) {
+    private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
         if (validUserTokens.isEmpty()) {
             return;

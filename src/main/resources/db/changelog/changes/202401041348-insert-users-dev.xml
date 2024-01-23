@@ -2,97 +2,12 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-
-    <!-- Insert initial data for Address -->
-    <changeSet id="2024-01-03-14:00-insert-addresses" author="VolodymyrMaiorov" context="@dev">
-        <insert tableName="address">
-            <column name="id" valueNumeric="1"/>
-            <column name="post_index" value="10176"/>
-            <column name="city" value="Berlin"/>
-            <column name="street" value="Alexanderplatz"/>
-            <column name="house_number" value="1"/>
-            <column name="user_id" valueNumeric="1"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="2"/>
-            <column name="post_index" value="10234"/>
-            <column name="city" value="Munich"/>
-            <column name="street" value="Marienplatz"/>
-            <column name="house_number" value="5"/>
-            <column name="user_id" valueNumeric="2"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="3"/>
-            <column name="post_index" value="10345"/>
-            <column name="city" value="Hamburg"/>
-            <column name="street" value="Reeperbahn"/>
-            <column name="house_number" value="12"/>
-            <column name="user_id" valueNumeric="3"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="4"/>
-            <column name="post_index" value="10456"/>
-            <column name="city" value="Cologne"/>
-            <column name="street" value="Domplatz"/>
-            <column name="house_number" value="8"/>
-            <column name="user_id" valueNumeric="4"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="5"/>
-            <column name="post_index" value="10567"/>
-            <column name="city" value="Frankfurt"/>
-            <column name="street" value="Römerplatz"/>
-            <column name="house_number" value="3"/>
-            <column name="user_id" valueNumeric="5"/>
-        </insert>
-
-        <!-- Additional 5 addresses -->
-        <insert tableName="address">
-            <column name="id" valueNumeric="6"/>
-            <column name="post_index" value="10678"/>
-            <column name="city" value="Stuttgart"/>
-            <column name="street" value="Schlossplatz"/>
-            <column name="house_number" value="10"/>
-            <column name="user_id" valueNumeric="6"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="7"/>
-            <column name="post_index" value="10789"/>
-            <column name="city" value="Dresden"/>
-            <column name="street" value="Zwinger"/>
-            <column name="house_number" value="15"/>
-            <column name="user_id" valueNumeric="7"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="8"/>
-            <column name="post_index" value="10890"/>
-            <column name="city" value="Leipzig"/>
-            <column name="street" value="Augustusplatz"/>
-            <column name="house_number" value="7"/>
-            <column name="user_id" valueNumeric="8"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="9"/>
-            <column name="post_index" value="10901"/>
-            <column name="city" value="Hannover"/>
-            <column name="street" value="Herrenhäuser Allee"/>
-            <column name="house_number" value="25"/>
-            <column name="user_id" valueNumeric="9"/>
-        </insert>
-        <insert tableName="address">
-            <column name="id" valueNumeric="10"/>
-            <column name="post_index" value="11012"/>
-            <column name="city" value="Nuremberg"/>
-            <column name="street" value="Lorenzkirche"/>
-            <column name="house_number" value="6"/>
-            <column name="user_id" valueNumeric="10"/>
-        </insert>
-    </changeSet>
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+                   logicalFilePath="04-insert-users">
 
     <!-- Insert initial data for User -->
     <!-- hash password Qwerty007! - $2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe-->
-    <changeSet id="2024-01-03-13:46-insert-users" author="VolodymyrMaiorov" context="@dev">
+    <changeSet id="2024-01-04-13:48-insert-users" author="VolodymyrMaiorov" context="@dev">
         <insert tableName="account">
             <column name="id" valueNumeric="1"/>
             <column name="first_name" value="James"/>
@@ -141,7 +56,6 @@
             <column name="tax_number" value="6565161651"/>
             <column name="position" value="DIRECTOR"/>
         </insert>
-
         <insert tableName="account">
             <column name="id" valueNumeric="6"/>
             <column name="first_name" value="Emma"/>

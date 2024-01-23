@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 @Schema(name = "UserRegistration", description = "Registration data")
 public class UserAddressRegistrationDto {
     @NotBlank(message = "First name is required")
-    @Size(min = 1, max = 100, message = "First name must be between 1 and 50 characters")
+    @Size(min = 1, max = 100, message = "First name must be between 1 and 100 characters")
     @Schema(description = "User first name", example = "Alex")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
-    @Size(min = 1, max = 100, message = "Last name must be between 1 and 50 characters")
+    @Size(min = 1, max = 100, message = "Last name must be between 1 and 100 characters")
     @Schema(description = "User last name", example = "Schmidt")
     private String lastName;
 
@@ -38,16 +38,16 @@ public class UserAddressRegistrationDto {
     @Schema(description = "User's email", example = "alex-schmidt@mail.com")
     private String email;
 
-    @Schema(description = "User's phone number", example = "0123456789")
+    @Schema(description = "User's phone number", example = "+491753456755")
     private String phoneNumber;
 
     @Schema(description = "Company name", example = "Allcom GmbH")
     private String companyName;
 
-    @Schema(description = "User's position", example = "Manager")
+    @Schema(description = "User's position", example = "Purchasing manager")
     private String position;
 
-    @Schema(description = "Company's tax's number", example = "123456789")
+    @Schema(description = "Company's tax's number", example = "3458795653")
     private String taxNumber;
 
     @Schema(description = "Company's index", example = "10176")
