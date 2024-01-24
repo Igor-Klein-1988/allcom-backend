@@ -1,8 +1,8 @@
 package de.allcom.controllers;
 
 import de.allcom.controllers.api.CategoryApi;
-import de.allcom.dto.category.CategoryByLanguageDto;
 import de.allcom.dto.category.CategoryDto;
+import de.allcom.dto.category.CategoryByLanguageDto;
 import de.allcom.services.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
