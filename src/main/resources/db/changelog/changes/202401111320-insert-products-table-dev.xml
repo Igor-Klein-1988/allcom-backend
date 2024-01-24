@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-01-11-13:20-products-table" author="DariaLavrushko" context="@dev">
+        <insert tableName="products">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="lgtentel"/>
+            <column name="description" value="description1"/>
+            <column name="weight" value="5.10"/>
+            <column name="color" value="black"/>
+            <column name="category_id" valueNumeric="1"/>
+            <column name="buy_price" value="100.50"/>
+            <column name="state" value="Draft"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="notLgtentel"/>
+            <column name="description" value="description2"/>
+            <column name="category_id" valueNumeric="1"/>
+            <column name="buy_price" value="90.50"/>
+            <column name="state" value="Draft"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="lamborginy"/>
+            <column name="description" value="description3"/>
+            <column name="category_id" valueNumeric="3"/>
+            <column name="buy_price" value="90.50"/>
+            <column name="state" value="Draft"/>
+        </insert>
+        <insert tableName="products">
+            <column name="id" valueNumeric="4"/>
+            <column name="name" value="bugatty"/>
+            <column name="description" value="description4"/>
+            <column name="category_id" valueNumeric="4"/>
+            <column name="buy_price" value="90.50"/>
+            <column name="state" value="Draft"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
