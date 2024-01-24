@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @Schema(name = "Category", description = "Categories of products in the language")
-public class CategoryLanguageDto {
+public class CategoryByLanguageDto {
 
     @Schema(description = "Category identifier", example = "1")
     private Long id;

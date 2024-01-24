@@ -41,8 +41,8 @@ public interface ProductApi {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     Page<ProductDto> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size);
+            @RequestParam int page,
+            @RequestParam int size);
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{productId}")

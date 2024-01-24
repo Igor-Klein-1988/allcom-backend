@@ -1,8 +1,8 @@
 package de.allcom.controllers;
 
 import de.allcom.controllers.api.CategoryApi;
+import de.allcom.dto.category.CategoryByLanguageDto;
 import de.allcom.dto.category.CategoryDto;
-import de.allcom.dto.category.CategoryLanguageDto;
 import de.allcom.services.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,22 +15,22 @@ public class CategoryController implements CategoryApi {
     private final CategoryService categoryService;
 
     @Override
-    public List<CategoryDto> findAllCategoriesWithAllNames() {
-        return categoryService.findAllCategoriesWithAllNames();
+    public List<CategoryDto> findCategoriesWithAllNames() {
+        return categoryService.findCategoriesWithAllNames();
     }
 
     @Override
-    public List<CategoryLanguageDto> findAllCategoryWithLanguage(String language) {
-        return categoryService.findAllCategoryWithLanguage(language);
+    public List<CategoryByLanguageDto> findCategoriesByLanguage(String language) {
+        return categoryService.findCategoriesByLanguage(language);
     }
 
     @Override
-    public CategoryDto findOneCategoryWithAllField(Long id) {
-        return categoryService.findOneCategoryWithAllField(id);
+    public CategoryDto findCategoryById(Long id) {
+        return categoryService.findCategoryById(id);
     }
 
     @Override
-    public CategoryLanguageDto findOneCategoryWithLanguage(Long id, String language) {
-        return categoryService.findOneCategoryWithLanguage(id, language);
+    public CategoryByLanguageDto findCategoryByLanguage(Long id, String language) {
+        return categoryService.findCategoryByLanguage(id, language);
     }
 }

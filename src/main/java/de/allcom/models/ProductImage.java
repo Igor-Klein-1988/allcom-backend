@@ -34,19 +34,4 @@ public class ProductImage {
 
     @Column
     private String link;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProductImage that = (ProductImage) o;
-
-        return link.equals(that.link);
-    }
-
-    @Override
-    public int hashCode() {
-        return link.hashCode();
-    }
 }

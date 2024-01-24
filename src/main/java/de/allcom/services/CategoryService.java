@@ -1,7 +1,7 @@
 package de.allcom.services;
 
+import de.allcom.dto.category.CategoryByLanguageDto;
 import de.allcom.dto.category.CategoryDto;
-import de.allcom.dto.category.CategoryLanguageDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.repositories.CategoryRepository;
 import java.util.List;
@@ -15,7 +15,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public List<CategoryDto> findAllCategoriesWithAllNames() {
+    public List<CategoryDto> findCategoriesWithAllNames() {
         return categoryRepository.findAll().stream().map(c -> CategoryDto.builder()
                 .id(c.getId())
                 .nameRu(c.getNameRu())
@@ -25,19 +25,19 @@ public class CategoryService {
                 .build()).toList();
     }
 
-    public List<CategoryLanguageDto> findAllCategoryWithLanguage(String language) {
+    public List<CategoryByLanguageDto> findCategoriesByLanguage(String language) {
         return switch (language) {
-            case "ru" -> categoryRepository.findAll().stream().map(c -> CategoryLanguageDto.builder()
+            case "ru" -> categoryRepository.findAll().stream().map(c -> CategoryByLanguageDto.builder()
                     .id(c.getId())
                     .name(c.getNameRu())
                     .parentId(c.getParentId())
                     .build()).toList();
-            case "de" -> categoryRepository.findAll().stream().map(c -> CategoryLanguageDto.builder()
+            case "de" -> categoryRepository.findAll().stream().map(c -> CategoryByLanguageDto.builder()
                     .id(c.getId())
                     .name(c.getNameDe())
                     .parentId(c.getParentId())
                     .build()).toList();
-            case "en" -> categoryRepository.findAll().stream().map(c -> CategoryLanguageDto.builder()
+            case "en" -> categoryRepository.findAll().stream().map(c -> CategoryByLanguageDto.builder()
                             .id(c.getId())
                             .name(c.getNameEn())
                             .parentId(c.getParentId())
@@ -47,7 +47,7 @@ public class CategoryService {
         };
     }
 
-    public CategoryDto findOneCategoryWithAllField(Long id) {
+    public CategoryDto findCategoryById(Long id) {
         return categoryRepository.findById(id).map(c -> CategoryDto.builder()
                         .id(c.getId())
                         .nameRu(c.getNameRu())
@@ -56,35 +56,35 @@ public class CategoryService {
                         .parentId(c.getParentId())
                         .build())
                 .stream().findFirst()
-                .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, "Unexpected id: " + id));
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Unexpected id: " + id));
     }
 
-    public CategoryLanguageDto findOneCategoryWithLanguage(Long id, String language) {
+    public CategoryByLanguageDto findCategoryByLanguage(Long id, String language) {
         return switch (language) {
-            case "ru" -> categoryRepository.findById(id).map(c -> CategoryLanguageDto.builder()
+            case "ru" -> categoryRepository.findById(id).map(c -> CategoryByLanguageDto.builder()
                             .id(c.getId())
                             .name(c.getNameRu())
                             .parentId(c.getParentId())
                             .build())
-                    .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
-                            "Unexpected id: " + id + " or language"));
+                    .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                            "Unexpected id: " + id));
             case "de" -> categoryRepository.findById(id)
-                    .map(c -> CategoryLanguageDto.builder()
+                    .map(c -> CategoryByLanguageDto.builder()
                             .id(c.getId())
                             .name(c.getNameDe())
                             .parentId(c.getParentId())
                             .build())
-                    .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
-                            "Unexpected id: " + id + " or language"));
+                    .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                            "Unexpected id: " + id));
             case "en" -> categoryRepository.findById(id)
-                    .map(c -> CategoryLanguageDto.builder()
+                    .map(c -> CategoryByLanguageDto.builder()
                             .id(c.getId())
                             .name(c.getNameEn())
                             .parentId(c.getParentId())
                             .build())
-                    .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
-                            "Unexpected id: " + id + " or language"));
-            default -> throw new RestException(HttpStatus.BAD_REQUEST, "Unexpected id: " + id + " or language");
+                    .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                            "Unexpected id: " + id));
+            default -> throw new RestException(HttpStatus.BAD_REQUEST, "Unexpected language");
         };
     }
 }
