@@ -1,15 +1,13 @@
 package de.allcom.controllers;
 
 import de.allcom.controllers.api.ProductApi;
-import de.allcom.dto.product.ProductDto;
 import de.allcom.dto.product.CreateProductRequestDto;
+import de.allcom.dto.product.ProductDto;
 import de.allcom.dto.product.UpdateProductRequestDto;
 import de.allcom.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -25,14 +23,12 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ResponseEntity<ProductDto> updateProduct(UpdateProductRequestDto request, Long productId) {
-        ProductDto updatedProduct = productService.updateProduct(request, productId);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    public ProductDto updateProduct(UpdateProductRequestDto request, Long productId) {
+        return productService.updateProduct(request, productId);
     }
 
     @Override
-    public ResponseEntity<ProductDto> createProduct(CreateProductRequestDto request) {
-        ProductDto createdProduct = productService.createProductWithPhotos(request);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    public ProductDto createProduct(CreateProductRequestDto request) {
+        return productService.createProductWithPhotos(request);
     }
 }

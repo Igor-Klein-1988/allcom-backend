@@ -3,14 +3,13 @@ package de.allcom.dto.product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,6 +41,10 @@ public class UpdateProductRequestDto {
     @Schema(description = "Category id", example = "1")
     private Long categoryId;
 
-    @Schema(description = "Photos of the product, jpeg", example = "foto1.jpeg")
+    @Schema(description = "Photos of the product, jpeg", example = "photo1.jpeg")
     private List<MultipartFile> images;
+
+    @Schema(description = "Links of products photos", example = "/path/path1/photo1.jpeg")
+    private List<String> imageLinks;
+
 }

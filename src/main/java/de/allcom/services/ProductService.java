@@ -10,19 +10,17 @@ import de.allcom.models.ProductImage;
 import de.allcom.repositories.CategoryRepository;
 import de.allcom.repositories.ProductRepository;
 import de.allcom.services.utils.Converters;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -46,14 +44,18 @@ public class ProductService {
         product.setWeight(request.getWeight());
         product.setCategory(request.getCategory());
         product.setUpdateAt(LocalDateTime.now());
+
         Product savedProduct = productRepository.save(product);
-        if (!request.getImages().isEmpty()) {
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
             List<ProductImage> photos = productImageService.uploadPhotos(request.getImages(), savedProduct);
             savedProduct.setImages(photos);
         } else {
-            System.out.println("net photok!");
+            savedProduct.setImages(null);
         }
+
         savedProduct = productRepository.save(savedProduct);
+
         return converters.fromProductToProductDto(savedProduct);
     }
 
@@ -61,32 +63,57 @@ public class ProductService {
     public ProductDto updateProduct(UpdateProductRequestDto request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() ->
                 new RestException(HttpStatus.BAD_REQUEST, "The product is not found"));
-        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() ->
-                new RestException(HttpStatus.BAD_REQUEST, "The category is not found"));
+        if (product.getImages().isEmpty() && !request.getImageLinks().isEmpty()
+                || !product.getImages().isEmpty() && request.getImageLinks().isEmpty()) {
+            throw new RestException(HttpStatus.NOT_FOUND, "Links of photos did not found in the DB");
+        }
+
+        List<ProductImage> images = product.getImages();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setWeight(request.getWeight());
         product.setColor(request.getColor());
+        Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() ->
+                new RestException(HttpStatus.BAD_REQUEST, "The category is not found"));
         product.setCategory(category);
+        product.setUpdateAt(LocalDateTime.now());
 
-        if(!productImageService.getProductImages(product).isEmpty()) {
-            List<String> altPhotos = product.getImages().stream().map(ProductImage::getLink).toList();
-            for (String photo: altPhotos) {
+        List<ProductImage> imagesForRemove = images.stream()
+                .filter(i -> request.getImageLinks().contains(i.getLink()))
+                .toList();
+
+        if (!imagesForRemove.isEmpty()) {
+            for (ProductImage productImage : imagesForRemove) {
+                images.remove(productImage);
                 try {
-                    Files.delete(Path.of(photo));
+                    Files.delete(Path.of(productImage.getLink()));
                 } catch (IOException e) {
-                    throw new RuntimeException("File is not copy");
+                    throw new RuntimeException(e);
                 }
             }
-            product.getImages().clear();
-            productImageService.deleteImagesOfProduct(product);
         }
-        if (request.getImages() != null) {
-            List<ProductImage> newPhoto = productImageService.uploadPhotos(request.getImages(), product);
-            product.setImages(newPhoto);
+
+        product.setImages(images);
+        productRepository.save(product);
+
+        for (ProductImage imageToRemove : imagesForRemove) {
+            productImageService.deleteImageById(imageToRemove.getId());
         }
-        product.setUpdateAt(LocalDateTime.now());
-        Product updatedProduct = productRepository.save(product);
-        return converters.fromProductToProductDto(updatedProduct);
+
+        productImageService.uploadPhotos(request.getImages(), product);
+        productRepository.save(product);
+
+        Product updatedProduct = productRepository.findById(request.getId())
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product did not found in the DB"));
+
+        List<ProductImage> imagesNew = productImageService.getProductImages(updatedProduct);
+
+        return ProductDto.builder()
+                .id(updatedProduct.getId())
+                .name(updatedProduct.getName())
+                .description(updatedProduct.getDescription())
+                .categoryId(updatedProduct.getCategory().getId())
+                .photoLinks(imagesNew.stream().map(ProductImage::getLink).toList())
+                .build();
     }
 }
