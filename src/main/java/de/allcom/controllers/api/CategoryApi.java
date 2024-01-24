@@ -23,14 +23,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Tags(@Tag(name = "Categories"))
 @RequestMapping("/api/categories")
 public interface CategoryApi {
+    int QUANTITY_OF_DIGITS_FOR_LANGUAGE = 2;
+
     @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categories found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
-            @ApiResponse(responseCode = "404", description = "Categories is not found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @ApiResponse(responseCode = "404", description = "Categories is not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
             @ApiResponse(responseCode = "409", description = "User with this email already exists", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
     )
@@ -40,7 +42,9 @@ public interface CategoryApi {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/all/{language}")
-    List<CategoryLanguageDto> findAllCategoryWithLanguage(@PathVariable @Valid @Size(min = 2, max = 2) String language);
+    List<CategoryLanguageDto> findAllCategoryWithLanguage(
+            @PathVariable @Valid @Size(min = QUANTITY_OF_DIGITS_FOR_LANGUAGE,
+                    max = QUANTITY_OF_DIGITS_FOR_LANGUAGE) String language);
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/one/{id}")
@@ -50,5 +54,6 @@ public interface CategoryApi {
     @GetMapping("/{id}/{language}")
     CategoryLanguageDto findOneCategoryWithLanguage(
             @PathVariable Long id,
-            @PathVariable @Valid @Size(min = 2, max = 2) String language);
+            @PathVariable @Valid @Size(min = QUANTITY_OF_DIGITS_FOR_LANGUAGE,
+                    max = QUANTITY_OF_DIGITS_FOR_LANGUAGE) String language);
 }
