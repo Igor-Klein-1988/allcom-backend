@@ -62,7 +62,7 @@ public class ProductService {
     @Transactional
     public ProductDto updateProduct(UpdateProductRequestDto request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() ->
-                new RestException(HttpStatus.BAD_REQUEST, "The product is not found"));
+                new RestException(HttpStatus.NOT_FOUND, "The product is not found"));
         if (product.getImages().isEmpty() && !request.getImageLinks().isEmpty()
                 || !product.getImages().isEmpty() && request.getImageLinks().isEmpty()) {
             throw new RestException(HttpStatus.NOT_FOUND, "Links of photos did not found in the DB");
@@ -74,7 +74,7 @@ public class ProductService {
         product.setWeight(request.getWeight());
         product.setColor(request.getColor());
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() ->
-                new RestException(HttpStatus.BAD_REQUEST, "The category is not found"));
+                new RestException(HttpStatus.NOT_FOUND, "The category is not found"));
         product.setCategory(category);
         product.setUpdateAt(LocalDateTime.now());
 

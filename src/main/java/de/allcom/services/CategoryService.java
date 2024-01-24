@@ -28,15 +28,17 @@ public class CategoryService {
     public List<CategoryByLanguageDto> findCategoriesByLanguage(String language) {
         return switch (language) {
             case "ru" -> categoryRepository.findAll().stream().map(c -> CategoryByLanguageDto.builder()
-                    .id(c.getId())
-                    .name(c.getNameRu())
-                    .parentId(c.getParentId())
-                    .build()).toList();
+                            .id(c.getId())
+                            .name(c.getNameRu())
+                            .parentId(c.getParentId())
+                            .build())
+                    .toList();
             case "de" -> categoryRepository.findAll().stream().map(c -> CategoryByLanguageDto.builder()
-                    .id(c.getId())
-                    .name(c.getNameDe())
-                    .parentId(c.getParentId())
-                    .build()).toList();
+                            .id(c.getId())
+                            .name(c.getNameDe())
+                            .parentId(c.getParentId())
+                            .build())
+                    .toList();
             case "en" -> categoryRepository.findAll().stream().map(c -> CategoryByLanguageDto.builder()
                             .id(c.getId())
                             .name(c.getNameEn())
