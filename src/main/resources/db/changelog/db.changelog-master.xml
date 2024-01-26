@@ -16,5 +16,15 @@
     <include file="changes/202401111310-products-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202401111320-insert-products-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401112010-product_images-table.xml" relativeToChangelogFile="true"/>
-
+    <include file="changes/102401252100-insert-product-images-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401252110-areas-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401252120-insert-areas-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401252110-racks-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401252120-insert-racks-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401252110-sections-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401252120-insert-sections-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401252110-shelves-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401252120-insert-shelves-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401252110-storage-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401252120-insert-storage-dev.xml" relativeToChangelogFile="true" context="@dev"/>
 </databaseChangeLog>

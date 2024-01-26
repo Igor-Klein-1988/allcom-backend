@@ -36,6 +36,10 @@ public class ProductService {
         return products.map(converters::fromProductToProductDto);
     }
 
+    public ProductDto findBiId(Long id) {
+        return converters.fromProductToProductDto(productRepository.findById(id).get());
+    }
+
     @Transactional
     public ProductDto createProductWithPhotos(CreateProductRequestDto request) {
         Product product = new Product();
@@ -43,6 +47,7 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setWeight(request.getWeight());
         product.setCategory(request.getCategory());
+        product.setCreateAt(LocalDateTime.now());
         product.setUpdateAt(LocalDateTime.now());
 
         Product savedProduct = productRepository.save(product);
@@ -63,8 +68,7 @@ public class ProductService {
     public ProductDto updateProduct(UpdateProductRequestDto request, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() ->
                 new RestException(HttpStatus.NOT_FOUND, "The product is not found"));
-        if (product.getImages().isEmpty() && !request.getImageLinks().isEmpty()
-                || !product.getImages().isEmpty() && request.getImageLinks().isEmpty()) {
+        if (product.getImages().isEmpty() && !request.getImageLinks().isEmpty()) {
             throw new RestException(HttpStatus.NOT_FOUND, "Links of photos did not found in the DB");
         }
 

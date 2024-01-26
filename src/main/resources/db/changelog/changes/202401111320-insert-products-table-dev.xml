@@ -4,40 +4,53 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="2024-01-11-13:20-products-table" author="DariaLavrushko" context="@dev">
-        <insert tableName="products">
-            <column name="id" valueNumeric="1"/>
-            <column name="name" value="lgtentel"/>
-            <column name="description" value="description1"/>
-            <column name="weight" value="5.10"/>
-            <column name="color" value="black"/>
-            <column name="category_id" valueNumeric="1"/>
-            <column name="buy_price" value="100.50"/>
-            <column name="state" value="Draft"/>
-        </insert>
-        <insert tableName="products">
-            <column name="id" valueNumeric="2"/>
-            <column name="name" value="notLgtentel"/>
-            <column name="description" value="description2"/>
-            <column name="category_id" valueNumeric="1"/>
-            <column name="buy_price" value="90.50"/>
-            <column name="state" value="Draft"/>
-        </insert>
-        <insert tableName="products">
-            <column name="id" valueNumeric="3"/>
-            <column name="name" value="lamborginy"/>
-            <column name="description" value="description3"/>
-            <column name="category_id" valueNumeric="3"/>
-            <column name="buy_price" value="90.50"/>
-            <column name="state" value="Draft"/>
-        </insert>
-        <insert tableName="products">
-            <column name="id" valueNumeric="4"/>
-            <column name="name" value="bugatty"/>
-            <column name="description" value="description4"/>
-            <column name="category_id" valueNumeric="4"/>
-            <column name="buy_price" value="90.50"/>
-            <column name="state" value="Draft"/>
-        </insert>
+    <changeSet id="2024-01-25-13:20-products-table" author="DariaLavrushko" context="@dev">
+        <sql>
+            INSERT INTO products
+                (name, description, weight, color, category_id, storage_id)
+            VALUES ('UltraBook X1', 'Sleek and powerful ultrabook for professionals.', 1.5, 'Silver', 1,1),
+                   ('Gaming Desktop Titan', 'Custom-built gaming desktop for the ultimate gaming experience.', 12.0, 'Black/Red', 2,2),
+                   ('High-Resolution Monitor Pro', 'Professional-grade high-resolution monitor for detailed graphics.', 4.5, 'Black', 3,3),
+                   ('Gaming Tablet X300', 'Portable gaming tablet with advanced graphics capabilities.', 0.8, 'Blue', 4,4),
+                   ('Gaming Console Ultimate', 'Next-gen gaming console for an immersive gaming experience.', 6.0, 'Black/Green', 5,5),
+                   ('High-Speed HDMI Cable', 'Premium quality HDMI cable for high-speed data transfer.', 0.1, 'Black', 6,6),
+                   ('Network Router Pro', 'Advanced networking router for seamless connectivity.', 1.2, 'White', 7,7),
+                   ('Headphone Stand Elite', 'Stylish headphone stand with premium build quality.', 0.5, 'Silver', 8,8),
+                   ('Wireless Keyboard &amp; Mouse Combo', 'Combo set with a wireless keyboard and mouse for convenient use.', 1.0, 'Black', 9,9),
+                   ('Smart Office Printer', 'High-performance printer for efficient office printing.', 8.0, 'Gray', 10,10),
+                   ('Surround Sound Speaker System', 'Immersive surround sound speaker system for home entertainment.', 10.0, 'Wood', 11,11),
+                   ('Professional Studio Microphone', 'High-quality studio microphone for professional audio recording.', 0.7, 'Black/Silver', 12,12),
+                   ('Smartphone X Pro', 'High-end smartphone with advanced features.', 0.2, 'Black', 13,13),
+                   ('Ultra HD Smart TV', '4K Ultra HD smart TV for a stunning viewing experience.', 18.0, 'Silver', 14,14),
+                   ('Power Bank 10000mAh', 'Portable power bank for charging devices on the go.', 0.3, 'White', 15,15),
+                   ('Wireless Headphones Elite', 'Premium wireless headphones with noise cancellation.', 0.5, 'Gold', 16,16),
+                   ('Smartwatch Pro Series', 'Feature-packed smartwatch for health and fitness tracking.', 0.1, 'Black', 17,17),
+                   ('High-Fidelity Audio System', 'Immersive audio system for a superior listening experience.', 8.5, 'Wood', 18,18),
+                   ('4K Digital Camera', 'Professional-grade 4K digital camera for stunning photos and videos.', 1.0, 'Black', 19,19),
+                   ('Mobile Phone Stand Holder', 'Convenient stand holder for mobile phones.', 0.1, 'Silver', 20,20),
+                   ('TV Wall Mount Bracket', 'Durable wall mount bracket for securing your TV.', 2.0, 'Black', 21,21),
+                   ('Fast Charger for Smartphones', 'Quick-charging adapter for smartphones.', 0.2, 'Black', 13,22),
+                   ('Smart Fridge Deluxe', 'High-tech smart refrigerator with advanced features.', 150.0, 'Stainless Steel', 22,23),
+                   ('Ultra-Clean Washing Machine', 'Efficient and powerful washing machine for clean laundry.', 80.0, 'White', 23,24),
+                   ('Combo Washer Dryer', 'All-in-one washer dryer for space-saving laundry solutions.', 90.0, 'Silver', 24,25),
+                   ('Premium Dishwasher', 'Smart dishwasher for hassle-free dish cleaning.', 45.0, 'Black', 25,26),
+                   ('Chefs Choice Cooking Range', 'Professional-grade cooking range for versatile cooking.', 120.0, 'Stainless Steel', 26,27),
+                   ('Super Suction Vacuum', 'Powerful vacuum cleaner for efficient cleaning.', 8.0, 'Blue', 30,28),
+                   ('Smart Robotic Vacuum', 'Intelligent robotic vacuum for automated cleaning.', 5.5, 'Silver', 31,29),
+                   ('Cordless Cleaning Pro', 'Portable cordless vacuum for easy cleaning.', 3.0, 'Red', 32,30),
+                   ('Steam Master Cleaner', 'High-performance steam cleaner for thorough cleaning.', 6.5, 'White', 33,31),
+                   ('Ultimate Ironing Station', 'Advanced iron for wrinkle-free clothes.', 2.0, 'Black', 34,32),
+                   ('Premium Built-in Appliance Set', 'Complete set for a modern kitchen.', 50.0, 'Stainless Steel', 37,33),
+                   ('Smart Built-in Oven', 'State-of-the-art built-in oven with smart features.', 35.0, 'Black', 38,34),
+                   ('Modern Microwave Oven', 'Efficient and stylish microwave for your kitchen.', 15.0, 'Silver', 46,35),
+                   ('Smart Multicooker', 'Versatile multicooker with smart technology.', 12.0, 'White', 47,36),
+                   ('Professional Hair Dryer', 'Powerful hair dryer for salon-quality results.', 12.0, 'White', 53,37),
+                   ('Precision Beard Trimmer', 'High-precision trimmer for grooming your beard.', 12.0, 'White', 54,38),
+                   ('Curling Iron Set', 'Versatile hair styling set for creating different looks.', 1.0, 'Rose Gold', 55,39),
+                   ('Comfortable Armchair', 'Ergonomic armchair for relaxation and comfort.', 15.0, 'Blue', 60,40),
+                   ('Modern Dining Chair', 'Stylish chair for contemporary dining spaces.', 8.0, 'White', 61,41),
+                   ('Stylish Summer Dress', 'Light and comfortable dress for summer days.', 0.5, 'Pink', 69,42),
+                   ('Classic Leather Shoes', 'Elegant leather shoes for formal occasions.', 1.2, 'Black', 70,43);
+        </sql>
     </changeSet>
 </databaseChangeLog>

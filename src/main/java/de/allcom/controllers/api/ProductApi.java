@@ -48,4 +48,8 @@ public interface ProductApi {
     @PutMapping("/{productId}")
     ProductDto updateProduct(@ModelAttribute @Valid UpdateProductRequestDto request, @PathVariable Long productId);
 
+
+    @GetMapping("/product/{id}")
+    ProductDto findById(@PathVariable Long id);
+
 }

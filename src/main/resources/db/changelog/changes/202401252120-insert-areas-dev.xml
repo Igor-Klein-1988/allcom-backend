@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-01-25-21:20-insert-areas-dev.xml" author="DariaLavrushko" context="@dev">
+        <insert tableName="storage_areas">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="R"/>
+        </insert>
+        <insert tableName="storage_areas">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="L"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

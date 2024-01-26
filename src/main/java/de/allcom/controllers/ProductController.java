@@ -28,6 +28,11 @@ public class ProductController implements ProductApi {
     }
 
     @Override
+    public ProductDto findById(Long id) {
+        return productService.findBiId(id);
+    }
+
+    @Override
     public ProductDto createProduct(CreateProductRequestDto request) {
         return productService.createProductWithPhotos(request);
     }

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -51,10 +52,16 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<ProductImage> images;
+    @OneToOne
+    @JoinColumn(name = "storage_id", referencedColumnName = "id")
+    private Storage storage;
 
     @Column
     private LocalDateTime updateAt;
+
+    @Column
+    private LocalDateTime createAt;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> images;
 }
