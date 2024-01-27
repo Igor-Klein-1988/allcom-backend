@@ -21,9 +21,9 @@ public class StorageDto {
     private Long id;
 
     @NotBlank(message = "Area is required")
-    @Size(min = 1, max = 1, message = "Area of the storage must be 1 big character")
+    @Size(min = 1, max = 1, message = "Area of the storage must be a single character")
     @Schema(description = "Area of storage", example = "R")
-    private Character area;
+    private String area;
 
     @NotBlank(message = "Rack is required")
     @Schema(description = "Rack of storage", example = "12")

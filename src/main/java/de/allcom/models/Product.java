@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Check;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,20 +32,9 @@ import org.hibernate.annotations.Check;
 @Entity
 @Table(name = "products")
 public class Product {
-    public enum StateName {
-        Draft("Draft"),
-        InStock("InStock"),
-        Sold("Sold");
-
-        private final String value;
-
-        StateName(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
+    @Getter
+    public enum State {
+        DRAFT, IN_STOCK, SOLD, PENDING_PAYMENT
     }
 
     @Id
@@ -77,8 +65,7 @@ public class Product {
 
     @Column
     @Enumerated(EnumType.STRING)
-    @Check(constraints = "state IN ('Draft', 'InStock', 'Sold')")
-    private StateName state;
+    private State state;
 
     @Column
     private LocalDateTime updateAt;

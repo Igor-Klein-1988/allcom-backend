@@ -49,7 +49,7 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setWeight(request.getWeight());
         product.setCategory(request.getCategory());
-        product.setState(Product.StateName.Draft);
+        product.setState(Product.State.DRAFT);
         product.setCreateAt(LocalDateTime.now());
         product.setUpdateAt(LocalDateTime.now());
 
@@ -83,7 +83,7 @@ public class ProductService {
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() ->
                 new RestException(HttpStatus.NOT_FOUND, "The category is not found"));
         product.setCategory(category);
-        product.setState(Product.StateName.Draft);
+        product.setState(Product.State.DRAFT);
         product.setUpdateAt(LocalDateTime.now());
 
         List<ProductImage> imagesForRemove = images.stream()
@@ -121,7 +121,7 @@ public class ProductService {
                 .name(updatedProduct.getName())
                 .description(updatedProduct.getDescription())
                 .categoryId(updatedProduct.getCategory().getId())
-                .state(updatedProduct.getState().getValue())
+                .state(updatedProduct.getState().name())
                 .photoLinks(imagesNew.stream().map(ProductImage::getLink).toList())
                 .build();
     }

@@ -13,6 +13,7 @@ import de.allcom.repositories.ShelveRepository;
 import de.allcom.repositories.StorageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +25,13 @@ public class StorageService {
     private final SectionRepository sectionRepository;
     private final ShelveRepository shelveRepository;
 
+    @Transactional
     public StorageDto savePlace(String area, Integer rackNumber, Integer sectionNumber, Integer shelveNumber) {
 
-        Area newArea = areaRepository.findByName(Area.AreaName.valueOf(area))
+        Area newArea = areaRepository.findByName(Area.Areas.valueOf(area))
                 .orElseGet(() -> {
                     Area areaEntity = new Area();
-                    areaEntity.setName(Area.AreaName.valueOf(area));
+                    areaEntity.setName(Area.Areas.valueOf(area));
                     return areaRepository.save(areaEntity);
                 });
 
@@ -64,7 +66,7 @@ public class StorageService {
 
         return StorageDto.builder()
                 .id(savedStorage.getId())
-                .area(savedStorage.getArea().getName().getValue())
+                .area(savedStorage.getArea().getName().name())
                 .rack(savedStorage.getRack().getNumber())
                 .section(savedStorage.getSection().getNumber())
                 .shelve(savedStorage.getShelve().getNumber())
