@@ -44,6 +44,11 @@ public class JwrAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            if (request.getRequestURI().startsWith("/swagger-ui") || request.getRequestURI().startsWith("/v3/api-docs")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             final String authHeader = request.getHeader("Authorization");
             final String jwt;
             final String userEmail;

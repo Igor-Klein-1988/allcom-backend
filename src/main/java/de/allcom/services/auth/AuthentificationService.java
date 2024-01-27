@@ -3,6 +3,7 @@ package de.allcom.services.auth;
 
 import de.allcom.controllers.auth.AuthentificationRequest;
 import de.allcom.controllers.auth.AuthentificationResponse;
+import de.allcom.controllers.auth.ChangePasswordRequest;
 import de.allcom.dto.user.UserAddressRegistrationDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
@@ -15,10 +16,13 @@ import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -133,5 +137,20 @@ public class AuthentificationService {
                 .expired(false)
                 .build();
         tokenRepository.save(token);
+    }
+
+    public ResponseEntity<?> changePassword(ChangePasswordRequest request, Principal connectedUser) {
+        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RestException(HttpStatus.FORBIDDEN, "Wrong password");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new RestException(HttpStatus.FORBIDDEN, "Password are not the same");
+        }
+
+        user.setHashPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
+        return ResponseEntity.ok("Password changed");
     }
 }
