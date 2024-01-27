@@ -3,6 +3,8 @@ package de.allcom.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Check;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +33,22 @@ import lombok.ToString;
 @Entity
 @Table(name = "products")
 public class Product {
+    public enum StateName {
+        Draft("Draft"),
+        InStock("InStock"),
+        Sold("Sold");
+
+        private final String value;
+
+        StateName(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,11 +76,17 @@ public class Product {
     private Storage storage;
 
     @Column
+    @Enumerated(EnumType.STRING)
+    @Check(constraints = "state IN ('Draft', 'InStock', 'Sold')")
+    private StateName state;
+
+    @Column
     private LocalDateTime updateAt;
 
     @Column
     private LocalDateTime createAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<ProductImage> images;
 }

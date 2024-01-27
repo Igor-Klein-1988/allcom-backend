@@ -7,6 +7,13 @@
     <changeSet id="2024-01-11-12:25-categories-table" author="DariaLavrushko">
         <!-- parent_id = 1 -> Ноутбуки и компьютеры/Laptops und Computer/Laptops and Computers -->
         <insert tableName="categories">
+            <column name="id" valueNumeric="74"/>
+            <column name="name_ru" value="Ноутбуки и компьютеры"/>
+            <column name="name_de" value="Laptops und Computer"/>
+            <column name="name_en" value="Laptops and Computers"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="categories">
             <column name="id" valueNumeric="1"/>
             <column name="name_ru" value="Ноутбуки"/>
             <column name="name_de" value="Laptops"/>
@@ -92,6 +99,13 @@
         </insert>
         <!-- parent_id = 2 -> Смартфоны, ТВ и электроника/Smartphones, TV & Elektronik/Smartphones, TVs, and Electronics -->
         <insert tableName="categories">
+            <column name="id" valueNumeric="75"/>
+            <column name="name_ru" value="Смартфоны, ТВ и электроника"/>
+            <column name="name_de" value="Smartphones, TV &amp; Elektronik"/>
+            <column name="name_en" value="Smartphones, TVs, and Electronics"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="categories">
             <column name="id" valueNumeric="13"/>
             <column name="name_ru" value="Мобильные телефоны"/>
             <column name="name_de" value="Smartphones &amp; Handys"/>
@@ -156,6 +170,13 @@
         </insert>
         <!-- parent_id = 3 -> Крупно бытовая техника/Große Haushaltsgeräte ->Haushaltsgroßgeräte/Household Appliances -->
         <insert tableName="categories">
+            <column name="id" valueNumeric="76"/>
+            <column name="name_ru" value="Крупно бытовая техника"/>
+            <column name="name_de" value="Große Haushaltsgeräte"/>
+            <column name="name_en" value="Household Appliances"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="categories">
             <column name="id" valueNumeric="22"/>
             <column name="name_ru" value="Холодильники"/>
             <column name="name_de" value="Kühlschränke"/>
@@ -213,6 +234,13 @@
         </insert>
         <!-- parent_id = 4 -> Уход за домом и одеждой/Haushalt & Wohnen/Home and Clothing Care -->
         <insert tableName="categories">
+            <column name="id" valueNumeric="77"/>
+            <column name="name_ru" value="Уход за домом и одеждой"/>
+            <column name="name_de" value="Haushalt &amp; Wohnen"/>
+            <column name="name_en" value="Home and Clothing Care"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="categories">
             <column name="id" valueNumeric="30"/>
             <column name="name_ru" value="Пылесосы"/>
             <column name="name_de" value="Staubsauger"/>
@@ -262,6 +290,13 @@
             <column name="parent_id" valueNumeric="4"/>
         </insert>
         <!-- parent_id = 5 -> Встраиваемая техника/Einbaugeräte/Built-in Appliances -->
+        <insert tableName="categories">
+            <column name="id" valueNumeric="78"/>
+            <column name="name_ru" value="Встраиваемая техника"/>
+            <column name="name_de" value="Einbaugeräte"/>
+            <column name="name_en" value="Built-in Appliances"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
         <insert tableName="categories">
             <column name="id" valueNumeric="37"/>
             <column name="name_ru" value="Комплекты встраеваемой техники"/>
@@ -327,6 +362,13 @@
         </insert>
         <!-- parent_id = 6 -> Техника для кухни/Küchengeräte/Kitchen Appliances -->
         <insert tableName="categories">
+            <column name="id" valueNumeric="79"/>
+            <column name="name_ru" value="Техника для кухни"/>
+            <column name="name_de" value="Küchengeräte"/>
+            <column name="name_en" value="Kitchen Appliances"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="categories">
             <column name="id" valueNumeric="46"/>
             <column name="name_ru" value="Микроволновые печи"/>
             <column name="name_de" value="Mikrowellen"/>
@@ -377,6 +419,13 @@
         </insert>
         <!-- parent_id = 7 -> Красота и здоровье/Gesundheit & Körperpflege/Beauty and Health -->
         <insert tableName="categories">
+            <column name="id" valueNumeric="80"/>
+            <column name="name_ru" value="Красота и здоровье"/>
+            <column name="name_de" value="Gesundheit &amp; Körperpflege"/>
+            <column name="name_en" value="Beauty and Health"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
+        <insert tableName="categories">
             <column name="id" valueNumeric="53"/>
             <column name="name_ru" value="Фены"/>
             <column name="name_de" value="Haartrockner"/>
@@ -426,6 +475,13 @@
             <column name="parent_id" valueNumeric="7"/>
         </insert>
         <!-- parent_id = 8 -> Мебель/Möbel/Furniture -->
+        <insert tableName="categories">
+            <column name="id" valueNumeric="81"/>
+            <column name="name_ru" value="Мебель"/>
+            <column name="name_de" value="Möbel"/>
+            <column name="name_en" value="Furniture"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
         <insert tableName="categories">
             <column name="id" valueNumeric="60"/>
             <column name="name_ru" value="Кресла"/>
@@ -490,6 +546,13 @@
             <column name="parent_id" valueNumeric="8"/>
         </insert>
         <!-- parent_id = 9 -> Одежда, обувь и аксессуары/Bekleidung, Schuhe und Accessoires/Clothing, Footwear, and Accessories -->
+        <insert tableName="categories">
+            <column name="id" valueNumeric="82"/>
+            <column name="name_ru" value="Одежда, обувь и аксессуары"/>
+            <column name="name_de" value="Bekleidung, Schuhe und Accessoires"/>
+            <column name="name_en" value="Clothing, Footwear, and Accessories"/>
+            <column name="parent_id" valueNumeric="0"/>
+        </insert>
         <insert tableName="categories">
             <column name="id" valueNumeric="69"/>
             <column name="name_ru" value="Одежда"/>

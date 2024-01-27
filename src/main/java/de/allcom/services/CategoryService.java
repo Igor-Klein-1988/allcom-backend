@@ -89,4 +89,19 @@ public class CategoryService {
             default -> throw new RestException(HttpStatus.BAD_REQUEST, "Unexpected language");
         };
     }
+
+    public List<CategoryDto> findCategoriesByParentId(Long parentId) {
+        categoryRepository.findAllByParentId(parentId)
+                .stream().findFirst()
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Category with id: "
+                        + parentId + " did not found"));
+        return categoryRepository.findAllByParentId(parentId).stream()
+                .map(c -> CategoryDto.builder()
+                        .id(c.getId())
+                        .nameRu(c.getNameRu())
+                        .nameDe(c.getNameDe())
+                        .nameEn(c.getNameEn())
+                        .parentId(c.getParentId())
+                        .build()).toList();
+    }
 }

@@ -9,7 +9,7 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(5)">
+            <column name="name" type="ENUM('L', 'R')">
                 <constraints nullable="false"/>
             </column>
         </createTable>

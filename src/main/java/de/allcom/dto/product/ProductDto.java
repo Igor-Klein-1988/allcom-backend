@@ -21,11 +21,14 @@ public class ProductDto {
     @Schema(description = "Products name", example = "Smartphone")
     private String name;
 
-    @Schema(description = "Description of products", example = "Good")
+    @Schema(description = "Description of the products", example = "Good")
     private String description;
 
-    @Schema(description = "Category id of product", example = "3")
+    @Schema(description = "Category id of the product", example = "3")
     private Long categoryId;
+
+    @Schema(description = "State of the product", example = "3")
+    private String state;
 
     @Schema(description = "Images", example = "[]")
     private List<String> photoLinks;

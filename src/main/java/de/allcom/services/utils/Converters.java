@@ -17,6 +17,7 @@ public class Converters {
                 .name(product.getName())
                 .description(product.getDescription())
                 .categoryId(product.getCategory().getId())
+                .state(product.getState().getValue())
                 .photoLinks(product.getImages().stream().map(ProductImage::getLink).toList())
                 .build();
     }

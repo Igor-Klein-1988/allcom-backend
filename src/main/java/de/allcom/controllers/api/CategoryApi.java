@@ -56,4 +56,8 @@ public interface CategoryApi {
             @PathVariable Long id,
             @PathVariable @Valid @Size(min = QUANTITY_OF_DIGITS_FOR_LANGUAGE,
                     max = QUANTITY_OF_DIGITS_FOR_LANGUAGE) String language);
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{parent_id}")
+    List<CategoryDto> findCategoriesByParentId(@PathVariable Long parentId);
 }

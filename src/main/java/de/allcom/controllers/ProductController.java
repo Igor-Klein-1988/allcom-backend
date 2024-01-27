@@ -29,7 +29,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ProductDto findById(Long id) {
-        return productService.findBiId(id);
+        return productService.findById(id);
     }
 
     @Override

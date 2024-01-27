@@ -17,45 +17,43 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class StorageService {
-    private StorageRepository storageRepository;
-    private AreaRepository areaRepository;
-    private RackRepository rackRepository;
-    private SectionRepository sectionRepository;
-    private ShelveRepository shelveRepository;
 
-    public StorageDto savePlace(Character area, Integer rack, Integer section, Integer shelve) {
+    private final StorageRepository storageRepository;
+    private final AreaRepository areaRepository;
+    private final RackRepository rackRepository;
+    private final SectionRepository sectionRepository;
+    private final ShelveRepository shelveRepository;
 
-        Area newArea = new Area();
-        if (areaRepository.findByName(area).isEmpty()) {
-            newArea.setName(area);
-            areaRepository.save(newArea);
-        } else {
-            newArea = areaRepository.findByName(area).get();
-        }
+    public StorageDto savePlace(String area, Integer rackNumber, Integer sectionNumber, Integer shelveNumber) {
 
-        Rack newRack = new Rack();
-        if (rackRepository.findByNumber(rack).getId() < 0) {
-            newRack.setNumber(rack);
-            rackRepository.save(newRack);
-        } else {
-            newRack = rackRepository.findByNumber(rack);
-        }
+        Area newArea = areaRepository.findByName(Area.AreaName.valueOf(area))
+                .orElseGet(() -> {
+                    Area areaEntity = new Area();
+                    areaEntity.setName(Area.AreaName.valueOf(area));
+                    return areaRepository.save(areaEntity);
+                });
 
-        Section newSection = new Section();
-        if (sectionRepository.findByNumber(section).getId() < 0) {
-            newSection.setNumber(rack);
-            sectionRepository.save(newSection);
-        } else {
-            newSection = sectionRepository.findByNumber(rack);
-        }
+        Rack newRack = rackRepository.findByNumber(rackNumber)
+                .orElseGet(() -> {
+                    Rack rackEntity = new Rack();
+                    rackEntity.setNumber(rackNumber);
+                    return rackRepository.save(rackEntity);
+                });
 
-        Shelve newShelve = new Shelve();
-        if (shelveRepository.findByNumber(shelve).getId() < 0) {
-            newShelve.setNumber(rack);
-            shelveRepository.save(newShelve);
-        } else {
-            newShelve = shelveRepository.findByNumber(rack);
-        }
+        Section newSection = sectionRepository.findByNumber(sectionNumber)
+                .orElseGet(() -> {
+                    Section sectionEntity = new Section();
+                    sectionEntity.setNumber(sectionNumber);
+                    return sectionRepository.save(sectionEntity);
+                });
+
+        Shelve newShelve = shelveRepository.findByNumber(shelveNumber)
+                .orElseGet(() -> {
+                    Shelve shelveEntity = new Shelve();
+                    shelveEntity.setNumber(shelveNumber);
+                    return shelveRepository.save(shelveEntity);
+                });
+
         Storage newStorage = new Storage();
         newStorage.setArea(newArea);
         newStorage.setRack(newRack);
@@ -63,9 +61,10 @@ public class StorageService {
         newStorage.setShelve(newShelve);
 
         Storage savedStorage = storageRepository.save(newStorage);
+
         return StorageDto.builder()
                 .id(savedStorage.getId())
-                .area(savedStorage.getArea().getName())
+                .area(savedStorage.getArea().getName().getValue())
                 .rack(savedStorage.getRack().getNumber())
                 .section(savedStorage.getSection().getNumber())
                 .shelve(savedStorage.getShelve().getNumber())

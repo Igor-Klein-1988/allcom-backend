@@ -36,8 +36,10 @@ public class ProductService {
         return products.map(converters::fromProductToProductDto);
     }
 
-    public ProductDto findBiId(Long id) {
-        return converters.fromProductToProductDto(productRepository.findById(id).get());
+    public ProductDto findById(Long id) {
+        return converters.fromProductToProductDto(productRepository.findById(id)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product whith id: "
+                        + id + " did not found")));
     }
 
     @Transactional
@@ -47,6 +49,7 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setWeight(request.getWeight());
         product.setCategory(request.getCategory());
+        product.setState(Product.StateName.Draft);
         product.setCreateAt(LocalDateTime.now());
         product.setUpdateAt(LocalDateTime.now());
 
@@ -80,6 +83,7 @@ public class ProductService {
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() ->
                 new RestException(HttpStatus.NOT_FOUND, "The category is not found"));
         product.setCategory(category);
+        product.setState(Product.StateName.Draft);
         product.setUpdateAt(LocalDateTime.now());
 
         List<ProductImage> imagesForRemove = images.stream()
@@ -117,6 +121,7 @@ public class ProductService {
                 .name(updatedProduct.getName())
                 .description(updatedProduct.getDescription())
                 .categoryId(updatedProduct.getCategory().getId())
+                .state(updatedProduct.getState().getValue())
                 .photoLinks(imagesNew.stream().map(ProductImage::getLink).toList())
                 .build();
     }
