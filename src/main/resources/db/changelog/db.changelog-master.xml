@@ -2,15 +2,16 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
         xmlns:pro="http://www.liquibase.org/xml/ns/pro"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-    <include file="changes/202401031336-account-table.xml" relativeToChangelogFile="true"/>
-    <include file="changes/202401031346-insert-users-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401031336-adress-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401031338-account-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202401031356-insert-adress-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202401041348-insert-users-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401111215-categories-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202401111225-insert-categories-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401111310-products-table.xml" relativeToChangelogFile="true"/>
@@ -27,4 +28,6 @@
     <include file="changes/202401252120-insert-shelves-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401252110-storage-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202401252120-insert-storage-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+
+
 </databaseChangeLog>

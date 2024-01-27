@@ -2,34 +2,11 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-
-    <!-- ChangeSet for Address -->
-    <changeSet id="2024-01-03-13:40-create-address-table" author="VolodymyrMaiorov">
-        <createTable tableName="address">
-            <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="post_index" type="varchar(255)">
-                <!-- Add constraints if needed -->
-            </column>
-            <column name="city" type="varchar(255)">
-                <!-- Add constraints if needed -->
-            </column>
-            <column name="street" type="varchar(255)">
-                <!-- Add constraints if needed -->
-            </column>
-            <column name="house_number" type="varchar(255)">
-                <!-- Add constraints if needed -->
-            </column>
-            <column name="user_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+                   logicalFilePath="02-account-table">
 
     <!-- ChangeSet for User -->
-    <changeSet id="2024-01-03-13:36-create-account-table" author="VolodymyrMaiorov">
+    <changeSet id="2024-01-03-13:38-create-account-table" author="VolodymyrMaiorov">
         <createTable tableName="account">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -46,17 +23,13 @@
             <column name="hash_password" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone_number" type="varchar(20)">
-                <!-- Add constraints if needed -->
+            <column name="phone_number" type="varchar(13)">
             </column>
             <column name="company_name" type="varchar(255)">
-                <!-- Add constraints if needed -->
             </column>
-            <column name="inn" type="varchar(13)">
-                <!-- Add constraints if needed -->
+            <column name="tax_number" type="varchar(13)">
             </column>
             <column name="position" type="varchar(100)">
-                <!-- Add constraints if needed -->
             </column>
             <column name="role" type="varchar(50)">
                 <constraints nullable="false"/>
