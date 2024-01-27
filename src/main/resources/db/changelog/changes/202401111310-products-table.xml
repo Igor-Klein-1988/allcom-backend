@@ -20,7 +20,7 @@
             <column name="category_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_products_categories" references="categories(id)"/>
             </column>
-            <column name="state" type="ENUM('Draft', 'InStock', 'Sold')">
+            <column name="state" type="ENUM('DRAFT', 'IN_STOCK', 'SOLD', 'PENDING_PAYMENT')">
             </column>
             <column name="storage_id" type="bigint">
             </column>

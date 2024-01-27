@@ -27,7 +27,7 @@ public class ProductDto {
     @Schema(description = "Category id of product", example = "3")
     private Long categoryId;
 
-    @Schema(description = "State of product", example = "3")
+    @Schema(description = "State of product", example = "DRAFT")
     private String state;
 
     @Schema(description = "Images", example = "[]")
