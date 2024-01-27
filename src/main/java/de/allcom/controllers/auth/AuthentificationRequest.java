@@ -17,13 +17,14 @@ public class AuthentificationRequest {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email address must be in a valid format (e.g., user@example.com)")
-    @Schema(description = "User's email", example = "alex-schmidt@mail.com")
+    @Schema(description = "User's email", example = "james-smith@mail.com")
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "Password must be at least 8 characters long and include letters, numbers,"
-                    + " and special characters")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+            message = "Password must be at least 8 characters long and include at least one uppercase letter, "
+                    + "numbers, and special characters")
     @Schema(description = "User's password", example = "Qwerty007!")
+
     private String password;
 }
