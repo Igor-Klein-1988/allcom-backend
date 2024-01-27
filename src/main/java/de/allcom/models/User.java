@@ -1,6 +1,6 @@
 package de.allcom.models;
 
-import de.allcom.models.token.Token;<<<<<<<HEAD
+import de.allcom.models.token.Token;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,23 +13,21 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;=======
-import jakarta.persistence.*;
-
-import java.util.Collection;>>>>>>>25f d9f5(add jwt,modify entity User,create entity Role,Address,Token.Modify liquidbase files)
 import java.util.List;
 import java.util.Objects;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
-import org.springframework.security.core.GrantedAuthority;<<<<<<<HEAD
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-@Setter @Getter=======
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-@Data >>>>>>>25f d9f5(add jwt,modify entity User,create entity Role,Address,Token.Modify liquidbase files)
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -53,22 +51,17 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String hashPassword;
 
-    <<<<<<<HEAD @Column(nullable=false,length=13)
+    @Column(length = 13)
+    private String taxNumber;
+
+    @Column(nullable = false, length = 20)
     private String phoneNumber;
 
     @Column
     private String companyName;
 
     @Column(length = 13)
-    private String taxNumber;=======
-    @Column(nullable = false, length = 20)
-    private String phoneNumber;
-
-    @Column(length = 255)
-    private String companyName;
-
-    @Column(length = 13)
-    private String inn;>>>>>>>25fd9f5 (add jwt, modify entity User, create entity Role,Address, Token. Modify liquidbase files)
+    private String inn;
 
     @Column(length = 100)
     private String position;

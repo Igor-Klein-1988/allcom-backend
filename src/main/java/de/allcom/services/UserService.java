@@ -25,7 +25,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public Page<UserAddressResponseDto> getAll(PageRequest pageRequest) {
-        Page<Object[]> results  = userRepository.findAllUsersWithAddresses(pageRequest);
+        Page<Object[]> results = userRepository.findAllUsersWithAddresses(pageRequest);
         return results.map(result -> UserAddressResponseDto.from((User) result[0], (Address) result[1]));
     }
 

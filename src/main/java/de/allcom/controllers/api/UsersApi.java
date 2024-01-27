@@ -102,4 +102,5 @@ public interface UsersApi {
                         @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))
         })
         UserAddressResponseDto changeStatus(@PathVariable Long userId, @RequestParam String status);
+
 }

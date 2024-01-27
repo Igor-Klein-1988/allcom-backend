@@ -1,7 +1,9 @@
 package de.allcom.config.security;
 
+import de.allcom.exceptions.RestException;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.services.auth.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

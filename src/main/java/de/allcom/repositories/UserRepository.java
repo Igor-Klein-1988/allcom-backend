@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "SELECT u, a FROM User u LEFT JOIN Address a ON u.id = a.user.id",
-            countQuery = "SELECT COUNT(u) FROM User u LEFT JOIN Address a ON u.id = a.user.id")
+    @Query(value = "SELECT u, a FROM User u LEFT JOIN Address a ON u.id = a.user.id", countQuery = "SELECT COUNT(u) FROM User u LEFT JOIN Address a ON u.id = a.user.id")
     Page<Object[]> findAllUsersWithAddresses(Pageable pageable);
 
     Optional<Object> findByEmail(String userEmail);
