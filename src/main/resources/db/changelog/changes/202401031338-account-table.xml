@@ -34,6 +34,13 @@
             <column name="role" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="update_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
 
             <!-- Add foreign key -->
             <column name="user_id" type="bigint">
