@@ -1,8 +1,8 @@
 package de.allcom.controllers.api;
 
-import de.allcom.dto.product.CreateProductRequestDto;
+import de.allcom.dto.forms.ProductResponseValues;
 import de.allcom.dto.product.ProductDto;
-import de.allcom.dto.product.UpdateProductRequestDto;
+import de.allcom.dto.product.SaveProductRequestDto;
 import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,20 +37,16 @@ public interface ProductApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
-    ProductDto createProduct(@ModelAttribute @Valid CreateProductRequestDto request);
+    ProductResponseValues saveProduct(@ModelAttribute @Valid SaveProductRequestDto request);
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    Page<ProductDto> getAllProducts(
+    Page<ProductResponseValues> getAllProducts(
             @RequestParam int page,
             @RequestParam int size);
 
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/{id}")
-    ProductDto updateProduct(@ModelAttribute @Valid UpdateProductRequestDto request, @PathVariable Long id);
-
 
     @GetMapping("/product/{id}")
-    ProductDto findById(@PathVariable Long id);
+    ProductResponseValues findById(@PathVariable Long id);
 
 }
