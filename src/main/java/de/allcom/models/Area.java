@@ -18,7 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "storage_areas")
 public class Area {
-    public enum Areas {
+    public enum Name {
         L, R
     }
 
@@ -28,7 +28,7 @@ public class Area {
 
     @Column(length = 1)
     @Enumerated(EnumType.STRING)
-    private Areas name;
+    private Name name;
 
     @OneToMany(mappedBy = "area")
     private List<Storage> storages;

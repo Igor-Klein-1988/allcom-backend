@@ -24,6 +24,12 @@ public class ProductDto {
     @Schema(description = "Description of products", example = "Good")
     private String description;
 
+    @Schema(description = "Weight of product", example = "2.5")
+    private Float weight;
+
+    @Schema(description = "Color of product", example = "Black")
+    private String color;
+
     @Schema(description = "Category id of product", example = "3")
     private Long categoryId;
 

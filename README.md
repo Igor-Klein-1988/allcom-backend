@@ -22,3 +22,13 @@ Run the following command to create a pre-commit file in your .git/hooks directo
 ```bash
 echo '#!/bin/sh\nmvn checkstyle:check pmd:check\nif [ $? -ne 0 ]; then\n  echo "Checkstyle violations found. Commit aborted."\n  exit 1\nfi' > .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 ```
+
+#### Setting for photos uploading
+
+Please fill next fields in application.properties file with your path name.
+It is path for upload, update, find photos of product.
+
+```bash
+#Path for photos:
+photo.upload.path=
+```

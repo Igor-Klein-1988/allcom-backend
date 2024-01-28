@@ -41,10 +41,11 @@ public class UpdateProductRequestDto {
     @Schema(description = "Category id", example = "1")
     private Long categoryId;
 
+    @Schema(description = "Links of products photos for delete", example = "/path/path1/photo1.jpeg")
+    private List<String> imageLinks;
+
     @Schema(description = "Photos of the product, jpeg", example = "photo1.jpeg")
     private List<MultipartFile> images;
 
-    @Schema(description = "Links of products photos", example = "/path/path1/photo1.jpeg")
-    private List<String> imageLinks;
 
 }

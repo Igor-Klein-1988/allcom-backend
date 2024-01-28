@@ -1,6 +1,5 @@
 package de.allcom.dto.product;
 
-import de.allcom.models.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -36,8 +35,8 @@ public class CreateProductRequestDto {
     @Size(min = 3, max = 10, message = "Color of the product must be between 3 and 50 characters")
     private String color;
 
-    @Schema(description = "Category", example = "TV")
-    private Category category;
+    @Schema(description = "Category", example = "1")
+    private Long categoryId;
 
     @Schema(description = "Photos of the product, jpeg", example = "foto1.jpeg")
     private List<MultipartFile> images;

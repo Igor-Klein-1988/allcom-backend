@@ -28,10 +28,10 @@ public class StorageService {
     @Transactional
     public StorageDto savePlace(String area, Integer rackNumber, Integer sectionNumber, Integer shelveNumber) {
 
-        Area newArea = areaRepository.findByName(Area.Areas.valueOf(area))
+        Area newArea = areaRepository.findByName(Area.Name.valueOf(area))
                 .orElseGet(() -> {
                     Area areaEntity = new Area();
-                    areaEntity.setName(Area.Areas.valueOf(area));
+                    areaEntity.setName(Area.Name.valueOf(area));
                     return areaRepository.save(areaEntity);
                 });
 

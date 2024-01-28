@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AreaRepository extends JpaRepository<Area, Long> {
-    Optional<Area> findByName(Area.Areas name);
+    Optional<Area> findByName(Area.Name name);
 }

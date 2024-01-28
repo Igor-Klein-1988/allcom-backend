@@ -31,7 +31,9 @@ public interface ProductApi {
             @ApiResponse(responseCode = "201", description = "Product added", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class)))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
     })
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,8 +47,8 @@ public interface ProductApi {
             @RequestParam int size);
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/{productId}")
-    ProductDto updateProduct(@ModelAttribute @Valid UpdateProductRequestDto request, @PathVariable Long productId);
+    @PutMapping("/{id}")
+    ProductDto updateProduct(@ModelAttribute @Valid UpdateProductRequestDto request, @PathVariable Long id);
 
 
     @GetMapping("/product/{id}")

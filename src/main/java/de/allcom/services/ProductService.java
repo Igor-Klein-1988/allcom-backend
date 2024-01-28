@@ -48,7 +48,9 @@ public class ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setWeight(request.getWeight());
-        product.setCategory(request.getCategory());
+        product.setCategory(categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                        "Category with id: " + request.getCategoryId() + " did not found")));
         product.setState(Product.State.DRAFT);
         product.setCreateAt(LocalDateTime.now());
         product.setUpdateAt(LocalDateTime.now());
@@ -64,7 +66,15 @@ public class ProductService {
 
         savedProduct = productRepository.save(savedProduct);
 
-        return converters.fromProductToProductDto(savedProduct);
+        return ProductDto.builder()
+                .id(savedProduct.getId())
+                .name(savedProduct.getName())
+                .description(savedProduct.getDescription())
+                .weight(savedProduct.getWeight())
+                .color(savedProduct.getColor())
+                .categoryId(savedProduct.getCategory().getId())
+                .photoLinks(savedProduct.getImages().stream().map(ProductImage::getLink).toList())
+                .build();
     }
 
     @Transactional
@@ -112,7 +122,8 @@ public class ProductService {
         productRepository.save(product);
 
         Product updatedProduct = productRepository.findById(request.getId())
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product did not found in the DB"));
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                        "Product did not found in the DB"));
 
         List<ProductImage> imagesNew = productImageService.getProductImages(updatedProduct);
 
