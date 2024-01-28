@@ -1,9 +1,14 @@
 package de.allcom.services.auth;
 
+import de.allcom.exceptions.RestException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -12,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -65,13 +71,24 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (SignatureException e) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, "Invalid JWT signature");
+        } catch (MalformedJwtException e) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, "Invalid JWT token");
+        } catch (UnsupportedJwtException e) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, "Unsupported JWT token");
+        } catch (ExpiredJwtException e) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, "Expired JWT token");
+        } catch (IllegalArgumentException e) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, "JWT claims string is empty");
+        }
     }
 
     private Key getSignInKey() {

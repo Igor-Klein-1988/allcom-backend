@@ -7,6 +7,7 @@ import de.allcom.models.Address;
 import de.allcom.models.User;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.UserRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class UserService {
         existingUser.setCompanyName(request.getCompanyName());
         existingUser.setPosition(request.getPosition());
         existingUser.setTaxNumber(request.getTaxNumber());
+        existingUser.setUpdateAt(LocalDateTime.now());
 
         User savedUser = userRepository.save(existingUser);
 

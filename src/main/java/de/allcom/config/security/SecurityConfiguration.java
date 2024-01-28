@@ -43,7 +43,10 @@ public class SecurityConfiguration {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html",
+            "/api/categories/**",
+            "/api/products/**"};
+    //TODO whitelist and security endpoints
     private final JwrAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -54,7 +57,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers("/api/auth/changePassword").hasAnyAuthority(ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
+                        .requestMatchers("/api/auth/changePassword").hasAnyAuthority(
+                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
                         .requestMatchers("/api/users/getAll").hasAuthority(ADMIN.name())
                         .requestMatchers("/api/users/updateUser/**").hasAuthority(ADMIN.name())
                         .requestMatchers("/api/users/getUserProfile").hasAnyAuthority(
