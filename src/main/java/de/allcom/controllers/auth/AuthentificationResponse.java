@@ -30,7 +30,8 @@ public class AuthentificationResponse {
     @Schema(description = "User's email", example = "alex-schmidt@mail.com")
     private String email;
 
-    @Schema(description = "User token", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0I")
+    @Schema(description = "User token",
+            example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0I")
     private String token;
 
     @Override

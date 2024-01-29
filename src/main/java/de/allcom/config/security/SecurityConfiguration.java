@@ -27,59 +27,59 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @ComponentScan("de.allcom.config.security")
 public class SecurityConfiguration {
 
-        private static final String[] WHITE_LIST_URL = {
-                        "/",
-                        "/api/auth/login",
-                        "/api/auth/refresh",
-                        "/api/auth/logout",
-                        "/api/auth/register",
-                        "/api-docs",
-                        "/api-docs/**",
-                        "/v2/api-docs",
-                        "/v3/api-docs",
-                        "/v3/api-docs/**",
-                        "/swagger-resources",
-                        "/swagger-resources/**",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui/**",
-                        "/webjars/**",
-                        "/swagger-ui.html",
-                        "/api/categories/**",
-                        "/api/products",
-                        "/api/products/**" };
-        // TODO whitelist and security endpoints
-        private final JwrAuthenticationFilter jwtAuthenticationFilter;
-        private final AuthenticationProvider authenticationProvider;
-        private final LogoutHandler logoutHandler;
+    private static final String[] WHITE_LIST_URL = {
+            "/",
+            "/api/auth/login",
+            "/api/auth/refresh",
+            "/api/auth/logout",
+            "/api/auth/register",
+            "/api-docs",
+            "/api-docs/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html",
+            "/api/categories/**",
+            "/api/products",
+            "/api/products/**"};
+    // TODO whitelist and security endpoints
+    private final JwrAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final LogoutHandler logoutHandler;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(AbstractHttpConfigurer::disable)
-                                .authorizeHttpRequests((authorize) -> authorize
-                                                .requestMatchers(WHITE_LIST_URL).permitAll()
-                                                .requestMatchers("/api/auth/changePassword").hasAnyAuthority(
-                                                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
-                                                .requestMatchers("/api/users/getAll").hasAuthority(ADMIN.name())
-                                                .requestMatchers("/api/users/updateUser/**").hasAuthority(ADMIN.name())
-                                                .requestMatchers("/api/users/getUserProfile").hasAnyAuthority(
-                                                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
-                                                .anyRequest().authenticated())
-                                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                                .authenticationProvider(authenticationProvider)
-                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                                .logout(logout -> logout.logoutUrl("/api/auth/logout")
-                                                .addLogoutHandler(logoutHandler)
-                                                .logoutSuccessHandler((request, response, authentication) -> {
-                                                        SecurityContextHolder.clearContext();
-                                                        SecurityExceptionHandlers.LOGOUT_SUCCESS_HANDLER
-                                                                        .onLogoutSuccess(request, response,
-                                                                                        authentication);
-                                                }))
-                                .exceptionHandling(exceptionHandling -> exceptionHandling
-                                                .authenticationEntryPoint(SecurityExceptionHandlers.ENTRY_POINT)
-                                                .accessDeniedHandler(SecurityExceptionHandlers.ACCESS_DENIED_HANDLER));
-                return http.build();
-        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(WHITE_LIST_URL).permitAll()
+                        .requestMatchers("/api/auth/changePassword").hasAnyAuthority(
+                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
+                        .requestMatchers("/api/users/getAll").hasAuthority(ADMIN.name())
+                        .requestMatchers("/api/users/updateUser/**").hasAuthority(ADMIN.name())
+                        .requestMatchers("/api/users/getUserProfile").hasAnyAuthority(
+                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout.logoutUrl("/api/auth/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            SecurityContextHolder.clearContext();
+                            SecurityExceptionHandlers.LOGOUT_SUCCESS_HANDLER
+                                    .onLogoutSuccess(request, response,
+                                            authentication);
+                        }))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(SecurityExceptionHandlers.ENTRY_POINT)
+                        .accessDeniedHandler(SecurityExceptionHandlers.ACCESS_DENIED_HANDLER));
+        return http.build();
+    }
 }

@@ -1,6 +1,5 @@
 package de.allcom.config.security;
 
-import de.allcom.exceptions.RestException;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.services.auth.JwtService;
 import jakarta.servlet.FilterChain;
