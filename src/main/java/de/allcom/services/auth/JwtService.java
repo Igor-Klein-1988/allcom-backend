@@ -1,9 +1,21 @@
 package de.allcom.services.auth;
 
+<<<<<<< HEAD
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+=======
+import de.allcom.exceptions.RestException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+>>>>>>> 6b9016c48f5a19d4ad26a182adf956ec34d199c2
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
