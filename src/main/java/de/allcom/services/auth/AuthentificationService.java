@@ -14,6 +14,8 @@ import de.allcom.models.token.TokenType;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
+import java.security.Principal;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +23,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +46,7 @@ public class AuthentificationService {
             throw new RestException(HttpStatus.CONFLICT,
                     "User with email " + request.getEmail() + " already exists!");
         }
+        LocalDateTime now = LocalDateTime.now();
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -56,6 +57,8 @@ public class AuthentificationService {
                 .hashPassword(passwordEncoder.encode(request.getPassword()))
                 .taxNumber(request.getTaxNumber())
                 .role(Role.CLIENT)
+                .createAt(now)
+                .updateAt(now)
                 .build();
 
         var savedUser = userRepository.save(user);

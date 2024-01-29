@@ -14,7 +14,7 @@
             <column name="last_name" value="Smith"/>
             <column name="email" value="james-smith@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491757778899"/>
+            <column name="phone_number" value="491757778899"/>
             <column name="role" value="ADMIN"/>
         </insert>
         <insert tableName="account">
@@ -23,7 +23,7 @@
             <column name="last_name" value="Johnson"/>
             <column name="email" value="maryJohnson@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491151118800"/>
+            <column name="phone_number" value="491151118800"/>
             <column name="role" value="ADMIN"/>
         </insert>
         <insert tableName="account">
@@ -32,7 +32,7 @@
             <column name="last_name" value="Williams"/>
             <column name="email" value="robertwilliams@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491753287491"/>
+            <column name="phone_number" value="491753287491"/>
             <column name="role" value="STOREKEEPER"/>
         </insert>
         <insert tableName="account">
@@ -41,7 +41,7 @@
             <column name="last_name" value="Brown"/>
             <column name="email" value="patricia-brown@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491765253418"/>
+            <column name="phone_number" value="491765253418"/>
             <column name="role" value="STOREKEEPER"/>
         </insert>
         <insert tableName="account">
@@ -50,7 +50,7 @@
             <column name="last_name" value="Moore"/>
             <column name="email" value="michael-moore@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491558746512"/>
+            <column name="phone_number" value="491558746512"/>
             <column name="role" value="CLIENT"/>
             <column name="company_name" value="Schnee GmBH"/>
             <column name="tax_number" value="6565161651"/>
@@ -62,7 +62,7 @@
             <column name="last_name" value="Johnson"/>
             <column name="email" value="emma-johnson@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491354482314"/>
+            <column name="phone_number" value="491354482314"/>
             <column name="role" value="CLIENT"/>
             <column name="company_name" value="Regenboden GmBH"/>
             <column name="tax_number" value="8491689484"/>
@@ -74,7 +74,7 @@
             <column name="last_name" value="Smith"/>
             <column name="email" value="william-smith@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491257271819"/>
+            <column name="phone_number" value="491257271819"/>
             <column name="role" value="CLIENT"/>
             <column name="company_name" value="Eulen GmBH"/>
             <column name="tax_number" value="98489484654"/>
@@ -86,7 +86,7 @@
             <column name="last_name" value="Miller"/>
             <column name="email" value="olivia-miller@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491756343457"/>
+            <column name="phone_number" value="491756343457"/>
             <column name="role" value="CLIENT"/>
         </insert>
         <insert tableName="account">
@@ -95,7 +95,7 @@
             <column name="last_name" value="Taylor"/>
             <column name="email" value="liam-taylor@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491753418911"/>
+            <column name="phone_number" value="491753418911"/>
             <column name="role" value="CLIENT"/>
         </insert>
         <insert tableName="account">
@@ -104,7 +104,7 @@
             <column name="last_name" value="Anderson"/>
             <column name="email" value="ava-anderson@mail.com"/>
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
-            <column name="phone_number" value="+491454472209"/>
+            <column name="phone_number" value="491454472209"/>
             <column name="role" value="CLIENT"/>
         </insert>
     </changeSet>

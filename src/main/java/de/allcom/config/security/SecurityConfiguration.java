@@ -1,5 +1,6 @@
 package de.allcom.config.security;
 
+import de.allcom.exceptions.SecurityExceptionHandlers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -43,7 +44,11 @@ public class SecurityConfiguration {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html",
+            "/api/categories/**",
+            "/api/products",
+            "/api/products/**"};
+    //TODO whitelist and security endpoints
     private final JwrAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -54,7 +59,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers("/api/auth/changePassword").hasAnyAuthority(ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
+                        .requestMatchers("/api/auth/changePassword").hasAnyAuthority(
+                                ADMIN.name(), CLIENT.name(), STOREKEEPER.name())
                         .requestMatchers("/api/users/getAll").hasAuthority(ADMIN.name())
                         .requestMatchers("/api/users/updateUser/**").hasAuthority(ADMIN.name())
                         .requestMatchers("/api/users/getUserProfile").hasAnyAuthority(
@@ -66,9 +72,15 @@ public class SecurityConfiguration {
                 .logout(logout ->
                         logout.logoutUrl("/api/auth/logout")
                                 .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler((request, response, authentication) ->
-                                        SecurityContextHolder.clearContext())
-                );
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    SecurityContextHolder.clearContext();
+                                    SecurityExceptionHandlers.LOGOUT_SUCCESS_HANDLER
+                                            .onLogoutSuccess(request, response, authentication);
+                                })
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(SecurityExceptionHandlers.ENTRY_POINT)
+                        .accessDeniedHandler(SecurityExceptionHandlers.ACCESS_DENIED_HANDLER));
         return http.build();
     }
 }

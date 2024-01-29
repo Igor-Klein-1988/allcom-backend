@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -66,7 +67,16 @@ public class User implements UserDetails {
     private Role role;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isChecked;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private boolean isBlocked;
+
+    @Column(nullable = false)
+    private LocalDateTime updateAt;
+
+    @Column(nullable = false)
+    private LocalDateTime createAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Token> tokens;
@@ -113,7 +123,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isBlocked;
+        return !isChecked;
     }
 
     @Override
@@ -123,6 +133,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !isBlocked;
     }
 }

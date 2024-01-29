@@ -7,12 +7,11 @@ import de.allcom.models.Address;
 import de.allcom.models.User;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,20 +24,9 @@ public class UserService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List<UserAddressResponseDto> getAll(int limit, int skip) {
-        Pageable pageable = PageRequest.of(skip, limit);
-        List<Object[]> results  = userRepository.findAllUsersWithAddresses(pageable);
-
-        List<UserAddressResponseDto> dtos = new ArrayList<>();
-
-        for (Object[] result : results) {
-            User user = (User) result[0];
-            Address address = (Address) result[1];
-            UserAddressResponseDto dto = UserAddressResponseDto.from(user, address);
-            dtos.add(dto);
-        }
-
-        return dtos;
+    public Page<UserAddressResponseDto> getAll(PageRequest pageRequest) {
+        Page<Object[]> results  = userRepository.findAllUsersWithAddresses(pageRequest);
+        return results.map(result -> UserAddressResponseDto.from((User) result[0], (Address) result[1]));
     }
 
     public UserAddressResponseDto getUserProfile() {
@@ -58,6 +46,9 @@ public class UserService {
         existingUser.setCompanyName(request.getCompanyName());
         existingUser.setPosition(request.getPosition());
         existingUser.setTaxNumber(request.getTaxNumber());
+        existingUser.setChecked(request.isChecked());
+        existingUser.setBlocked(request.isBlocked());
+        existingUser.setUpdateAt(LocalDateTime.now());
 
         User savedUser = userRepository.save(existingUser);
 

@@ -16,7 +16,7 @@ public class UserAddressResponseDto {
     private String lastName;
     @Schema(description = "User's email", example = "alex-schmidt-new-mail@mail.com")
     private String email;
-    @Schema(description = "User's phone number", example = "+490123456789")
+    @Schema(description = "User's phone number", example = "490123456789")
     private String phoneNumber;
     @Schema(description = "Company name", example = "Allcom GmbH & Co. KG")
     private String companyName;
@@ -32,6 +32,10 @@ public class UserAddressResponseDto {
     private String street;
     @Schema(description = "Company's house number", example = "1")
     private String houseNumber;
+    @Schema(description = "User's role", example = "ADMIN, CLIENT, STORKEEPER")
+    private String role;
+    @Schema(description = "User checked status", example = "false")
+    private boolean isChecked;
     @Schema(description = "User blocked status", example = "false")
     private boolean isBlocked;
 
@@ -49,6 +53,8 @@ public class UserAddressResponseDto {
         dto.setCity(address.getCity());
         dto.setStreet(address.getStreet());
         dto.setHouseNumber(address.getHouseNumber());
+        dto.setRole(user.getRole().name());
+        dto.setChecked(user.isChecked());
         dto.setBlocked(user.isBlocked());
         return dto;
     }

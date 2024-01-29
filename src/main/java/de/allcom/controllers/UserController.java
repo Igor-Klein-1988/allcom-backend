@@ -4,8 +4,9 @@ import de.allcom.controllers.api.UsersApi;
 import de.allcom.dto.user.UserAddressRegistrationDto;
 import de.allcom.dto.user.UserAddressResponseDto;
 import de.allcom.services.UserService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -14,8 +15,9 @@ public class UserController implements UsersApi {
     private final UserService userService;
 
     @Override
-    public List<UserAddressResponseDto> getAll(int limit, int skip) {
-        return userService.getAll(limit, skip);
+    public Page<UserAddressResponseDto> getAll(int limit, int skip) {
+        PageRequest pageRequest = PageRequest.of(skip, limit);
+        return userService.getAll(pageRequest);
     }
 
     @Override

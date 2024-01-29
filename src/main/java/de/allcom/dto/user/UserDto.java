@@ -25,16 +25,12 @@ public class UserDto {
     @Schema(description = "User's email", example = "alex-schmidt@mail.com")
     private String email;
 
-    @Schema(description = "User blocked status", example = "false")
-    private boolean isBlocked;
-
     public static UserDto from(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .isBlocked(user.isBlocked())
                 .build();
     }
 }

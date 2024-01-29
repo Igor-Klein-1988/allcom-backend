@@ -65,6 +65,9 @@ public class UserAddressRegistrationDto {
     @Schema(description = "Company's house number", example = "1")
     private String houseNumber;
 
+    @Schema(description = "User checked status", example = "false")
+    private boolean isChecked;
+
     @Schema(description = "User blocked status", example = "false")
     private boolean isBlocked;
 }
