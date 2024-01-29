@@ -1,9 +1,8 @@
 package de.allcom.controllers;
 
 import de.allcom.controllers.api.ProductApi;
-import de.allcom.dto.product.CreateProductRequestDto;
-import de.allcom.dto.product.ProductDto;
-import de.allcom.dto.product.UpdateProductRequestDto;
+import de.allcom.dto.forms.ProductResponseValues;
+import de.allcom.dto.product.SaveProductRequestDto;
 import de.allcom.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,18 +16,18 @@ public class ProductController implements ProductApi {
     private final ProductService productService;
 
     @Override
-    public Page<ProductDto> getAllProducts(int page, int size) {
+    public ProductResponseValues saveProduct(SaveProductRequestDto productRequestDto) {
+        return productService.saveProduct(productRequestDto);
+    }
+
+    @Override
+    public Page<ProductResponseValues> getAllProducts(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return productService.getAllProducts(pageRequest);
     }
 
     @Override
-    public ProductDto updateProduct(UpdateProductRequestDto request, Long productId) {
-        return productService.updateProduct(request, productId);
-    }
-
-    @Override
-    public ProductDto createProduct(CreateProductRequestDto request) {
-        return productService.createProductWithPhotos(request);
+    public ProductResponseValues findById(Long id) {
+        return productService.findById(id);
     }
 }

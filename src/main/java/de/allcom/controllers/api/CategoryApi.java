@@ -3,7 +3,6 @@ package de.allcom.controllers.api;
 import de.allcom.dto.StandardResponseDto;
 import de.allcom.dto.category.CategoryByLanguageDto;
 import de.allcom.dto.category.CategoryDto;
-import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,31 +28,69 @@ public interface CategoryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categories found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
-            @ApiResponse(responseCode = "400", description = "Validation error", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
-            @ApiResponse(responseCode = "404", description = "Categories is not found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
-            @ApiResponse(responseCode = "409", description = "User with this email already exists", content =
+            @ApiResponse(responseCode = "400", description = "Your request of categories is wrong", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Categories does not found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
     )
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/all")
     List<CategoryDto> findCategoriesWithAllNames();
 
+    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categories found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
+            @ApiResponse(responseCode = "400", description = "Your request of categories is wrong", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Categories does not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/all/{language}")
     List<CategoryByLanguageDto> findCategoriesByLanguage(
             @PathVariable @Valid @Size(min = QUANTITY_OF_DIGITS_FOR_LANGUAGE,
                     max = QUANTITY_OF_DIGITS_FOR_LANGUAGE) String language);
 
+    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categories found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
+            @ApiResponse(responseCode = "400", description = "Your request of categories is wrong", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Categories does not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/one/{id}")
     CategoryDto findCategoryById(@PathVariable Long id);
 
+    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categories found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
+            @ApiResponse(responseCode = "400", description = "Your request of categories is wrong", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Categories does not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}/{language}")
     CategoryByLanguageDto findCategoryByLanguage(
             @PathVariable Long id,
             @PathVariable @Valid @Size(min = QUANTITY_OF_DIGITS_FOR_LANGUAGE,
                     max = QUANTITY_OF_DIGITS_FOR_LANGUAGE) String language);
+
+    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categories found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
+            @ApiResponse(responseCode = "400", description = "Your request of categories is wrong", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Categories does not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("allByParent/{id}")
+    List<CategoryDto> findCategoriesByParentId(@PathVariable Long id);
 }

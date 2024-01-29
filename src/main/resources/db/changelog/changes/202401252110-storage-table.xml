@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-01-25-21:10-storage-table.xml" author="DariaLavrushko">
+        <sql>
+            create table storage
+            (
+                id         bigint auto_increment
+                    primary key,
+                area_id    bigint null,
+                rack_id    bigint null,
+                section_id bigint null,
+                line_id    bigint null,
+                constraint FK1o94kreblcce4e3tpiyusbg28
+                    foreign key (line_id) references storage_shelves (id),
+                constraint FKf64wcajm8ejjex4i2mmftvj1i
+                    foreign key (section_id) references storage_sections (id),
+                constraint FKo9s1flrfl79wx40nqehvd3vm
+                    foreign key (rack_id) references storage_racks (id),
+                constraint FKoxwlf3mufb90l70finkhlhelv
+                    foreign key (area_id) references storage_areas (id)
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

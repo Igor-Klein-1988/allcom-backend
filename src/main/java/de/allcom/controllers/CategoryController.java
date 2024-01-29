@@ -33,4 +33,9 @@ public class CategoryController implements CategoryApi {
     public CategoryByLanguageDto findCategoryByLanguage(Long id, String language) {
         return categoryService.findCategoryByLanguage(id, language);
     }
+
+    @Override
+    public List<CategoryDto> findCategoriesByParentId(Long id) {
+        return categoryService.findCategoriesByParentId(id);
+    }
 }

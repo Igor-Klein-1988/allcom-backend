@@ -1,6 +1,5 @@
 package de.allcom.dto.product;
 
-import de.allcom.models.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,7 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @Builder
 @Schema(name = "Add Product", description = "Data for add new product")
-public class CreateProductRequestDto {
+public class SaveProductRequestDto {
+
+    @Schema(description = "Id of the product", example = "1")
+    private Long id;
 
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name of the product must be between 3 and 50 characters")
@@ -36,8 +38,14 @@ public class CreateProductRequestDto {
     @Size(min = 3, max = 10, message = "Color of the product must be between 3 and 50 characters")
     private String color;
 
-    @Schema(description = "Category", example = "TV")
-    private Category category;
+    @Schema(description = "Category id", example = "1")
+    private Long categoryId;
+
+    @Schema(description = "Storage id", example = "1")
+    private Long storageId;
+
+    @Schema(description = "Links of products photos for delete", example = "/path/path1/photo1.jpeg")
+    private List<String> imageLinks;
 
     @Schema(description = "Photos of the product, jpeg", example = "foto1.jpeg")
     private List<MultipartFile> images;

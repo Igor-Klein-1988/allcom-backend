@@ -1,8 +1,8 @@
 package de.allcom.controllers.api;
 
-import de.allcom.dto.product.CreateProductRequestDto;
+import de.allcom.dto.forms.ProductResponseValues;
 import de.allcom.dto.product.ProductDto;
-import de.allcom.dto.product.UpdateProductRequestDto;
+import de.allcom.dto.product.SaveProductRequestDto;
 import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,21 +30,36 @@ public interface ProductApi {
             @ApiResponse(responseCode = "201", description = "Product added", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class)))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
     })
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
-    ProductDto createProduct(@ModelAttribute @Valid CreateProductRequestDto request);
+    ProductResponseValues saveProduct(@ModelAttribute @Valid SaveProductRequestDto request);
 
+    @Operation(summary = "Product add", description = "Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+    })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    Page<ProductDto> getAllProducts(
+    Page<ProductResponseValues> getAllProducts(
             @RequestParam int page,
             @RequestParam int size);
 
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/{productId}")
-    ProductDto updateProduct(@ModelAttribute @Valid UpdateProductRequestDto request, @PathVariable Long productId);
+    @Operation(summary = "Product add", description = "Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+    })
+    @GetMapping("/product/{id}")
+    ProductResponseValues findById(@PathVariable Long id);
 
 }

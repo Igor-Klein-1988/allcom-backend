@@ -3,12 +3,15 @@ package de.allcom.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -29,6 +32,11 @@ import lombok.ToString;
 @Entity
 @Table(name = "products")
 public class Product {
+    @Getter
+    public enum State {
+        DRAFT, IN_STOCK, SOLD, PENDING_PAYMENT
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,10 +59,21 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<ProductImage> images;
+    @OneToOne
+    @JoinColumn(name = "storage_id", referencedColumnName = "id")
+    private Storage storage;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     @Column
     private LocalDateTime updateAt;
+
+    @Column
+    private LocalDateTime createAt;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<ProductImage> images;
 }
