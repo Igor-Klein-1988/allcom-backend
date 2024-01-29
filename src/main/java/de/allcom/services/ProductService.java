@@ -10,6 +10,7 @@ import de.allcom.models.Product;
 import de.allcom.models.ProductImage;
 import de.allcom.repositories.CategoryRepository;
 import de.allcom.repositories.ProductRepository;
+import de.allcom.repositories.StorageRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,12 +31,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductImageService productImageService;
     private final CategoryRepository categoryRepository;
+    private final StorageRepository storageRepository;
 
     @Transactional
     public ProductResponseValues saveProduct(SaveProductRequestDto saveProductRequestDto) {
 
         if (saveProductRequestDto == null) {
-            throw new RestException(HttpStatus.NOT_FOUND, "SaveProductRequestDto is required");
+            throw new RestException(HttpStatus.BAD_REQUEST, "SaveProductRequestDto is null");
         }
         Product product;
 
@@ -55,22 +57,26 @@ public class ProductService {
         product.setWeight(saveProductRequestDto.getWeight());
         product.setColor(saveProductRequestDto.getColor());
         product.setCategory(category);
+        product.setStorage(storageRepository.findById(saveProductRequestDto.getStorageId())
+                .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST, "Storage id must be")));
         product.setState(Product.State.DRAFT);
         product.setCreateAt(LocalDateTime.now());
         product.setUpdateAt(LocalDateTime.now());
 
-        product = productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
         List<MultipartFile> newImages = saveProductRequestDto.getImages();
 
         if (!newImages.isEmpty()) {
-            List<ProductImage> images = productImageService.uploadPhotos(newImages, product);
-            product.setImages(images);
+            List<ProductImage> images = productImageService.uploadPhotos(newImages, savedProduct);
+            savedProduct.setImages(images);
         }
-        if (product.getImages().isEmpty() && !saveProductRequestDto.getImageLinks().isEmpty()) {
+
+        if (savedProduct.getImages().isEmpty() && !saveProductRequestDto.getImageLinks().isEmpty()) {
             throw new RestException(HttpStatus.NOT_FOUND,
                     "Links of photos did not found in the DB");
         }
-        List<ProductImage> images = product.getImages();
+
+        List<ProductImage> images = savedProduct.getImages();
         List<ProductImage> imagesForRemove = images.stream()
                 .filter(i -> saveProductRequestDto.getImageLinks().contains(i.getLink()))
                 .toList();
@@ -88,29 +94,29 @@ public class ProductService {
         for (ProductImage imageToRemove : imagesForRemove) {
             productImageService.deleteImageById(imageToRemove.getId());
         }
-        product = productRepository.save(product);
+        Product newProduct = productRepository.save(savedProduct);
 
-        Product updatedProduct = productRepository.findById(product.getId())
+        Product updatedProduct = productRepository.findById(newProduct.getId())
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-                        "Product did not found in the DB"));
+                        "Product with id: " + newProduct.getId() + " did not found"));
 
         List<String> imagesNew = productImageService.getProductImages(updatedProduct)
                 .stream().map(ProductImage::getLink).toList();
         ProductDto productDto = ProductDto.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .weight(product.getWeight())
-                .color(product.getColor())
-                .categoryId(product.getCategory().getId())
+                .id(updatedProduct.getId())
+                .name(updatedProduct.getName())
+                .description(updatedProduct.getDescription())
+                .weight(updatedProduct.getWeight())
+                .color(updatedProduct.getColor())
+                .categoryId(updatedProduct.getCategory().getId())
                 .photoLinks(imagesNew)
                 .build();
         StorageDto storageDto = StorageDto.builder()
-                .id(product.getStorage().getId())
-                .areaName(product.getStorage().getArea().getName().name())
-                .rackNumber(product.getStorage().getRack().getNumber())
-                .sectionNumber(product.getStorage().getSection().getNumber())
-                .shelveNumber(product.getStorage().getShelve().getNumber())
+                .id(updatedProduct.getStorage().getId())
+                .areaName(updatedProduct.getStorage().getArea().getName().name())
+                .rackNumber(updatedProduct.getStorage().getRack().getNumber())
+                .sectionNumber(updatedProduct.getStorage().getSection().getNumber())
+                .shelveNumber(updatedProduct.getStorage().getShelve().getNumber())
                 .build();
 
         return ProductResponseValues.builder()

@@ -20,6 +20,7 @@ public class Shelve {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     private Integer number;
 

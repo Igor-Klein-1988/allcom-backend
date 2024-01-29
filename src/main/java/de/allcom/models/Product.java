@@ -41,11 +41,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     @Size(min = 3, max = 50)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
     @Column

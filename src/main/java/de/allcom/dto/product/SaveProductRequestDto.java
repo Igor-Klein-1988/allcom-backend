@@ -41,6 +41,9 @@ public class SaveProductRequestDto {
     @Schema(description = "Category id", example = "1")
     private Long categoryId;
 
+    @Schema(description = "Storage id", example = "1")
+    private Long storageId;
+
     @Schema(description = "Links of products photos for delete", example = "/path/path1/photo1.jpeg")
     private List<String> imageLinks;
 

@@ -91,10 +91,6 @@ public class CategoryService {
     }
 
     public List<CategoryDto> findCategoriesByParentId(Long parentId) {
-        categoryRepository.findAllByParentId(parentId)
-                .stream().findFirst()
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Category with id: "
-                        + parentId + " did not found"));
         return categoryRepository.findAllByParentId(parentId).stream()
                 .map(c -> CategoryDto.builder()
                         .id(c.getId())

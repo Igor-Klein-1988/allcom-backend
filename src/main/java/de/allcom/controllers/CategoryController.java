@@ -35,7 +35,7 @@ public class CategoryController implements CategoryApi {
     }
 
     @Override
-    public List<CategoryDto> findCategoriesByParentId(Long parentId) {
-        return categoryService.findCategoriesByParentId(parentId);
+    public List<CategoryDto> findCategoriesByParentId(Long id) {
+        return categoryService.findCategoriesByParentId(id);
     }
 }

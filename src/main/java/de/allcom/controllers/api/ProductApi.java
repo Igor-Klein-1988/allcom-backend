@@ -39,13 +39,26 @@ public interface ProductApi {
     @PostMapping("/add")
     ProductResponseValues saveProduct(@ModelAttribute @Valid SaveProductRequestDto request);
 
+    @Operation(summary = "Product add", description = "Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+    })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     Page<ProductResponseValues> getAllProducts(
             @RequestParam int page,
             @RequestParam int size);
 
-
+    @Operation(summary = "Product add", description = "Default role is Admin")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+    })
     @GetMapping("/product/{id}")
     ProductResponseValues findById(@PathVariable Long id);
 
