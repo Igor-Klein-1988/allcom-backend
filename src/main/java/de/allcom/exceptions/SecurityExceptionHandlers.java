@@ -22,12 +22,6 @@ public class SecurityExceptionHandlers {
     public static final AuthenticationEntryPoint ENTRY_POINT = (request, response, authException) ->
             fillResponse(response, HttpStatus.UNAUTHORIZED, "User unauthorized." +  " " + authException.getMessage());
 
-    public static final AuthenticationSuccessHandler LOGIN_SUCCESS_HANDLER = (request, response, authentication) ->
-            fillResponse(response, HttpStatus.OK, "Login successful");
-
-    public static final AuthenticationFailureHandler LOGIN_FAILURE_HANDLER =  (request, response, exception) ->
-            fillResponse(response, HttpStatus.UNAUTHORIZED, "Incorrect password or username");
-
     public static final AccessDeniedHandler ACCESS_DENIED_HANDLER =  (request, response, accessDeniedException) -> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
