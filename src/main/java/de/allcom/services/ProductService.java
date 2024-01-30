@@ -1,9 +1,7 @@
 package de.allcom.services;
 
 import de.allcom.dto.forms.ProductResponseValues;
-import de.allcom.dto.product.ProductDto;
 import de.allcom.dto.product.SaveProductRequestDto;
-import de.allcom.dto.product.StorageDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Category;
 import de.allcom.models.Product;
@@ -102,62 +100,34 @@ public class ProductService {
 
         updatedProduct.setImages(productImageService.getProductImages(updatedProduct));
 
-        return mapFrom(updatedProduct);
-    }
-
-    public Page<ProductResponseValues> getAllProducts(PageRequest pageRequest) {
-        Page<Product> products = productRepository.findAll(pageRequest);
-        return products.map(this::mapFrom);
+        return ProductResponseValues.from(updatedProduct);
     }
 
     public ProductResponseValues findById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product with id: "
                         + id + " did not found"));
-        return mapFrom(product);
+        return ProductResponseValues.from(product);
     }
 
-    private ProductResponseValues mapFrom(Product product) {
-        return ProductResponseValues.builder()
-                .product(ProductDto.builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .description(product.getDescription())
-                        .weight(product.getWeight())
-                        .color(product.getColor())
-                        .categoryId(product.getCategory().getId())
-                        .state(product.getState().name())
-                        .photoLinks(product.getImages().stream().map(ProductImage::getLink).toList())
-                        .build())
-                .storage(StorageDto.builder()
-                        .id(product.getStorage().getId())
-                        .areaName(product.getStorage().getArea().getName().name())
-                        .rackNumber(product.getStorage().getRack().getNumber())
-                        .sectionNumber(product.getStorage().getSection().getNumber())
-                        .shelveNumber(product.getStorage().getShelve().getNumber())
-                        .build())
-                .build();
-    }
-
-    public Page<ProductResponseValues> findByCategoryAndWord(Long categoryId, String word, PageRequest pageRequest) {
+    public Page<ProductResponseValues> searchByCategoryOrName(Long categoryId, String searchQuery,
+                                                              PageRequest pageRequest) {
         Page<Product> products;
+
         if (categoryId != null) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
-                            "Category with id: " + categoryId + " did not found"));
+                            "Category with id: " + categoryId + " not found"));
 
-            if (word != null && !word.isEmpty()) {
-                products = productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, word, pageRequest);
-            } else {
-                products = productRepository.findAllByCategory(category, pageRequest);
-            }
+            products = searchQuery != null && !searchQuery.isEmpty()
+                    ? productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, searchQuery, pageRequest)
+                    : productRepository.findAllByCategory(category, pageRequest);
         } else {
-            if (word != null && !word.isEmpty()) {
-                products = productRepository.findAllByNameStartsWithIgnoreCase(word, pageRequest);
-            } else {
-                products = productRepository.findAll(pageRequest);
-            }
+            products = searchQuery != null && !searchQuery.isEmpty()
+                    ? productRepository.findAllByNameStartsWithIgnoreCase(searchQuery, pageRequest)
+                    : productRepository.findAll(pageRequest);
         }
-        return products.map(this::mapFrom);
+
+        return products.map(ProductResponseValues::from);
     }
 }

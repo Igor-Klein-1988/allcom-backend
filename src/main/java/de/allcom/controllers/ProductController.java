@@ -20,20 +20,14 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public Page<ProductResponseValues> getAllProducts(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return productService.getAllProducts(pageRequest);
-    }
-
-    @Override
     public ProductResponseValues findById(Long id) {
         return productService.findById(id);
     }
 
     @Override
-    public Page<ProductResponseValues> findByCategoryAndWord(Long id, String word,
+    public Page<ProductResponseValues> searchByCategoryOrName(Long id, String searchQuery,
                                                              int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return productService.findByCategoryAndWord(id, word, pageRequest);
+        return productService.searchByCategoryOrName(id, searchQuery, pageRequest);
     }
 }

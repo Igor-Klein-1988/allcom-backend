@@ -1,5 +1,6 @@
 package de.allcom.controllers.api;
 
+import de.allcom.dto.category.CategoryDto;
 import de.allcom.dto.forms.ProductResponseValues;
 import de.allcom.dto.product.ProductDto;
 import de.allcom.dto.product.SaveProductRequestDto;
@@ -39,19 +40,6 @@ public interface ProductApi {
     @PostMapping("/add")
     ProductResponseValues saveProduct(@ModelAttribute @Valid SaveProductRequestDto request);
 
-    @Operation(summary = "Products info", description = "Default role is Client")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
-            @ApiResponse(responseCode = "404", description = "Product did not found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
-    })
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping
-    Page<ProductResponseValues> getAllProducts(
-            @RequestParam int page,
-            @RequestParam int size);
-
     @Operation(summary = "Product info", description = "Default role is Client")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found", content =
@@ -68,11 +56,11 @@ public interface ProductApi {
             @ApiResponse(responseCode = "200", description = "Product found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class)))
     })
     @GetMapping("/product/like")
-    Page<ProductResponseValues> findByCategoryAndWord(@RequestParam(required = false) Long categoryId,
-                                                      @RequestParam(required = false) String word,
+    Page<ProductResponseValues> searchByCategoryOrName(@RequestParam(required = false) Long categoryId,
+                                                      @RequestParam(required = false) String searchQuery,
                                                       @RequestParam int page,
                                                       @RequestParam int size);
 }
