@@ -31,12 +31,6 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public Page<ProductResponseValues> findByCategory(Long id, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return productService.findByCategory(id, pageRequest);
-    }
-
-    @Override
     public Page<ProductResponseValues> findByCategoryAndWord(Long id, String word,
                                                              int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);

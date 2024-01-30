@@ -112,7 +112,7 @@ public class ProductService {
 
     public ProductResponseValues findById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product whith id: "
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product with id: "
                         + id + " did not found"));
         return mapFrom(product);
     }
@@ -139,23 +139,24 @@ public class ProductService {
                 .build();
     }
 
-    public Page<ProductResponseValues> findByCategory(Long id, PageRequest pageRequest) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
-                        "Category with id: " + id + " did not found"));
-        Page<Product> products = productRepository.findAllByCategory(category, pageRequest);
-        return products.map(this::mapFrom);
-    }
-
     public Page<ProductResponseValues> findByCategoryAndWord(Long categoryId, String word, PageRequest pageRequest) {
         Page<Product> products;
         if (categoryId != null) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
                             "Category with id: " + categoryId + " did not found"));
-            products = productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, word, pageRequest);
+
+            if (word != null && !word.isEmpty()) {
+                products = productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, word, pageRequest);
+            } else {
+                products = productRepository.findAllByCategory(category, pageRequest);
+            }
         } else {
-            products = productRepository.findAllByNameStartsWithIgnoreCase(word, pageRequest);
+            if (word != null && !word.isEmpty()) {
+                products = productRepository.findAllByNameStartsWithIgnoreCase(word, pageRequest);
+            } else {
+                products = productRepository.findAll(pageRequest);
+            }
         }
         return products.map(this::mapFrom);
     }

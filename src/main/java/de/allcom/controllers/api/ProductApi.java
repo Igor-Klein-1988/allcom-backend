@@ -62,28 +62,17 @@ public interface ProductApi {
     @GetMapping("/product/{id}")
     ProductResponseValues findById(@PathVariable Long id);
 
-    @Operation(summary = "Product info", description = "Default role is Client")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
-            @ApiResponse(responseCode = "404", description = "Product did not found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
-    })
-    @GetMapping("/product/by_category/{id}")
-    Page<ProductResponseValues> findByCategory(@PathVariable Long id,
-                                               @RequestParam int page,
-                                               @RequestParam int size);
 
     @Operation(summary = "Product info", description = "Default role is Client")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
-            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @ApiResponse(responseCode = "400", description = "Bad request", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
     })
     @GetMapping("/product/like")
     Page<ProductResponseValues> findByCategoryAndWord(@RequestParam(required = false) Long categoryId,
-                                                      @RequestParam String word,
+                                                      @RequestParam(required = false) String word,
                                                       @RequestParam int page,
                                                       @RequestParam int size);
 }
