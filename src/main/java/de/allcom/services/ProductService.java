@@ -100,59 +100,24 @@ public class ProductService {
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "Product with id: " + newProduct.getId() + " did not found"));
 
-        List<String> imagesNew = productImageService.getProductImages(updatedProduct)
-                .stream().map(ProductImage::getLink).toList();
-        ProductDto productDto = ProductDto.builder()
-                .id(updatedProduct.getId())
-                .name(updatedProduct.getName())
-                .description(updatedProduct.getDescription())
-                .weight(updatedProduct.getWeight())
-                .color(updatedProduct.getColor())
-                .categoryId(updatedProduct.getCategory().getId())
-                .photoLinks(imagesNew)
-                .build();
-        StorageDto storageDto = StorageDto.builder()
-                .id(updatedProduct.getStorage().getId())
-                .areaName(updatedProduct.getStorage().getArea().getName().name())
-                .rackNumber(updatedProduct.getStorage().getRack().getNumber())
-                .sectionNumber(updatedProduct.getStorage().getSection().getNumber())
-                .shelveNumber(updatedProduct.getStorage().getShelve().getNumber())
-                .build();
+        updatedProduct.setImages(productImageService.getProductImages(updatedProduct));
 
-        return ProductResponseValues.builder()
-                .product(productDto)
-                .storage(storageDto)
-                .build();
+        return mapFrom(updatedProduct);
     }
 
     public Page<ProductResponseValues> getAllProducts(PageRequest pageRequest) {
         Page<Product> products = productRepository.findAll(pageRequest);
-
-        return products.map(r -> ProductResponseValues.builder()
-                .product(ProductDto.builder()
-                        .id(r.getId())
-                        .name(r.getName())
-                        .description(r.getDescription())
-                        .weight(r.getWeight())
-                        .color(r.getColor())
-                        .categoryId(r.getCategory().getId())
-                        .state(r.getState().name())
-                        .photoLinks(r.getImages().stream().map(ProductImage::getLink).toList())
-                        .build())
-                .storage(StorageDto.builder()
-                        .id(r.getStorage().getId())
-                        .areaName(r.getStorage().getArea().getName().name())
-                        .rackNumber(r.getStorage().getRack().getNumber())
-                        .sectionNumber(r.getStorage().getSection().getNumber())
-                        .shelveNumber(r.getStorage().getShelve().getNumber())
-                        .build())
-                .build());
+        return products.map(this::mapFrom);
     }
 
     public ProductResponseValues findById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product whith id: "
                         + id + " did not found"));
+        return mapFrom(product);
+    }
+
+    private ProductResponseValues mapFrom(Product product) {
         return ProductResponseValues.builder()
                 .product(ProductDto.builder()
                         .id(product.getId())
@@ -172,8 +137,26 @@ public class ProductService {
                         .shelveNumber(product.getStorage().getShelve().getNumber())
                         .build())
                 .build();
+    }
 
+    public Page<ProductResponseValues> findByCategory(Long id, PageRequest pageRequest) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
+                        "Category with id: " + id + " did not found"));
+        Page<Product> products = productRepository.findAllByCategory(category, pageRequest);
+        return products.map(this::mapFrom);
+    }
 
-
+    public Page<ProductResponseValues> findByCategoryAndWord(Long categoryId, String word, PageRequest pageRequest) {
+        Page<Product> products;
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
+                            "Category with id: " + categoryId + " did not found"));
+            products = productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, word, pageRequest);
+        } else {
+            products = productRepository.findAllByNameStartsWithIgnoreCase(word, pageRequest);
+        }
+        return products.map(this::mapFrom);
     }
 }
