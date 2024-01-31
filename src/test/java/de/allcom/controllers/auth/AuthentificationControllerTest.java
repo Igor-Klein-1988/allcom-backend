@@ -1,6 +1,9 @@
 package de.allcom.controllers.auth;
 
-import de.allcom.dto.user.UserAddressRegistrationDto;
+import de.allcom.controllers.AuthentificationController;
+import de.allcom.dto.auth.AuthentificationRequestDto;
+import de.allcom.dto.auth.AuthentificationResponseDto;
+import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.services.auth.AuthentificationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,28 +26,28 @@ class AuthentificationControllerTest {
 
     @Test
     void testRegister() {
-        UserAddressRegistrationDto request = new UserAddressRegistrationDto();
-        AuthentificationResponse expectedResponse = new AuthentificationResponse();
+        UserWithAddressRegistrationDto request = new UserWithAddressRegistrationDto();
+        AuthentificationResponseDto expectedResponse = new AuthentificationResponseDto();
         expectedResponse.setToken("mockedToken");
 
-        when(authentificationService.register(any(UserAddressRegistrationDto.class)))
+        when(authentificationService.register(any(UserWithAddressRegistrationDto.class)))
                 .thenReturn(expectedResponse);
 
-        AuthentificationResponse response = authentificationController.register(request);
+        AuthentificationResponseDto response = authentificationController.register(request);
 
         assertEquals(expectedResponse, response);
     }
 
     @Test
     void testLogin() {
-        AuthentificationRequest authRequest = new AuthentificationRequest();
-        AuthentificationResponse expectedResponse = new AuthentificationResponse();
+        AuthentificationRequestDto authRequest = new AuthentificationRequestDto();
+        AuthentificationResponseDto expectedResponse = new AuthentificationResponseDto();
         expectedResponse.setToken("mockedToken");
 
-        when(authentificationService.login(any(AuthentificationRequest.class)))
+        when(authentificationService.login(any(AuthentificationRequestDto.class)))
                 .thenReturn(expectedResponse);
 
-        AuthentificationResponse response = authentificationController.login(authRequest);
+        AuthentificationResponseDto response = authentificationController.login(authRequest);
 
         assertEquals(expectedResponse, response);
     }

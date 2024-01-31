@@ -1,4 +1,4 @@
-package de.allcom.controllers.auth;
+package de.allcom.dto.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthentificationRequest {
+public class AuthentificationRequestDto {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email address must be in a valid format (e.g., user@example.com)")
@@ -25,6 +25,5 @@ public class AuthentificationRequest {
             message = "Password must be at least 8 characters long and include at least one uppercase letter, "
             + "numbers, and special characters")
     @Schema(description = "User's password", example = "Qwerty007!")
-
     private String password;
 }

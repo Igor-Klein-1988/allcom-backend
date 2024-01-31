@@ -54,7 +54,7 @@ public class User implements UserDetails {
     @Column(length = 13)
     private String taxNumber;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 12)
     private String phoneNumber;
 
     @Column

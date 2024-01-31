@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class UserAddressResponseDto {
+public class UserWithAddressResponseDto {
 
     @Schema(description = "User identifier", example = "1")
     private Long id;
@@ -24,23 +24,17 @@ public class UserAddressResponseDto {
     private String position;
     @Schema(description = "Company's tax's number", example = "123456789")
     private String taxNumber;
-    @Schema(description = "Company's index", example = "10176")
-    private String index;
-    @Schema(description = "Company's city", example = "Berlin")
-    private String city;
-    @Schema(description = "Company's street", example = "Alexanderplatz")
-    private String street;
-    @Schema(description = "Company's house number", example = "1")
-    private String houseNumber;
-    @Schema(description = "User's role", example = "ADMIN, CLIENT, STORKEEPER")
+    @Schema(description = "Address")
+    private AddressDto address;
+    @Schema(description = "User's role", example = "CLIENT")
     private String role;
     @Schema(description = "User checked status", example = "false")
     private boolean isChecked;
     @Schema(description = "User blocked status", example = "false")
     private boolean isBlocked;
 
-    public static UserAddressResponseDto from(User user, Address address) {
-        UserAddressResponseDto dto = new UserAddressResponseDto();
+    public static UserWithAddressResponseDto from(User user, Address address) {
+        UserWithAddressResponseDto dto = new UserWithAddressResponseDto();
         dto.setId(user.getId());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
@@ -49,13 +43,19 @@ public class UserAddressResponseDto {
         dto.setCompanyName(user.getCompanyName());
         dto.setPosition(user.getPosition());
         dto.setTaxNumber(user.getTaxNumber());
-        dto.setIndex(address.getPostIndex());
-        dto.setCity(address.getCity());
-        dto.setStreet(address.getStreet());
-        dto.setHouseNumber(address.getHouseNumber());
+
+        AddressDto addressDto = new AddressDto();
+        addressDto.setPostIndex(address.getPostIndex());
+        addressDto.setCity(address.getCity());
+        addressDto.setStreet(address.getStreet());
+        addressDto.setHouseNumber(address.getHouseNumber());
+
+        dto.setAddress(addressDto);
+
         dto.setRole(user.getRole().name());
         dto.setChecked(user.isChecked());
         dto.setBlocked(user.isBlocked());
+
         return dto;
     }
 }

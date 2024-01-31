@@ -1,8 +1,9 @@
 package de.allcom.controllers.api;
 
 import de.allcom.dto.StandardResponseDto;
-import de.allcom.dto.user.UserAddressRegistrationDto;
-import de.allcom.dto.user.UserAddressResponseDto;
+import de.allcom.dto.user.UserWithAddressRegistrationDto;
+import de.allcom.dto.user.UserWithAddressResponseDto;
+import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -14,6 +15,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +41,7 @@ public interface UsersApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved users",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = UserAddressResponseDto.class)))),
+                            array = @ArraySchema(schema = @Schema(implementation = UserWithAddressResponseDto.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -46,9 +49,9 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
     })
-    Page<UserAddressResponseDto> getAll(
-            @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
-            @RequestParam(name = "skip", defaultValue = DEFAULT_SKIP) int skip);
+    Page<UserWithAddressResponseDto> getAll(
+            @Valid @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
+            @Valid @RequestParam(name = "skip", defaultValue = DEFAULT_SKIP) int skip);
 
     @Operation(summary = "Update user (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -57,7 +60,10 @@ public interface UsersApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+                            schema = @Schema(implementation = UserWithAddressResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -68,7 +74,8 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    UserAddressResponseDto updateUser(@RequestBody UserAddressRegistrationDto request, @PathVariable Long userId);
+    UserWithAddressResponseDto updateUser(@Valid @RequestBody UserWithAddressRegistrationDto request,
+                                          @PathVariable Long userId);
 
     @Operation(summary = "Get user profile")
     @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN','STOREKEEPER')")
@@ -77,7 +84,7 @@ public interface UsersApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User profile retrieved successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+                            schema = @Schema(implementation = UserWithAddressResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -85,7 +92,7 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
     })
-    UserAddressResponseDto getUserProfile();
+    UserWithAddressResponseDto getUserProfile();
 
     @Operation(summary = "Found user (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -94,7 +101,10 @@ public interface UsersApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+                            schema = @Schema(implementation = UserWithAddressResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -105,7 +115,7 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    UserAddressResponseDto foundUserByEmail(@PathVariable String userEmail);
+    UserWithAddressResponseDto foundUserByEmail(@PathVariable String userEmail);
 
     @Operation(summary = "Found user by ID (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -114,7 +124,10 @@ public interface UsersApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+                            schema = @Schema(implementation = UserWithAddressResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -125,7 +138,8 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    UserAddressResponseDto foundUserById(@PathVariable Long userId);
+    UserWithAddressResponseDto foundUserById(@PathVariable @Min(value = 1,
+            message = "User ID must be greater than or equal to 1")Long userId);
 
     @Operation(summary = "Change status of user account (lock/unlock and ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -134,7 +148,10 @@ public interface UsersApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Status of User updated successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserAddressResponseDto.class))),
+                            schema = @Schema(implementation = UserWithAddressResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -145,6 +162,9 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    UserAddressResponseDto changeStatus(@PathVariable Long userId, @RequestParam String status);
+    UserWithAddressResponseDto changeStatus(@PathVariable @Min(value = 1,
+            message = "User ID must be greater than or equal to 1") Long userId,
+                                            @RequestParam boolean isChecked,
+                                            @RequestParam boolean isBlocked);
 
 }

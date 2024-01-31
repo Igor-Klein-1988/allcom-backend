@@ -1,7 +1,8 @@
 package de.allcom.services;
 
-import de.allcom.dto.user.UserAddressRegistrationDto;
-import de.allcom.dto.user.UserAddressResponseDto;
+import de.allcom.dto.user.AddressDto;
+import de.allcom.dto.user.UserWithAddressRegistrationDto;
+import de.allcom.dto.user.UserWithAddressResponseDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.User;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,18 +26,19 @@ public class UserService {
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Page<UserAddressResponseDto> getAll(PageRequest pageRequest) {
+    public Page<UserWithAddressResponseDto> getAll(PageRequest pageRequest) {
         Page<Object[]> results = userRepository.findAllUsersWithAddresses(pageRequest);
-        return results.map(result -> UserAddressResponseDto.from((User) result[0], (Address) result[1]));
+        return results.map(result -> UserWithAddressResponseDto.from((User) result[0], (Address) result[1]));
     }
 
-    public UserAddressResponseDto getUserProfile() {
+    public UserWithAddressResponseDto getUserProfile() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Address address = addressRepository.findByUser(user);
-        return UserAddressResponseDto.from(user, address);
+        return UserWithAddressResponseDto.from(user, address);
     }
 
-    public UserAddressResponseDto updateUser(UserAddressRegistrationDto request, Long userId) {
+    @Transactional
+    public UserWithAddressResponseDto updateUser(UserWithAddressRegistrationDto request, Long userId) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
         existingUser.setFirstName(request.getFirstName());
@@ -56,38 +59,40 @@ public class UserService {
 
         Address address = optionalAddress.orElseGet(Address::new);
 
-        address.setPostIndex(request.getPostIndex());
-        address.setCity(request.getCity());
-        address.setStreet(request.getStreet());
-        address.setHouseNumber(request.getHouseNumber());
+        AddressDto addressDto = request.getAddress();
+
+        address.setPostIndex(addressDto.getPostIndex());
+        address.setCity(addressDto.getCity());
+        address.setStreet(addressDto.getStreet());
+        address.setHouseNumber(addressDto.getHouseNumber());
         address.setUser(savedUser);
 
-        addressRepository.save(address);
-
-        return UserAddressResponseDto.from(savedUser, address);
+        addressRepository.saveAndFlush(address);
+        return UserWithAddressResponseDto.from(savedUser, address);
     }
 
-    public UserAddressResponseDto foundUserByEmail(String userEmail) {
+    public UserWithAddressResponseDto foundUserByEmail(String userEmail) {
         User user = (User) userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "User with email " + userEmail + " not found!"));
         Address address = addressRepository.findByUser(user);
-        return UserAddressResponseDto.from(user, address);
+        return UserWithAddressResponseDto.from(user, address);
     }
 
-    public UserAddressResponseDto foundUserById(Long userId) {
+    public UserWithAddressResponseDto foundUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "User with id " + userId + " not found!"));
         Address address = addressRepository.findByUser(user);
-        return UserAddressResponseDto.from(user, address);
+        return UserWithAddressResponseDto.from(user, address);
     }
 
-    public UserAddressResponseDto changeStatus(Long userId, String status) {
+    public UserWithAddressResponseDto changeStatus(Long userId, boolean isChecked, boolean isBlocked) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
-        user.setBlocked(Boolean.parseBoolean(status));
+        user.setChecked(isChecked);
+        user.setBlocked(isBlocked);
         userRepository.save(user);
-        return UserAddressResponseDto.from(user, addressRepository.findByUser(user));
+        return UserWithAddressResponseDto.from(user, addressRepository.findByUser(user));
     }
 }

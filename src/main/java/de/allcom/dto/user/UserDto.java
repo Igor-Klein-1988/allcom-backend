@@ -1,13 +1,16 @@
 package de.allcom.dto.user;
 
+import de.allcom.models.Role;
 import de.allcom.models.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,6 +28,12 @@ public class UserDto {
     @Schema(description = "User's email", example = "alex-schmidt@mail.com")
     private String email;
 
+    @Schema(description = "User's role", example = "ADMIN")
+    private Role role;
+
+    @Schema(description = "User checked status", example = "false")
+    private boolean isChecked;
+
     @Schema(description = "User blocked status", example = "false")
     private boolean isBlocked;
 
@@ -34,6 +43,8 @@ public class UserDto {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .role(user.getRole())
+                .isChecked(user.isChecked())
                 .isBlocked(user.isBlocked())
                 .build();
     }

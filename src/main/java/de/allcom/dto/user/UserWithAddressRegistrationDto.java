@@ -1,21 +1,24 @@
 package de.allcom.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Schema(name = "UserRegistration", description = "Registration data")
-public class UserAddressRegistrationDto {
+public class UserWithAddressRegistrationDto {
     @NotBlank(message = "First name is required")
     @Size(min = 1, max = 100, message = "First name must be between 1 and 100 characters")
     @Schema(description = "User first name", example = "Alex")
@@ -39,7 +42,7 @@ public class UserAddressRegistrationDto {
     private String email;
 
     @Schema(description = "User's phone number", example = "491753456755")
-    @Size(max = 13, message = "Phone number should not exceed 13 characters")
+    @Size(max = 12, message = "Phone number should not exceed 12 characters")
     private String phoneNumber;
 
     @Schema(description = "Company name", example = "Allcom GmbH")
@@ -52,18 +55,9 @@ public class UserAddressRegistrationDto {
     @Size(max = 13, message = "Tax number should not exceed 13 characters")
     private String taxNumber;
 
-    @Schema(description = "Company's index", example = "10176")
-    @Size(max = 5, message = "Index should not exceed 5 characters")
-    private String postIndex;
-
-    @Schema(description = "Company's city", example = "Berlin")
-    private String city;
-
-    @Schema(description = "Company's street", example = "Alexanderplatz")
-    private String street;
-
-    @Schema(description = "Company's house number", example = "1")
-    private String houseNumber;
+    @Schema(description = "Adddress")
+    @Valid
+    private AddressDto address;
 
     @Schema(description = "User checked status", example = "false")
     private boolean isChecked;

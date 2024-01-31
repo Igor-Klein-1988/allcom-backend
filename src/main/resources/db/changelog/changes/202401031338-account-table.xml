@@ -23,7 +23,7 @@
             <column name="hash_password" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="phone_number" type="varchar(13)">
+            <column name="phone_number" type="varchar(12)">
             </column>
             <column name="company_name" type="varchar(255)">
             </column>

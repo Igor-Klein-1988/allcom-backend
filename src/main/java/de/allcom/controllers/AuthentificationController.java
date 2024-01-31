@@ -1,8 +1,11 @@
-package de.allcom.controllers.auth;
+package de.allcom.controllers;
 
 import de.allcom.dto.StandardResponseDto;
-import de.allcom.dto.user.UserAddressRegistrationDto;
+import de.allcom.dto.auth.AuthentificationRequestDto;
+import de.allcom.dto.auth.AuthentificationResponseDto;
+import de.allcom.dto.auth.ChangePasswordRequestDto;
 import de.allcom.dto.user.UserDto;
+import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.services.auth.AuthentificationService;
 import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,10 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,8 +49,8 @@ public class AuthentificationController {
                             schema = @Schema(implementation = StandardResponseDto.class)))})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public AuthentificationResponse register(
-            @RequestBody UserAddressRegistrationDto request) {
+    public AuthentificationResponseDto register(
+            @Valid @RequestBody UserWithAddressRegistrationDto request) {
         return authentificationService.register(request);
     }
 
@@ -55,7 +58,10 @@ public class AuthentificationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User authenticated",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = AuthentificationResponse.class))),
+                            schema = @Schema(implementation = AuthentificationResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -67,13 +73,16 @@ public class AuthentificationController {
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
     @PostMapping("/login")
-    public AuthentificationResponse login(
-            @RequestBody AuthentificationRequest request) {
+    public AuthentificationResponseDto login(
+            @Valid @RequestBody AuthentificationRequestDto request) {
         return authentificationService.login(request);
     }
 
     @Operation(summary = "Change user password", description = "Available to everyone.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Password changed successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -84,8 +93,8 @@ public class AuthentificationController {
     @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN','STOREKEEPER')")
     @SecurityRequirement(name = "bearerAuth", scopes = {"admin,user,storekeeper"})
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(
-            @RequestBody ChangePasswordRequest request,
+    public StandardResponseDto changePassword(
+            @Valid @RequestBody ChangePasswordRequestDto request,
             Principal connectedUser) {
         return authentificationService.changePassword(request, connectedUser);
     }

@@ -44,11 +44,8 @@ public class SecurityConfiguration {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html",
-            "/api/categories/**",
-            "/api/products",
-            "/api/products/**"};
-    // TODO whitelist and security endpoints
+            "/swagger-ui.html"};
+
     private final JwrAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;

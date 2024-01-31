@@ -1,9 +1,11 @@
 package de.allcom.services.auth;
 
-import de.allcom.controllers.auth.AuthentificationRequest;
-import de.allcom.controllers.auth.AuthentificationResponse;
-import de.allcom.controllers.auth.ChangePasswordRequest;
-import de.allcom.dto.user.UserAddressRegistrationDto;
+import de.allcom.dto.StandardResponseDto;
+import de.allcom.dto.auth.AuthentificationRequestDto;
+import de.allcom.dto.auth.AuthentificationResponseDto;
+import de.allcom.dto.auth.ChangePasswordRequestDto;
+import de.allcom.dto.user.AddressDto;
+import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.Role;
@@ -17,11 +19,11 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +41,8 @@ public class AuthentificationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthentificationResponse register(UserAddressRegistrationDto request) {
+    @Transactional
+    public AuthentificationResponseDto register(UserWithAddressRegistrationDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RestException(HttpStatus.CONFLICT,
                     "User with email " + request.getEmail() + " already exists!");
@@ -61,19 +64,21 @@ public class AuthentificationService {
 
         var savedUser = userRepository.save(user);
 
-        var address = Address.builder()
-                .postIndex(request.getPostIndex())
-                .city(request.getCity())
-                .street(request.getStreet())
-                .houseNumber(request.getHouseNumber())
-                .user(savedUser)
-                .build();
-
-        addressRepository.save(address);
+        AddressDto addressDto = request.getAddress();
+        if (addressDto != null) {
+            var address = Address.builder()
+                    .postIndex(addressDto.getPostIndex())
+                    .city(addressDto.getCity())
+                    .street(addressDto.getStreet())
+                    .houseNumber(addressDto.getHouseNumber())
+                    .user(savedUser)
+                    .build();
+            addressRepository.save(address);
+        }
 
         var jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken);
-        return AuthentificationResponse.builder()
+        return AuthentificationResponseDto.builder()
                 .id(savedUser.getId())
                 .firstName(savedUser.getFirstName())
                 .lastName(savedUser.getLastName())
@@ -82,7 +87,7 @@ public class AuthentificationService {
                 .build();
     }
 
-    public AuthentificationResponse login(AuthentificationRequest request) {
+    public AuthentificationResponseDto login(AuthentificationRequestDto request) {
         if (request.getEmail() == null || request.getPassword() == null) {
             throw new RestException(HttpStatus.BAD_REQUEST,
                     "Email and password are required!");
@@ -91,14 +96,11 @@ public class AuthentificationService {
                     "User with email " + request.getEmail() + " not found!");
         }
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()));
-        } catch (Exception e) {
-            throw new RestException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()));
+
         var user = (User) userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
@@ -106,7 +108,7 @@ public class AuthentificationService {
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);
-        return AuthentificationResponse.builder()
+        return AuthentificationResponseDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -138,7 +140,7 @@ public class AuthentificationService {
         tokenRepository.save(token);
     }
 
-    public ResponseEntity<?> changePassword(ChangePasswordRequest request, Principal connectedUser) {
+    public StandardResponseDto changePassword(ChangePasswordRequestDto request, Principal connectedUser) {
         User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new RestException(HttpStatus.FORBIDDEN, "Wrong password");
@@ -150,6 +152,6 @@ public class AuthentificationService {
         user.setHashPassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepository.save(user);
-        return ResponseEntity.ok("Password changed");
+        return new StandardResponseDto("Password changed");
     }
 }
