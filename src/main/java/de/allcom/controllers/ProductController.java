@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RequiredArgsConstructor
 @RestController
 public class ProductController implements ProductApi {
@@ -21,13 +20,14 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public Page<ProductResponseValues> getAllProducts(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return productService.getAllProducts(pageRequest);
+    public ProductResponseValues findById(Long id) {
+        return productService.findById(id);
     }
 
     @Override
-    public ProductResponseValues findById(Long id) {
-        return productService.findById(id);
+    public Page<ProductResponseValues> searchByCategoryOrName(Long id, String searchQuery,
+                                                             int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return productService.searchByCategoryOrName(id, searchQuery, pageRequest);
     }
 }

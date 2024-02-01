@@ -1,9 +1,7 @@
 package de.allcom.services;
 
 import de.allcom.dto.forms.ProductResponseValues;
-import de.allcom.dto.product.ProductDto;
 import de.allcom.dto.product.SaveProductRequestDto;
-import de.allcom.dto.product.StorageDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Category;
 import de.allcom.models.Product;
@@ -100,80 +98,37 @@ public class ProductService {
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "Product with id: " + newProduct.getId() + " did not found"));
 
-        List<String> imagesNew = productImageService.getProductImages(updatedProduct)
-                .stream().map(ProductImage::getLink).toList();
-        ProductDto productDto = ProductDto.builder()
-                .id(updatedProduct.getId())
-                .name(updatedProduct.getName())
-                .description(updatedProduct.getDescription())
-                .weight(updatedProduct.getWeight())
-                .color(updatedProduct.getColor())
-                .categoryId(updatedProduct.getCategory().getId())
-                .photoLinks(imagesNew)
-                .build();
-        StorageDto storageDto = StorageDto.builder()
-                .id(updatedProduct.getStorage().getId())
-                .areaName(updatedProduct.getStorage().getArea().getName().name())
-                .rackNumber(updatedProduct.getStorage().getRack().getNumber())
-                .sectionNumber(updatedProduct.getStorage().getSection().getNumber())
-                .shelveNumber(updatedProduct.getStorage().getShelve().getNumber())
-                .build();
+        updatedProduct.setImages(productImageService.getProductImages(updatedProduct));
 
-        return ProductResponseValues.builder()
-                .product(productDto)
-                .storage(storageDto)
-                .build();
-    }
-
-    public Page<ProductResponseValues> getAllProducts(PageRequest pageRequest) {
-        Page<Product> products = productRepository.findAll(pageRequest);
-
-        return products.map(r -> ProductResponseValues.builder()
-                .product(ProductDto.builder()
-                        .id(r.getId())
-                        .name(r.getName())
-                        .description(r.getDescription())
-                        .weight(r.getWeight())
-                        .color(r.getColor())
-                        .categoryId(r.getCategory().getId())
-                        .state(r.getState().name())
-                        .photoLinks(r.getImages().stream().map(ProductImage::getLink).toList())
-                        .build())
-                .storage(StorageDto.builder()
-                        .id(r.getStorage().getId())
-                        .areaName(r.getStorage().getArea().getName().name())
-                        .rackNumber(r.getStorage().getRack().getNumber())
-                        .sectionNumber(r.getStorage().getSection().getNumber())
-                        .shelveNumber(r.getStorage().getShelve().getNumber())
-                        .build())
-                .build());
+        return ProductResponseValues.from(updatedProduct);
     }
 
     public ProductResponseValues findById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product whith id: "
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Product with id: "
                         + id + " did not found"));
-        return ProductResponseValues.builder()
-                .product(ProductDto.builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .description(product.getDescription())
-                        .weight(product.getWeight())
-                        .color(product.getColor())
-                        .categoryId(product.getCategory().getId())
-                        .state(product.getState().name())
-                        .photoLinks(product.getImages().stream().map(ProductImage::getLink).toList())
-                        .build())
-                .storage(StorageDto.builder()
-                        .id(product.getStorage().getId())
-                        .areaName(product.getStorage().getArea().getName().name())
-                        .rackNumber(product.getStorage().getRack().getNumber())
-                        .sectionNumber(product.getStorage().getSection().getNumber())
-                        .shelveNumber(product.getStorage().getShelve().getNumber())
-                        .build())
-                .build();
+        return ProductResponseValues.from(product);
+    }
 
+    public Page<ProductResponseValues> searchByCategoryOrName(Long categoryId, String searchQuery,
+                                                              PageRequest pageRequest) {
+        Page<Product> products;
+        boolean isSearchQueryPresent = searchQuery != null && !searchQuery.isEmpty();
 
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
+                            "Category with id: " + categoryId + " not found"));
 
+            products = isSearchQueryPresent
+                    ? productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, searchQuery, pageRequest)
+                    : productRepository.findAllByCategory(category, pageRequest);
+            return products.map(ProductResponseValues::from);
+        } else {
+            products = isSearchQueryPresent
+                    ? productRepository.findAllByNameStartsWithIgnoreCase(searchQuery, pageRequest)
+                    : productRepository.findAll(pageRequest);
+            return products.map(ProductResponseValues::from);
+        }
     }
 }
