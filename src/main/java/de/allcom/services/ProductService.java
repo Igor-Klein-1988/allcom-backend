@@ -113,21 +113,22 @@ public class ProductService {
     public Page<ProductResponseValues> searchByCategoryOrName(Long categoryId, String searchQuery,
                                                               PageRequest pageRequest) {
         Page<Product> products;
+        boolean isSearchQueryPresent = searchQuery != null && !searchQuery.isEmpty();
 
         if (categoryId != null) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new RestException(HttpStatus.BAD_REQUEST,
                             "Category with id: " + categoryId + " not found"));
 
-            products = searchQuery != null && !searchQuery.isEmpty()
+            products = isSearchQueryPresent
                     ? productRepository.findAllByCategoryAndNameStartsWithIgnoreCase(category, searchQuery, pageRequest)
                     : productRepository.findAllByCategory(category, pageRequest);
+            return products.map(ProductResponseValues::from);
         } else {
-            products = searchQuery != null && !searchQuery.isEmpty()
+            products = isSearchQueryPresent
                     ? productRepository.findAllByNameStartsWithIgnoreCase(searchQuery, pageRequest)
                     : productRepository.findAll(pageRequest);
+            return products.map(ProductResponseValues::from);
         }
-
-        return products.map(ProductResponseValues::from);
     }
 }

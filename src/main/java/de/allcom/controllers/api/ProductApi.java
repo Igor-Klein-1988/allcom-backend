@@ -1,10 +1,9 @@
 package de.allcom.controllers.api;
 
-import de.allcom.dto.category.CategoryDto;
+import de.allcom.dto.StandardResponseDto;
 import de.allcom.dto.forms.ProductResponseValues;
 import de.allcom.dto.product.ProductDto;
 import de.allcom.dto.product.SaveProductRequestDto;
-import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,9 +30,9 @@ public interface ProductApi {
             @ApiResponse(responseCode = "201", description = "Product added", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Product did not found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))
     })
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,7 +44,7 @@ public interface ProductApi {
             @ApiResponse(responseCode = "200", description = "Product found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
             @ApiResponse(responseCode = "404", description = "Product did not found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class)))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))
     })
     @GetMapping("/product/{id}")
     ProductResponseValues findById(@PathVariable Long id);
@@ -56,7 +55,7 @@ public interface ProductApi {
             @ApiResponse(responseCode = "200", description = "Product found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad request", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class)))
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))
     })
     @GetMapping("/product/like")
     Page<ProductResponseValues> searchByCategoryOrName(@RequestParam(required = false) Long categoryId,
