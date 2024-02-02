@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(value = RestException.class)
+    @ExceptionHandler(RestException.class)
     public ResponseEntity<StandardResponseDto> handleRestException(RestException e) {
         return ResponseEntity
                 .status(e.getStatus())
@@ -16,4 +16,5 @@ public class RestExceptionHandler {
                         .message(e.getMessage())
                         .build());
     }
+
 }
