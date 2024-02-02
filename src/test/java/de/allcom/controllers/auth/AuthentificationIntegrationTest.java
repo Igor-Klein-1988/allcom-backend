@@ -12,13 +12,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,7 +34,6 @@ public class AuthentificationIntegrationTest {
     @DisplayName("POST /api/auth/login:")
     public class LoginUser {
 
-        @Transactional
         @Test
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
@@ -46,10 +46,9 @@ public class AuthentificationIntegrationTest {
                                       "password": "Qwerty007!"
                                     }"""))
                     .andExpect(status().isOk())
-                    .andExpect((ResultMatcher) jsonPath("$.id", is(1)));
+                    .andExpect(jsonPath("$.id", is(1)));
         }
 
-        @Transactional
         @Test
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
@@ -64,7 +63,6 @@ public class AuthentificationIntegrationTest {
                     .andExpect(status().isNotFound());
         }
 
-        @Transactional
         @Test
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
@@ -110,8 +108,8 @@ public class AuthentificationIntegrationTest {
                                       "checked": false,
                                       "blocked": false
                                     }"""))
-                    .andExpect(status().isOk())
-                    .andExpect((ResultMatcher) jsonPath("$.id", is(11)));
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id", is(11)));
         }
 
         @Transactional
@@ -119,7 +117,7 @@ public class AuthentificationIntegrationTest {
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void register_user_which_already_exists() throws Exception {
-            mockMvc.perform(post("/api/auth/login")
+            mockMvc.perform(post("/api/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("""
                                     {
@@ -143,20 +141,121 @@ public class AuthentificationIntegrationTest {
                     .andExpect(status().isConflict());
         }
 
+        @Transactional
+        @Test
+        @Sql(scripts = "/sql/data.sql")
+        @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+        public void register_new_user_with_not_strong_password() throws Exception {
+            mockMvc.perform(post("/api/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                      "firstName": "Alex",
+                                      "lastName": "Schmidt",
+                                      "password": "werty007",
+                                      "email": "alex-schmidt@mail.com",
+                                      "phoneNumber": "+491753456755",
+                                      "companyName": "Allcom GmbH",
+                                      "position": "Purchasing manager",
+                                      "taxNumber": "3458795653",
+                                      "address": {
+                                        "postIndex": "10176",
+                                        "city": "Berlin",
+                                        "street": "Alexanderplatz",
+                                        "houseNumber": "1"
+                                      },
+                                      "checked": false,
+                                      "blocked": false
+                                    }"""))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Transactional
+        @Test
+        @Sql(scripts = "/sql/data.sql")
+        @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+        public void register_new_user_with_wrong_email() throws Exception {
+            mockMvc.perform(post("/api/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                      "firstName": "Alex",
+                                      "lastName": "Schmidt",
+                                      "password": "Qwerty007!",
+                                      "email": "alex-schmidtATmail.com",
+                                      "phoneNumber": "+491753456755",
+                                      "companyName": "Allcom GmbH",
+                                      "position": "Purchasing manager",
+                                      "taxNumber": "3458795653",
+                                      "address": {
+                                        "postIndex": "10176",
+                                        "city": "Berlin",
+                                        "street": "Alexanderplatz",
+                                        "houseNumber": "1"
+                                      },
+                                      "checked": false,
+                                      "blocked": false
+                                    }"""))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Transactional
+        @Test
+        @Sql(scripts = "/sql/data.sql")
+        @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+        public void register_new_user_with_not_full_address() throws Exception {
+            mockMvc.perform(post("/api/auth/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                      "firstName": "Alex",
+                                      "lastName": "Schmidt",
+                                      "password": "Qwerty007!",
+                                      "email": "alex-schmidt@mail.com",
+                                      "phoneNumber": "+491753456755",
+                                      "companyName": "Allcom GmbH",
+                                      "position": "Purchasing manager",
+                                      "taxNumber": "3458795653",
+                                      "address": {
+                                        "postIndex": "10176",
+                                        "city": "Berlin",
+                                        "street": "",
+                                        "houseNumber": "1"
+                                      },
+                                      "checked": false,
+                                      "blocked": false
+                                    }"""))
+                    .andExpect(status().isBadRequest());
+        }
     }
 
-    //    @Test
-    //    @WithMockUser(roles = {"ADMIN"})
-    //    @Sql(scripts = "/sql/data.sql")
-    //    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    //    public void return_409_for_existed_email() throws Exception {
-    //        mockMvc.perform(post("/api/users/register")
-    //                        .contentType(MediaType.APPLICATION_JSON)
-    //                        .content("""
-    //                                    {
-    //                                      "email": "james-smith@mail.com",
-    //                                      "password": "Qwerty007!"
-    //                                    }"""))
-    //                .andExpect(status().isConflict());
-    //    }
+    @Nested
+    @DisplayName("POST /api/auth/logout:")
+    public class LogoutUser {
+
+        @Transactional
+        @Test
+        @Sql(scripts = "/sql/data.sql")
+        @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+        public void logout_user() throws Exception {
+            MvcResult mvcResult = mockMvc.perform(post("/api/auth/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                      "email": "james-smith@mail.com",
+                                      "password": "Qwerty007!"
+                                    }"""))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id", is(1)))
+                    .andReturn();
+            String token = mvcResult.getResponse().getHeader("Authorization");
+
+            mockMvc.perform(post("/api/auth/logout")
+                            .header("Authorization", "Bearer " + token)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+        }
+
+    }
+
 }
