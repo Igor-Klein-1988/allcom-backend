@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "storage_shelves")
-public class Shelve {
+public class Shelf {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +24,6 @@ public class Shelve {
     @Column
     private Integer number;
 
-    @OneToMany(mappedBy = "shelve")
+    @OneToMany(mappedBy = "shelf")
     private List<Storage> storages;
 }

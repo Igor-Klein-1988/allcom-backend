@@ -1,20 +1,15 @@
 package de.allcom.dto.product;
 
+import de.allcom.dto.auction.AuctionDto;
+import de.allcom.dto.storage.StorageDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@Schema(name = "Product", description = "Product data")
-public class ProductDto {
+public class ProductResponseDto {
     @Schema(description = "Product identifier", example = "1")
     private Long id;
 
@@ -36,6 +31,12 @@ public class ProductDto {
     @Schema(description = "State of product", example = "IN_STOCK")
     private String state;
 
-    @Schema(description = "Images", example = "[]")
+    @Schema(description = "imageLinks", example = "[]")
     private List<String> imageLinks;
+
+    @Schema(description = "Current auction of the product")
+    private AuctionDto lastCreatedAuction;
+
+    @Schema(description = "Storage of the product")
+    private StorageDto storage;
 }

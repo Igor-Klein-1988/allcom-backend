@@ -20,10 +20,10 @@
             </column>
             <column name="parent_id" type="bigint">
             </column>
-            <column name="update_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="create_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -52,28 +52,32 @@ public class Product {
     private Float weight;
 
     @Column
-    @Size(min = 3, max = 10)
+    @Size(min = 1, max = 30)
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", nullable = false, referencedColumnName = "id")
     private Category category;
 
     @OneToOne
-    @JoinColumn(name = "storage_id", referencedColumnName = "id")
+    @JoinColumn(name = "storage_id", nullable = false, referencedColumnName = "id")
     private Storage storage;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @Column
-    private LocalDateTime updateAt;
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
-    @Column
-    private LocalDateTime createAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<ProductImage> images;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Auction> auctions;
 }

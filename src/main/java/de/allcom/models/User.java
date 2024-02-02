@@ -117,4 +117,11 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return !isBlocked;
     }
+    @ToString.Exclude
+    @OneToMany(mappedBy = "winner")
+    private List<Auction> wonAuctions;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bet> bits;
 }

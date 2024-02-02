@@ -9,21 +9,23 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "storage")
 public class Storage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "line_id", referencedColumnName = "id")
-    private Shelve shelve;
 
     @ManyToOne
     @JoinColumn(name = "area_id", referencedColumnName = "id")
@@ -36,6 +38,10 @@ public class Storage {
     @ManyToOne
     @JoinColumn(name = "section_id", referencedColumnName = "id")
     private Section section;
+
+    @ManyToOne
+    @JoinColumn(name = "shelf_id", referencedColumnName = "id")
+    private Shelf shelf;
 
     @OneToOne(mappedBy = "storage", cascade = CascadeType.ALL)
     private Product product;
