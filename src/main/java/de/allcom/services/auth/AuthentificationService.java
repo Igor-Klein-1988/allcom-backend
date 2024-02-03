@@ -17,6 +17,8 @@ import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,7 +50,7 @@ public class AuthentificationService {
                     "User with email " + request.getEmail() + " already exists!");
         }
         LocalDateTime now = LocalDateTime.now();
-        var user = User.builder()
+        User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
@@ -62,11 +64,11 @@ public class AuthentificationService {
                 .updateAt(now)
                 .build();
 
-        var savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
         AddressDto addressDto = request.getAddress();
         if (addressDto != null) {
-            var address = Address.builder()
+            Address address = Address.builder()
                     .postIndex(addressDto.getPostIndex())
                     .city(addressDto.getCity())
                     .street(addressDto.getStreet())
@@ -76,7 +78,7 @@ public class AuthentificationService {
             addressRepository.save(address);
         }
 
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken);
         return AuthentificationResponseDto.builder()
                 .id(savedUser.getId())
@@ -101,11 +103,11 @@ public class AuthentificationService {
                         request.getEmail(),
                         request.getPassword()));
 
-        var user = (User) userRepository
+        User user = (User) userRepository
                 .findByEmail(request.getEmail())
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "User with email " + request.getEmail() + " not found!"));
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);
         return AuthentificationResponseDto.builder()
@@ -118,7 +120,7 @@ public class AuthentificationService {
     }
 
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
+        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
         if (validUserTokens.isEmpty()) {
             return;
         }
@@ -130,7 +132,7 @@ public class AuthentificationService {
     }
 
     private void savedUserToken(User user, String jwtToken) {
-        var token = Token.builder()
+        Token token = Token.builder()
                 .user(user)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
