@@ -45,7 +45,7 @@ public interface UsersApi {
                                     schema = @Schema(implementation = UserWithAddressResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "Bad Request",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = StandardResponseDto.class))),
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
