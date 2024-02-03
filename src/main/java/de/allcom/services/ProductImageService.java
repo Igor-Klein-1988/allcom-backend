@@ -72,20 +72,6 @@ public class ProductImageService {
         }
     }
 
-//    public void deleteImages(List<String> imagesToRemove) {
-//        for (String imagePath : imagesToRemove) {
-//            try {
-//                Files.delete(Path.of(imagePath));
-//            } catch (IOException e) {
-//                throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
-//                        "Failed to delete file: " + imagePath + ", error " + e.getMessage());
-//            }
-//            productImageRepository.deleteByLink(imagePath).orElseThrow(() -> {
-//                throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY, "Failed to delete link: " + imagePath);
-//            });
-//        }
-//    }
-
     public void deleteImages(List<String> imagesToRemove) {
         for (String imagePath : imagesToRemove) {
             try {

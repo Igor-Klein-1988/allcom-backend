@@ -30,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString(exclude = { "tokens", "hashPassword" })
+@ToString
 @Table(name = "account")
 public class User implements UserDetails {
     @Id
@@ -46,6 +46,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @ToString.Exclude
     @Column(nullable = false)
     private String hashPassword;
 
@@ -79,9 +80,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime createAt;
 
+    @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Token> tokens;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -117,6 +118,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return !isBlocked;
     }
+
     @ToString.Exclude
     @OneToMany(mappedBy = "winner")
     private List<Auction> wonAuctions;

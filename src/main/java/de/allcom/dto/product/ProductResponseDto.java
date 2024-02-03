@@ -31,7 +31,7 @@ public class ProductResponseDto {
     @Schema(description = "State of product", example = "IN_STOCK")
     private String state;
 
-    @Schema(description = "imageLinks", example = "[]")
+    @Schema(description = "imageLinks", example = "[\"/images/2/1ed74407-c18d-40e0-9b9b-c53b9fb99634.jpeg\"]")
     private List<String> imageLinks;
 
     @Schema(description = "Current auction of the product")

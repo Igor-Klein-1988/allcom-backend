@@ -3,7 +3,6 @@ package de.allcom.controllers.api;
 import de.allcom.dto.StandardResponseDto;
 import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
-import de.allcom.exceptions.RestException;
 import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -46,7 +45,7 @@ public interface UsersApi {
                                     schema = @Schema(implementation = UserWithAddressResponseDto.class)))),
             @ApiResponse(responseCode = "400", description = "Bad Request",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RestException.class))),
+                            schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),

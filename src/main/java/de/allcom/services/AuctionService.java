@@ -13,7 +13,7 @@ import de.allcom.models.User;
 import de.allcom.repositories.AuctionRepository;
 import de.allcom.repositories.BetRepository;
 import de.allcom.repositories.ProductRepository;
-import de.allcom.repositories.UsersRepository;
+import de.allcom.repositories.UserRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -34,7 +34,7 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final BetRepository betRepository;
     private final ProductRepository productRepository;
-    private final UsersRepository userRepository;
+    private final UserRepository userRepository;
     private final BetService betService;
 
     private final JobScheduler jobScheduler;
@@ -87,13 +87,16 @@ public class AuctionService {
     public AuctionResponseDto addBet(NewBetDto newBetDto) {
         log.info(AuctionService.log.getName());
         final User user = userRepository.findById(newBetDto.getUserId())
-                                  .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-                                          "User with id <" + newBetDto.getUserId() + "> not found"));
-        // TODO check user isBlock
+                                        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                                                "User with id <" + newBetDto.getUserId() + "> not found"));
+        if (user.isBlocked() || !user.isChecked()) {
+            throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
+                                                "User with id <" + user.getId() + "> Blocked or not Checked");
+        }
+
         Auction auction = auctionRepository.findById(newBetDto.getAuctionId())
                                            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                                                    "Auction with id <" + newBetDto.getAuctionId() + "> not found"));
-
         if (!auction.getState().equals(Auction.State.ACTIVE)) {
             throw new RestException(HttpStatus.BAD_REQUEST,
                     "Auction with id <" + newBetDto.getAuctionId() + "> has state <" + auction.getState() + ">");

@@ -35,7 +35,7 @@ public class ProductUpdateRequestDto {
     private Float weight;
 
     @Schema(description = "Color of the product", example = "Black")
-    @Size(min = 1, max = 30, message = "Color of the product must be between 1 and 50 characters")
+    @Size(min = 1, max = 30, message = "Color of the product must be between 1 and 30 characters")
     private String color;
 
     @Schema(description = "Category id", example = "1")

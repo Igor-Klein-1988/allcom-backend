@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public interface CategoryApi {
     int QUANTITY_OF_DIGITS_FOR_LANGUAGE = 2;
 
-    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @Operation(summary = "Categories with All Names", description = "Available to everyone. Default role is Admin")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The request was processed successfully", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
@@ -38,7 +38,7 @@ public interface CategoryApi {
     @GetMapping("/all")
     List<CategoryDto> findCategoriesWithAllNames();
 
-    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @Operation(summary = "Categories with one language", description = "Available to everyone. Default role is Admin")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The request was processed successfully", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
@@ -53,7 +53,7 @@ public interface CategoryApi {
             @PathVariable @Valid @Size(min = QUANTITY_OF_DIGITS_FOR_LANGUAGE, max = QUANTITY_OF_DIGITS_FOR_LANGUAGE)
             @Parameter(description = "Language identifier", example = "ru") String language);
 
-    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @Operation(summary = "Get Category by id", description = "Available to everyone. Default role is Admin")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The request was processed successfully", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
@@ -67,7 +67,8 @@ public interface CategoryApi {
     @GetMapping("/one/{id}")
     CategoryDto findCategoryById(@PathVariable @Parameter(description = "Category identifier", example = "1")  Long id);
 
-    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @Operation(summary = "Get Category by id with one language",
+            description = "Available to everyone. Default role is Admin")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The request was processed successfully", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),
@@ -84,7 +85,7 @@ public interface CategoryApi {
             max = QUANTITY_OF_DIGITS_FOR_LANGUAGE)
             @Parameter(description = "Language identifier", example = "ru") String language);
 
-    @Operation(summary = "Categories", description = "Available to everyone. Default role is Admin")
+    @Operation(summary = "Get Categories by parentId", description = "Available to everyone. Default role is Admin")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The request was processed successfully", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class))),

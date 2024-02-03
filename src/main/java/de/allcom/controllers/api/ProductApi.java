@@ -11,10 +11,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +32,16 @@ public interface ProductApi {
     String DEFAULT_PAGE = "0";
     String DEFAULT_SIZE = "20";
 
-    @Operation(summary = "Add Product", description = "Default role is Admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
+    @Operation(summary = "Add Product", description = "Available only to the ADMIN")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product added", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Product did not found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "422", description = "Failed to save file", content =
@@ -45,12 +51,16 @@ public interface ProductApi {
     ProductResponseDto create(@RequestParam("auction") String auctionJson, @RequestParam("storage") String storageJson,
             @ModelAttribute ProductCreateRequestDto productDto);
 
-    @Operation(summary = "Update Product", description = "Default role is Admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
+    @Operation(summary = "Update Product", description = "Available only to the ADMIN")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product updated", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Validation error", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Product did not found", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
             @ApiResponse(responseCode = "422", description = "Failed to save file", content =
@@ -78,8 +88,9 @@ public interface ProductApi {
             @ApiResponse(responseCode = "400", description = "Bad request", content =
             @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))})
     @GetMapping("/search")
-    Page<ProductResponseDto> searchByCategoryOrName(@RequestParam(name = "categoryId", required = false)
-            Long categoryId, @RequestParam(required = false) String searchQuery,
+    Page<ProductResponseDto> searchByCategoryOrName(
+            @RequestParam(name = "categoryId", required = false) Long categoryId,
+            @RequestParam(required = false) String searchQuery,
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE) int size);
 }

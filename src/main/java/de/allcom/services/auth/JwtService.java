@@ -25,10 +25,10 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     @Value("${jwt.secret}")
-    private String JWT_SECRET;
+    private String jwtSecret;
 
     @Value("${jwt.lifetime}")
-    private long JWT_LIFETIME;
+    private long jwtLifetime;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -45,7 +45,7 @@ public class JwtService {
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime expirationTime = currentTime.plusSeconds(JWT_LIFETIME);
+        LocalDateTime expirationTime = currentTime.plusSeconds(jwtLifetime);
 
         return Jwts
                 .builder()
@@ -92,7 +92,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
