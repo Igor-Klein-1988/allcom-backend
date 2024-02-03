@@ -1,7 +1,9 @@
 package de.allcom.dto.storage;
 
+import de.allcom.models.Storage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +18,8 @@ import lombok.Setter;
 @Builder
 @Schema(name = "Add a place to storage", description = "Data for add new place in storage")
 public class StorageDto {
-
-    @Schema(description = "id of storage", example = "1")
+    @NotNull(message = "Storage identifier is required")
+    @Schema(description = "Storage identifier", example = "1")
     private Long id;
 
     @NotBlank(message = "Area is required")
@@ -25,15 +27,30 @@ public class StorageDto {
     @Schema(description = "Area of storage", example = "R")
     private String area;
 
-    @NotBlank(message = "Rack is required")
+    @NotNull(message = "Rack is required")
     @Schema(description = "Rack of storage", example = "12")
     private Integer rack;
 
-    @NotBlank(message = "Section is required")
+    @NotNull(message = "Section is required")
     @Schema(description = "Section of storage", example = "12")
     private Integer section;
 
-    @NotBlank(message = "Shelve is required")
-    @Schema(description = "Shelve of storage", example = "12")
-    private Integer shelve;
+    @NotNull(message = "shelf is required")
+    @Schema(description = "shelf of storage", example = "12")
+    private Integer shelf;
+
+    @Schema(description = "Product identifier", example = "2")
+    private Long productId;
+
+    public static StorageDto from(Storage storage) {
+
+        return StorageDto.builder()
+                         .id(storage.getId())
+                         .area(storage.getArea().getName().toString())
+                         .rack(storage.getRack().getNumber())
+                         .section(storage.getSection().getNumber())
+                         .shelf(storage.getShelf().getNumber())
+                         .productId(storage.getProduct().getId())
+                         .build();
+    }
 }

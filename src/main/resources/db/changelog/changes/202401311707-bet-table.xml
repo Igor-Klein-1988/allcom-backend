@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- ChangeSet for Bet -->
+    <changeSet id="202401041707-create-bet-table" author="IgorKlein">
+        <createTable tableName="bet">
+            <column name="id" type="BIGINT"  autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auction_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bet_amount" type="INTEGER">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="202401041707-add-fk_bet_user" author="IgorKlein">
+        <addForeignKeyConstraint constraintName="fk_bet_user"
+                                 baseTableName="bet"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="202401041707-add-fk_bet_auction" author="IgorKlein">
+        <addForeignKeyConstraint constraintName="fk_bet_auction"
+                                 baseTableName="bet"
+                                 baseColumnNames="auction_id"
+                                 referencedTableName="auction"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

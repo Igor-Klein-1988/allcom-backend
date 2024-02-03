@@ -7,7 +7,7 @@
     <changeSet id="2024-01-25-21:20-insert-storage-dev.xml" author="DariaLavrushko" context="@dev">
         <sql>
             INSERT INTO storage
-                (area_id, rack_id, section_id, line_id)
+                (area_id, rack_id, section_id, shelf_id)
             VALUES (1, 1, 1, 1),
                    (1, 1, 1, 2),
                    (1, 1, 1, 3),

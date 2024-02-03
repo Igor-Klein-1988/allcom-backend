@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Insert initial data for Auction -->
+    <changeSet id="202401041706-insert-auctions" author="IgorKlein" context="@dev">
+        <sql>
+            SET @startAt = ADDDATE(CURRENT_DATE, INTERVAL -DAYOFWEEK(CURRENT_DATE) + 2 DAY) + INTERVAL 8 HOUR;
+            SET @plannedEndAt = CASE WHEN DAYOFWEEK(CURRENT_DATE) = 6 THEN CURRENT_DATE + INTERVAL 23 HOUR ELSE ADDDATE(CURRENT_DATE, INTERVAL 6 - DAYOFWEEK(CURRENT_DATE) DAY) + INTERVAL 23 HOUR END;
+            SET @createdAt = ADDDATE(CURRENT_DATE, INTERVAL -DAYOFWEEK(CURRENT_DATE) + 1 DAY) + INTERVAL 8 HOUR;
+            SET @oneWeekAgo = ADDDATE(@createdAt, INTERVAL -1 WEEK);
+
+            INSERT INTO auction
+            (start_price, start_at, planned_end_at, current_planned_end_at, actual_end_at, state, product_id, winner_id, updated_at, created_at)
+            VALUES
+                (1100, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 1, NULL, @CreatedAt, @CreatedAt),
+                (1100, ADDDATE(@startAt, INTERVAL -1 WEEK), ADDDATE(@plannedEndAt, INTERVAL -1 WEEK), ADDDATE(@plannedEndAt, INTERVAL -1 WEEK), ADDDATE(@plannedEndAt, INTERVAL -1 WEEK), 'UNSUCCESSFUL', 1, NULL, ADDDATE(@plannedEndAt, INTERVAL -1 WEEK), ADDDATE(@createdAt, INTERVAL -1 WEEK)),
+                (855, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 2, NULL, @CreatedAt, @CreatedAt),
+                (44, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 3, NULL, @CreatedAt, @CreatedAt),
+                (213, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 4, NULL, @CreatedAt, @CreatedAt),
+                (46, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 5, NULL, @CreatedAt, @CreatedAt),
+                (2, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 6, NULL, @CreatedAt, @CreatedAt),
+                (20, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 7, NULL, @CreatedAt, @CreatedAt),
+                (15, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 8, NULL, @CreatedAt, @CreatedAt),
+                (11, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 9, NULL, @CreatedAt, @CreatedAt),
+                (30, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 10, NULL, @CreatedAt, @CreatedAt),
+                (60, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 11, NULL, @CreatedAt, @CreatedAt),
+                (15, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 12, NULL, @CreatedAt, @CreatedAt),
+                (450, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 13, NULL, @CreatedAt, @CreatedAt),
+                (259, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 14, NULL, @CreatedAt, @CreatedAt),
+                (10, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 15, NULL, @CreatedAt, @CreatedAt),
+                (15, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 16, NULL, @CreatedAt, @CreatedAt),
+                (340, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 17, NULL, @CreatedAt, @CreatedAt),
+                (235, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 18, NULL, @CreatedAt, @CreatedAt),
+                (310, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 19, NULL, @CreatedAt, @CreatedAt),
+                (2, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 20, NULL, @CreatedAt, @CreatedAt),
+                (87, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 21, NULL, @CreatedAt, @CreatedAt),
+                (9, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 22, NULL, @CreatedAt, @CreatedAt),
+                (37, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 23, NULL, @CreatedAt, @CreatedAt),
+                (189, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 24, NULL, @CreatedAt, @CreatedAt),
+                (92, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 25, NULL, @CreatedAt, @CreatedAt),
+                (387, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 26, NULL, @CreatedAt, @CreatedAt),
+                (176, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 27, NULL, @CreatedAt, @CreatedAt),
+                (54, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 28, NULL, @CreatedAt, @CreatedAt),
+                (205, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 29, NULL, @CreatedAt, @CreatedAt),
+                (28, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 30, NULL, @CreatedAt, @CreatedAt),
+                (52, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 31, NULL, @CreatedAt, @CreatedAt),
+                (24, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 32, NULL, @CreatedAt, @CreatedAt),
+                (354, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 33, NULL, @CreatedAt, @CreatedAt),
+                (30, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 34, NULL, @CreatedAt, @CreatedAt),
+                (20, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 35, NULL, @CreatedAt, @CreatedAt),
+                (75, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 36, NULL, @CreatedAt, @CreatedAt),
+                (34, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 37, NULL, @CreatedAt, @CreatedAt),
+                (23, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 38, NULL, @CreatedAt, @CreatedAt),
+                (68, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 39, NULL, @CreatedAt, @CreatedAt),
+                (65, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 40, NULL, @CreatedAt, @CreatedAt),
+                (44, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 41, NULL, @CreatedAt, @CreatedAt),
+                (14, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 42, NULL, @CreatedAt, @CreatedAt),
+                (10, @startAt, @plannedEndAt, @plannedEndAt, NULL, 'ACTIVE', 43, NULL, @CreatedAt, @CreatedAt)
+        </sql>
+    </changeSet>
+</databaseChangeLog>

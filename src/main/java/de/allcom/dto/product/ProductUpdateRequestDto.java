@@ -17,9 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @Builder
 @Schema(name = "Add Product", description = "Data for add new product")
-public class SaveProductRequestDto {
+public class ProductUpdateRequestDto {
 
-    @Schema(description = "Id of the product", example = "1")
+    @Schema(description = "Product identifier", example = "1")
     private Long id;
 
     @NotBlank(message = "Name is required")
@@ -35,18 +35,15 @@ public class SaveProductRequestDto {
     private Float weight;
 
     @Schema(description = "Color of the product", example = "Black")
-    @Size(min = 3, max = 10, message = "Color of the product must be between 3 and 50 characters")
+    @Size(min = 1, max = 30, message = "Color of the product must be between 1 and 30 characters")
     private String color;
 
     @Schema(description = "Category id", example = "1")
     private Long categoryId;
 
-    @Schema(description = "Storage id", example = "1")
-    private Long storageId;
-
     @Schema(description = "Links of products photos for delete", example = "/path/path1/photo1.jpeg")
-    private List<String> imageLinks;
+    private List<String> imagesToRemove;
 
-    @Schema(description = "Photos of the product, jpeg", example = "foto1.jpeg")
+    @Schema(description = "Photos of the product, jpeg")
     private List<MultipartFile> images;
 }
