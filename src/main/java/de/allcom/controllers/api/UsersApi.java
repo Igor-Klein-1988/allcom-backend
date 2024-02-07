@@ -34,6 +34,7 @@ public interface UsersApi {
 
     String DEFAULT_SKIP = "0";
 
+
     @Operation(summary = "Get all users (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
@@ -55,7 +56,8 @@ public interface UsersApi {
     })
     Page<UserWithAddressResponseDto> getAll(
             @Valid @RequestParam(name = "limit", defaultValue = DEFAULT_LIMIT) int limit,
-            @Valid @RequestParam(name = "skip", defaultValue = DEFAULT_SKIP) int skip);
+            @Valid @RequestParam(name = "skip", defaultValue = DEFAULT_SKIP) int skip,
+            @RequestParam(name = "search", required = false) String searchQuery);
 
     @Operation(summary = "Update user (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -79,7 +81,8 @@ public interface UsersApi {
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
     UserWithAddressResponseDto updateUser(@Valid @RequestBody UserWithAddressRegistrationDto request,
-                                          @PathVariable Long userId);
+                                          @PathVariable @Min(value = 1,
+                                                  message = "User ID must be greater than or equal to 1") Long userId);
 
     @Operation(summary = "Get user profile")
     @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN','STOREKEEPER')")
@@ -148,7 +151,7 @@ public interface UsersApi {
     @Operation(summary = "Change status of user account (lock/unlock and ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
     @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
-    @PutMapping("/changeStatus/{userId}")
+    @PutMapping("/changeCredentialStatus/{userId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Status of User updated successfully",
                     content = @Content(mediaType = "application/json",
@@ -166,9 +169,33 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    UserWithAddressResponseDto changeStatus(
+    UserWithAddressResponseDto changeCredentialStatus(
             @PathVariable @Min(value = 1, message = "User ID must be greater than or equal to 1") Long userId,
-            @RequestParam boolean isChecked,
+            @RequestParam boolean isChecked);
+
+    @Operation(summary = "Change status of user account (lock/unlock and ADMIN only)")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"admin"})
+    @PutMapping("/changeBlockedStatus/{userId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status of User updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserWithAddressResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class)))
+    })
+    UserWithAddressResponseDto changeBlockedStatus(
+            @PathVariable @Min(value = 1, message = "User ID must be greater than or equal to 1") Long userId,
             @RequestParam boolean isBlocked);
 
 }

@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static de.allcom.models.Role.ADMIN;
 import static de.allcom.models.Role.CLIENT;
@@ -81,7 +82,8 @@ public class SecurityConfiguration {
                                             authentication);
                         }))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(SecurityExceptionHandlers.ENTRY_POINT)
+                        .defaultAuthenticationEntryPointFor(SecurityExceptionHandlers.ENTRY_POINT,
+                                new AntPathRequestMatcher("/api/**"))
                         .accessDeniedHandler(SecurityExceptionHandlers.ACCESS_DENIED_HANDLER));
         return http.build();
     }

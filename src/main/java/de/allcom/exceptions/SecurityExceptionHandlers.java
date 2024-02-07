@@ -18,9 +18,11 @@ public class SecurityExceptionHandlers {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static final AuthenticationEntryPoint ENTRY_POINT = (request, response, authException) ->
-            fillResponse(response, HttpStatus.UNAUTHORIZED, "User unauthorized." +  " " + authException.getMessage());
+            fillResponse(response,
+                    response.getStatus() >= 400 ? HttpStatus.valueOf(response.getStatus()) : HttpStatus.UNAUTHORIZED,
+                    "Error." + " " + authException.getMessage());
 
-    public static final AccessDeniedHandler ACCESS_DENIED_HANDLER =  (request, response, accessDeniedException) -> {
+    public static final AccessDeniedHandler ACCESS_DENIED_HANDLER = (request, response, accessDeniedException) -> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         fillResponse(response, HttpStatus.FORBIDDEN, "Access denied for user with email <"
