@@ -30,7 +30,7 @@ public class UserWithAddressRegistrationDto {
     private String lastName;
 
     @NotBlank(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[A-Za-zßäöüÄÖÜ])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
             message = "Password must be at least 8 characters long and include letters, numbers,"
             + " and special characters")
     @Schema(description = "User's password", example = "Qwerty007!")

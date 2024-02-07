@@ -15,10 +15,11 @@ import de.allcom.models.token.TokenType;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
+import de.allcom.services.mail.EmailSender;
+import de.allcom.services.mail.MailTemplatesUtil;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +43,10 @@ public class AuthentificationService {
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
+
+    private final EmailSender emailSender;
+
+    private final MailTemplatesUtil mailTemplatesUtil;
 
     @Transactional
     public AuthentificationResponseDto register(UserWithAddressRegistrationDto request) {
@@ -78,6 +83,10 @@ public class AuthentificationService {
             addressRepository.save(address);
         }
 
+        String html = mailTemplatesUtil.createRegistrationMail(user.getFirstName(), user.getLastName());
+
+        emailSender.send(user.getEmail(), "Registrierung auf der Allcom-Website", html);
+
         String jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken);
         return AuthentificationResponseDto.builder()
@@ -94,7 +103,7 @@ public class AuthentificationService {
             throw new RestException(HttpStatus.BAD_REQUEST,
                     "Email and password are required!");
         } else if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
-            throw new RestException(HttpStatus.NOT_FOUND,
+            throw new RestException(HttpStatus.UNAUTHORIZED,
                     "User with email " + request.getEmail() + " not found!");
         }
 

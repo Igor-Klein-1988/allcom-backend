@@ -17,12 +17,16 @@ public class UserController implements UsersApi {
     private final UserService userService;
 
     @Override
-    public Page<UserWithAddressResponseDto> getAll(int limit, int skip) {
+    public Page<UserWithAddressResponseDto> getAll(int limit, int skip, String searchQuery) {
         if (limit < 0 || skip < 0) {
             throw new RestException(HttpStatus.BAD_REQUEST, "Limit and skip must be non-negative values.");
         }
-        PageRequest pageRequest = PageRequest.of(skip, limit);
-        return userService.getAll(pageRequest);
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            return userService.searchUsers(limit, skip, searchQuery);
+        } else {
+            PageRequest pageRequest = PageRequest.of(skip, limit);
+            return userService.getAll(pageRequest);
+        }
     }
 
     @Override
@@ -46,7 +50,12 @@ public class UserController implements UsersApi {
     }
 
     @Override
-    public UserWithAddressResponseDto changeStatus(Long userId, boolean isChecked, boolean isBlocked) {
-        return userService.changeStatus(userId, isChecked, isBlocked);
+    public UserWithAddressResponseDto changeCredentialStatus(Long userId, boolean isChecked) {
+        return userService.changeCredentialStatus(userId, isChecked);
+    }
+
+    @Override
+    public UserWithAddressResponseDto changeBlockedStatus(Long userId, boolean isBlocked) {
+        return userService.changeBlockedStatus(userId, isBlocked);
     }
 }
