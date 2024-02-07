@@ -78,11 +78,13 @@ public class ProductImageService {
 
     public void deleteImages(List<String> imagesToRemove) {
         for (String imagePath : imagesToRemove) {
+            String correctPath = uploadPath.substring(0, uploadPath.length() - 7) + imagePath;
             try {
-                Files.delete(Path.of(imagePath));
+
+                Files.delete(Path.of(correctPath));
             } catch (IOException e) {
                 throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Failed to delete file: " + imagePath + ", error " + e.getMessage());
+                        "Failed to delete file: " + correctPath + ", error " + e.getMessage());
             }
             productImageRepository.deleteByLink(imagePath)
                                   .orElseThrow(() -> new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
