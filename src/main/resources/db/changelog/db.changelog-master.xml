@@ -31,5 +31,7 @@
     <include file="changes/202401311705-auction-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202401311706-insert-auctions-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401311707-bet-table.xml" relativeToChangelogFile="true"/>
+
     <include file="changes/202401311708-insert-bets-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202402031338-token-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

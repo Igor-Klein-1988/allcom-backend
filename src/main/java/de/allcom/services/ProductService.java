@@ -152,12 +152,12 @@ public class ProductService {
             if (categoryIds.isEmpty()) {
                 throw new RestException(HttpStatus.BAD_REQUEST, "Category with id: " + categoryId + " not found");
             }
-            products = isSearchQueryPresent ? productRepository.findAllByCategoryIdInAndNameStartsWithIgnoreCase(
+            products = isSearchQueryPresent ? productRepository.findAllByCategoryIdInAndNameContainingIgnoreCase(
                     categoryIds, searchQuery, pageRequest)
                     : productRepository.findAllByCategoryIdIn(categoryIds, pageRequest);
             return products.map(converters::convertToProductResponseDto);
         } else {
-            products = isSearchQueryPresent ? productRepository.findAllByNameStartsWithIgnoreCase(searchQuery,
+            products = isSearchQueryPresent ? productRepository.findAllByNameContainingIgnoreCase(searchQuery,
                     pageRequest) : productRepository.findAll(pageRequest);
             return products.map(converters::convertToProductResponseDto);
         }

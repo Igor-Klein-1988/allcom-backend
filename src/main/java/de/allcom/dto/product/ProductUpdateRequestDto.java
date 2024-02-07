@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @Builder
-@Schema(name = "Add Product", description = "Data for add new product")
+@Schema(name = "Product Update Request Dto", description = "Data for update new product")
 public class ProductUpdateRequestDto {
 
     @Schema(description = "Product identifier", example = "1")

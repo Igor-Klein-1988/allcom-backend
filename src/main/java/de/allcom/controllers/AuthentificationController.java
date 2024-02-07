@@ -14,11 +14,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,10 +75,12 @@ public class AuthentificationController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
+
+    //@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
     @PostMapping("/login")
     public AuthentificationResponseDto login(
-            @Valid @RequestBody AuthentificationRequestDto request) {
-        return authentificationService.login(request);
+            @Valid @RequestBody AuthentificationRequestDto request, HttpServletResponse response) {
+        return authentificationService.login(request, response);
     }
 
     @Operation(summary = "Change user password", description = "Available to everyone.")
@@ -97,5 +102,18 @@ public class AuthentificationController {
             @Valid @RequestBody ChangePasswordRequestDto request,
             Principal connectedUser) {
         return authentificationService.changePassword(request, connectedUser);
+    }
+
+
+    @Operation(summary = "Сheck Auth", description = "Available to everyone.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User authenticated"),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ValidationErrorsDto.class)))
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/check")
+    public AuthentificationResponseDto checkAuth(HttpServletRequest request) {
+        return authentificationService.checkAuth(request);
     }
 }
