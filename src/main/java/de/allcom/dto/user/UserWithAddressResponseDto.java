@@ -45,11 +45,12 @@ public class UserWithAddressResponseDto {
         dto.setTaxNumber(user.getTaxNumber());
 
         AddressDto addressDto = new AddressDto();
-        addressDto.setPostIndex(address.getPostIndex());
-        addressDto.setCity(address.getCity());
-        addressDto.setStreet(address.getStreet());
-        addressDto.setHouseNumber(address.getHouseNumber());
-
+        if (!(address == null)) {
+            addressDto.setPostIndex(address.getPostIndex());
+            addressDto.setCity(address.getCity());
+            addressDto.setStreet(address.getStreet());
+            addressDto.setHouseNumber(address.getHouseNumber());
+        }
         dto.setAddress(addressDto);
 
         dto.setRole(user.getRole().name());

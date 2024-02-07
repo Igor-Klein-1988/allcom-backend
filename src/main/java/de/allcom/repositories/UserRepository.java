@@ -15,5 +15,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
             countQuery = "SELECT COUNT(u) FROM User u LEFT JOIN Address a ON u.id = a.user.id")
     Page<Object[]> findAllUsersWithAddresses(Pageable pageable);
 
+    @Query(value = "SELECT u, a FROM User u LEFT JOIN Address a ON u.id = a.user.id "
+            + "WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) "
+            + "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) "
+            + "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%'))",
+            countQuery = "SELECT COUNT(u) FROM User u LEFT JOIN Address a ON u.id = a.user.id "
+                    + "WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) "
+                    + "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) "
+                    + "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%'))")
+    Page<Object[]> searchUsersWithAddresses(String query, Pageable pageable);
+
     Optional<Object> findByEmail(String userEmail);
 }

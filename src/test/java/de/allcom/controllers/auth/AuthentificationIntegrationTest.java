@@ -1,11 +1,17 @@
 package de.allcom.controllers.auth;
 
+import de.allcom.services.mail.EmailSender;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -13,7 +19,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,16 +29,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AuthentificationIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private EmailSender emailSender;
 
     @Nested
     @DisplayName("POST /api/auth/login:")
     public class LoginUser {
 
         @Test
+        @Order(1)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void login_exists_user() throws Exception {
@@ -46,9 +56,11 @@ public class AuthentificationIntegrationTest {
                                     }"""))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id", is(1)));
+
         }
 
         @Test
+        @Order(2)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void login_with_not_exists_user() throws Exception {
@@ -59,10 +71,11 @@ public class AuthentificationIntegrationTest {
                                       "email": "james@mail.com",
                                       "password": "Qwerty007!"
                                     }"""))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isUnauthorized());
         }
 
         @Test
+        @Order(3)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void login_with_exists_user_but_incorrect_password() throws Exception {
@@ -81,8 +94,8 @@ public class AuthentificationIntegrationTest {
     @DisplayName("POST /api/auth/register:")
     public class RegisterUser {
 
-        @Transactional
         @Test
+        @Order(4)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void register_new_user() throws Exception {
@@ -109,10 +122,14 @@ public class AuthentificationIntegrationTest {
                                     }"""))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id", is(11)));
+
+            Mockito.verify(emailSender, Mockito.times(1))
+                    .send(Mockito.anyString(), Mockito.eq("Registrierung auf der Allcom-Website"), Mockito.anyString());
+
         }
 
-        @Transactional
         @Test
+        @Order(5)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void register_user_which_already_exists() throws Exception {
@@ -140,8 +157,8 @@ public class AuthentificationIntegrationTest {
                     .andExpect(status().isConflict());
         }
 
-        @Transactional
         @Test
+        @Order(6)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void register_new_user_with_not_strong_password() throws Exception {
@@ -169,8 +186,8 @@ public class AuthentificationIntegrationTest {
                     .andExpect(status().isBadRequest());
         }
 
-        @Transactional
         @Test
+        @Order(7)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void register_new_user_with_wrong_email() throws Exception {
@@ -198,8 +215,8 @@ public class AuthentificationIntegrationTest {
                     .andExpect(status().isBadRequest());
         }
 
-        @Transactional
         @Test
+        @Order(8)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void register_new_user_with_not_full_address() throws Exception {
@@ -232,8 +249,8 @@ public class AuthentificationIntegrationTest {
     @DisplayName("POST /api/auth/logout:")
     public class LogoutUser {
 
-        @Transactional
         @Test
+        @Order(9)
         @Sql(scripts = "/sql/data.sql")
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void logout_user() throws Exception {

@@ -8,6 +8,8 @@ import de.allcom.models.Address;
 import de.allcom.models.User;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.UserRepository;
+import de.allcom.services.mail.EmailSender;
+import de.allcom.services.mail.MailTemplatesUtil;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +27,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSender emailSender;
+    private final MailTemplatesUtil mailTemplatesUtil;
 
     public Page<UserWithAddressResponseDto> getAll(PageRequest pageRequest) {
         Page<Object[]> results = userRepository.findAllUsersWithAddresses(pageRequest);
+        return results.map(result -> UserWithAddressResponseDto.from((User) result[0], (Address) result[1]));
+    }
+
+    public Page<UserWithAddressResponseDto> searchUsers(int limit, int skip, String searchQuery) {
+        PageRequest pageRequest = PageRequest.of(skip, limit);
+
+        Page<Object[]> results = userRepository.searchUsersWithAddresses(searchQuery, pageRequest);
+
         return results.map(result -> UserWithAddressResponseDto.from((User) result[0], (Address) result[1]));
     }
 
@@ -41,6 +53,7 @@ public class UserService {
     public UserWithAddressResponseDto updateUser(UserWithAddressRegistrationDto request, Long userId) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
+        final boolean isCheckedBefore = existingUser.isChecked();
         existingUser.setFirstName(request.getFirstName());
         existingUser.setLastName(request.getLastName());
         existingUser.setEmail(request.getEmail());
@@ -52,6 +65,17 @@ public class UserService {
         existingUser.setChecked(request.isChecked());
         existingUser.setBlocked(request.isBlocked());
         existingUser.setUpdateAt(LocalDateTime.now());
+
+        if (request.isChecked() && !isCheckedBefore) {
+            String html = mailTemplatesUtil.createActivatedMail(existingUser.getFirstName(),
+                    existingUser.getLastName());
+            emailSender.send(existingUser.getEmail(), "Ihr Konto aktiviert", html);
+        }
+        if (request.isBlocked()) {
+            String html = mailTemplatesUtil.createBlocketedMail(existingUser.getFirstName(),
+                    existingUser.getLastName());
+            emailSender.send(existingUser.getEmail(), "Ihr Konto vorübergehend gesperrt", html);
+        }
 
         User savedUser = userRepository.save(existingUser);
 
@@ -71,6 +95,35 @@ public class UserService {
         return UserWithAddressResponseDto.from(savedUser, address);
     }
 
+    public UserWithAddressResponseDto changeCredentialStatus(Long userId, boolean isChecked) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
+        boolean isCheckedBefore = user.isChecked();
+        user.setChecked(isChecked);
+        userRepository.save(user);
+
+        if (isChecked && !isCheckedBefore) {
+            String html = mailTemplatesUtil.createActivatedMail(user.getFirstName(), user.getLastName());
+            emailSender.send(user.getEmail(), "Ihr Konto aktiviert", html);
+        }
+
+        return UserWithAddressResponseDto.from(user, addressRepository.findByUser(user));
+    }
+
+    public UserWithAddressResponseDto changeBlockedStatus(Long userId, boolean isBlocked) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
+        user.setBlocked(isBlocked);
+        userRepository.save(user);
+
+        if (isBlocked) {
+            String html = mailTemplatesUtil.createBlocketedMail(user.getFirstName(), user.getLastName());
+            emailSender.send(user.getEmail(), "Ihr Konto vorübergehend gesperrt", html);
+        }
+
+        return UserWithAddressResponseDto.from(user, addressRepository.findByUser(user));
+    }
+
     public UserWithAddressResponseDto foundUserByEmail(String userEmail) {
         User user = (User) userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
@@ -87,12 +140,4 @@ public class UserService {
         return UserWithAddressResponseDto.from(user, address);
     }
 
-    public UserWithAddressResponseDto changeStatus(Long userId, boolean isChecked, boolean isBlocked) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
-        user.setChecked(isChecked);
-        user.setBlocked(isBlocked);
-        userRepository.save(user);
-        return UserWithAddressResponseDto.from(user, addressRepository.findByUser(user));
-    }
 }
