@@ -18,7 +18,6 @@ import de.allcom.repositories.UserRepository;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
