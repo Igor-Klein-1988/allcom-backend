@@ -34,6 +34,7 @@ public class SecurityConfiguration {
             "/api/auth/refresh",
             "/api/auth/logout",
             "/api/auth/register",
+            "/api/auth/check",
             "/api/categories/**",
             "/api/products/search",
             "/api/products/{productId}",
@@ -50,7 +51,8 @@ public class SecurityConfiguration {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
+            "/h2-console"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;

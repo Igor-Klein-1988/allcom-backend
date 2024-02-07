@@ -17,20 +17,29 @@ import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
 import de.allcom.services.mail.EmailSender;
 import de.allcom.services.mail.MailTemplatesUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
 
 @Service
 @RequiredArgsConstructor
 public class AuthentificationService {
+    @Value("${jwt.lifetime}")
+    private long jwtLifetime;
 
     private final UserRepository userRepository;
 
@@ -40,19 +49,19 @@ public class AuthentificationService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
 
     private final EmailSender emailSender;
 
     private final MailTemplatesUtil mailTemplatesUtil;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
 
     @Transactional
     public AuthentificationResponseDto register(UserWithAddressRegistrationDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RestException(HttpStatus.CONFLICT,
-                    "User with email " + request.getEmail() + " already exists!");
+            throw new RestException(HttpStatus.CONFLICT, "User with email " + request.getEmail() + " already exists!");
         }
         LocalDateTime now = LocalDateTime.now();
         User user = User.builder()
@@ -90,27 +99,25 @@ public class AuthentificationService {
         String jwtToken = jwtService.generateToken(user);
         savedUserToken(savedUser, jwtToken);
         return AuthentificationResponseDto.builder()
-                .id(savedUser.getId())
-                .firstName(savedUser.getFirstName())
-                .lastName(savedUser.getLastName())
-                .email(savedUser.getEmail())
-                .token(jwtToken)
-                .build();
+                                          .id(savedUser.getId())
+                                          .firstName(savedUser.getFirstName())
+                                          .lastName(savedUser.getLastName())
+                                          .email(savedUser.getEmail())
+                                          .role(savedUser.getRole().toString())
+                                          .token(jwtToken)
+                                          .build();
     }
 
-    public AuthentificationResponseDto login(AuthentificationRequestDto request) {
+    public AuthentificationResponseDto login(AuthentificationRequestDto request, HttpServletResponse response) {
         if (request.getEmail() == null || request.getPassword() == null) {
-            throw new RestException(HttpStatus.BAD_REQUEST,
-                    "Email and password are required!");
+            throw new RestException(HttpStatus.BAD_REQUEST, "Email and password are required!");
         } else if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
             throw new RestException(HttpStatus.UNAUTHORIZED,
                     "User with email " + request.getEmail() + " not found!");
         }
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         User user = (User) userRepository
                 .findByEmail(request.getEmail())
@@ -119,13 +126,21 @@ public class AuthentificationService {
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);
+
+        Cookie authCookie = new Cookie("authorization", jwtToken);
+        authCookie.setHttpOnly(true);
+        authCookie.setMaxAge((int) jwtLifetime); // Время жизни куки в секундах
+        authCookie.setPath("/");
+        response.setHeader("X-XSS-Protection", "1; mode=block");
+        response.addCookie(authCookie);
         return AuthentificationResponseDto.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .token(jwtToken)
-                .build();
+                                          .id(user.getId())
+                                          .firstName(user.getFirstName())
+                                          .lastName(user.getLastName())
+                                          .email(user.getEmail())
+                                          .role(user.getRole().toString())
+                                          .token(jwtToken)
+                                          .build();
     }
 
     private void revokeAllUserTokens(User user) {
@@ -164,5 +179,41 @@ public class AuthentificationService {
 
         userRepository.save(user);
         return new StandardResponseDto("Password changed");
+    }
+
+    public AuthentificationResponseDto checkAuth(HttpServletRequest request) {
+        Cookie authCookie = WebUtils.getCookie(request, "authorization");
+        if (authCookie == null) {
+            return AuthentificationResponseDto.builder().isAuthenticated(false).build();
+        }
+
+        String token = authCookie.getValue();
+        try {
+            String userEmail = jwtService.extractUsername(token);
+            if (userEmail == null || userEmail.isEmpty()) {
+                return AuthentificationResponseDto.builder().isAuthenticated(false).build();
+            }
+
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            var isTokenValid = tokenRepository.findByToken(token)
+                                              .map(t -> !t.isExpired() && !t.isRevoked())
+                                              .orElse(false);
+            if (jwtService.isTokenValid(token, userDetails) && isTokenValid) {
+                return userRepository.findByEmail(userEmail)
+                                     .map(user -> AuthentificationResponseDto.builder()
+                                                                             .isAuthenticated(true)
+                                                                             .id(user.getId())
+                                                                             .firstName(user.getFirstName())
+                                                                             .lastName(user.getLastName())
+                                                                             .email(user.getEmail())
+                                                                             .role(user.getRole().toString())
+                                                                             .build())
+                                     .orElse(AuthentificationResponseDto.builder().isAuthenticated(false).build());
+            }
+
+            return AuthentificationResponseDto.builder().isAuthenticated(false).build();
+        } catch (Exception e) {
+            throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid token: " + e.getMessage());
+        }
     }
 }

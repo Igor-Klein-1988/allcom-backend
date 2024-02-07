@@ -1,5 +1,6 @@
 package de.allcom.services;
 
+import de.allcom.dto.StandardResponseDto;
 import de.allcom.dto.auction.AuctionDto;
 import de.allcom.dto.auction.AuctionRequestDto;
 import de.allcom.dto.auction.AuctionResponseDto;
@@ -22,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ public class AuctionService {
     private final UserRepository userRepository;
     private final BetService betService;
 
+    private final SimpMessagingTemplate messagingTemplate;
     private final JobScheduler jobScheduler;
     private final AuctionJobs auctionJobs;
 
@@ -84,50 +88,60 @@ public class AuctionService {
     }
 
     @Transactional
-    public AuctionResponseDto addBet(NewBetDto newBetDto) {
-        log.info(AuctionService.log.getName());
-        final User user = userRepository.findById(newBetDto.getUserId())
-                                        .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-                                                "User with id <" + newBetDto.getUserId() + "> not found"));
-        if (user.isBlocked() || !user.isChecked()) {
-            throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
-                                                "User with id <" + user.getId() + "> Blocked or not Checked");
+    public void addBet(NewBetDto newBetDto, SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            log.info(AuctionService.log.getName());
+            final User user = userRepository.findById(newBetDto.getUserId())
+                                            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                                                    "User with id <" + newBetDto.getUserId() + "> not found"));
+            if (user.isBlocked() || !user.isChecked()) {
+                String errorMessage = "User with id <" + user.getId() + "> Blocked or not Checked";
+                throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY, errorMessage);
+            }
+
+            Auction auction = auctionRepository.findById(newBetDto.getAuctionId())
+                                               .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                                                       "Auction with id <" + newBetDto.getAuctionId() + "> not found"));
+            if (!auction.getState().equals(Auction.State.ACTIVE)) {
+                throw new RestException(HttpStatus.BAD_REQUEST,
+                        "Auction with id <" + newBetDto.getAuctionId() + "> has state <" + auction.getState() + ">");
+            }
+
+            Optional<Bet> maxBet = betRepository.findFirstByAuctionIdOrderByBetAmountDesc(auction.getId());
+            Integer currentPrice = maxBet.isPresent() ? maxBet.get().getBetAmount() : auction.getStartPrice();
+            Integer betAmount = newBetDto.getBetAmount();
+            if (currentPrice < 0 || betAmount < currentPrice) {
+                throw new RestException(HttpStatus.BAD_REQUEST,
+                        "Bet rejected for auction id [" + auction.getId() + "]: " + "the new bet amount [" + betAmount
+                                + "] must be higher than the current highest price [" + currentPrice + "].");
+            }
+
+            int validBet = betService.getValidBet(currentPrice);
+            if (validBet != betAmount) {
+                throw new RestException(HttpStatus.BAD_REQUEST,
+                        "Bet rejected for auction id [" + auction.getId() + "]: the new bet amount [" + betAmount
+                                + "] does not match the valid bet amount [" + validBet + "].");
+            }
+
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime checkTime = auction.getCurrentPlannedEndAt().minusSeconds(EXTRA_TIME_AFTER_LAST_BET_SECONDS);
+            if (checkTime.isBefore(now)) {
+                auction.setCurrentPlannedEndAt(now.plusSeconds(EXTRA_TIME_AFTER_LAST_BET_SECONDS));
+                auctionRepository.save(auction);
+            }
+            betService.createBet(user, auction, betAmount);
+            AuctionResponseDto response = AuctionResponseDto.from(auction, betAmount);
+
+            messagingTemplate.convertAndSend("/topic/auction/" + auction.getId(), response);
+        } catch (RestException e) {
+            log.error("Error processing bet: " + e.getMessage());
+            String username = headerAccessor.getUser().getName();
+            Optional<User> user = userRepository.findByEmail(username);
+            if (user.isPresent()) {
+                StandardResponseDto errorMessage = StandardResponseDto.builder().message(e.getMessage()).build();
+                messagingTemplate.convertAndSend("/error/" + user.get().getId() + "/errors", errorMessage);
+            }
         }
-
-        Auction auction = auctionRepository.findById(newBetDto.getAuctionId())
-                                           .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-                                                   "Auction with id <" + newBetDto.getAuctionId() + "> not found"));
-        if (!auction.getState().equals(Auction.State.ACTIVE)) {
-            throw new RestException(HttpStatus.BAD_REQUEST,
-                    "Auction with id <" + newBetDto.getAuctionId() + "> has state <" + auction.getState() + ">");
-        }
-
-        Optional<Bet> maxBet = betRepository.findFirstByAuctionIdOrderByBetAmountDesc(auction.getId());
-        Integer currentPrice = maxBet.isPresent() ? maxBet.get().getBetAmount() : auction.getStartPrice();
-        Integer betAmount = newBetDto.getBetAmount();
-        if (currentPrice < 0 || betAmount < currentPrice) {
-            throw new RestException(HttpStatus.BAD_REQUEST,
-                    "Bet rejected for auction id [" + auction.getId() + "]: " + "the new bet amount [" + betAmount
-                            + "] must be higher than the current highest price [" + currentPrice + "].");
-        }
-
-        int validBet = betService.getValidBet(currentPrice);
-        if (validBet != betAmount) {
-            throw new RestException(HttpStatus.BAD_REQUEST,
-                    "Bet rejected for auction id [" + auction.getId() + "]: the new bet amount [" + betAmount
-                            + "] does not match the valid bet amount [" + validBet + "].");
-        }
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime checkTime = auction.getCurrentPlannedEndAt().minusSeconds(EXTRA_TIME_AFTER_LAST_BET_SECONDS);
-        if (checkTime.isAfter(now)) {
-            auction.setCurrentPlannedEndAt(now.plusSeconds(EXTRA_TIME_AFTER_LAST_BET_SECONDS));
-            auctionRepository.save(auction);
-        }
-
-        betService.createBet(user, auction, betAmount);
-
-        return AuctionResponseDto.from(auction, betAmount);
     }
 
     private void validateAuctionDates(LocalDateTime startAt, LocalDateTime plannedEndAt) {
