@@ -3,9 +3,7 @@ package de.allcom.repositories;
 import de.allcom.models.Product;
 import de.allcom.models.Wishlist;
 import de.allcom.models.WishlistItem;
-import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

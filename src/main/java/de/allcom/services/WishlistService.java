@@ -10,7 +10,6 @@ import de.allcom.repositories.ProductRepository;
 import de.allcom.repositories.WishlistItemRepository;
 import de.allcom.repositories.WishlistRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +28,8 @@ public class WishlistService {
     public Page<ProductWishlistDto> findProducts(Long userId, PageRequest pageRequest) {
         Wishlist wishlist = wishlistRepository.findByUserId(userId);
         if (wishlist != null) {
-            Page<WishlistItem> wishlistItems = wishlistItemRepository.findAllByWishlistId(wishlist.getId(), pageRequest);
+            Page<WishlistItem> wishlistItems =
+                    wishlistItemRepository.findAllByWishlistId(wishlist.getId(), pageRequest);
             return wishlistItems.map(p -> ProductWishlistDto.builder()
                     .id(p.getProduct().getId())
                     .name(p.getProduct().getName())
