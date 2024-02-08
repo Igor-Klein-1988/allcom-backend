@@ -1,5 +1,6 @@
 package de.allcom.dto.product;
 
+import de.allcom.dto.auction.AuctionDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
@@ -31,4 +32,7 @@ public class ProductWishlistDto {
 
     @Schema(description = "imageLinks", example = "[\"/images/2/1ed74407-c18d-40e0-9b9b-c53b9fb99634.jpeg\"]")
     private List<String> imageLinks;
+
+    @Schema(description = "Current auction of the product")
+    private AuctionDto lastCreatedAuction;
 }

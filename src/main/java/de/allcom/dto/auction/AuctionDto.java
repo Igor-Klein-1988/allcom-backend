@@ -53,7 +53,10 @@ public class AuctionDto {
     @Schema(description = "The date and time when the object was created", example = "2023-12-01T15:30:45")
     private LocalDateTime createdAt;
 
-    public static AuctionDto from(Auction auction, Integer lastBetAmount) {
+    @Schema(description = "LastUsersBetAmount", example = "240")
+    private Integer lastUsersBetAmount;
+
+    public static AuctionDto from(Auction auction, Integer lastBetAmount, Integer lastUsersBetAmount) {
         Long winnerId = auction.getWinner() != null ? auction.getWinner().getId() : null;
 
         return AuctionDto.builder()
@@ -69,6 +72,7 @@ public class AuctionDto {
                          .lastBetAmount(lastBetAmount)
                          .updatedAt(auction.getUpdatedAt())
                          .createdAt(auction.getCreatedAt())
+                         .lastUsersBetAmount(lastUsersBetAmount)
                          .build();
     }
 }

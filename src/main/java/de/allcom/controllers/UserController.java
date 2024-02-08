@@ -1,10 +1,12 @@
 package de.allcom.controllers;
 
 import de.allcom.controllers.api.UsersApi;
+import de.allcom.dto.product.ProductWishlistDto;
 import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.services.UserService;
+import de.allcom.services.WishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController implements UsersApi {
     private final UserService userService;
+    private final WishlistService wishlistService;
 
     @Override
     public Page<UserWithAddressResponseDto> getAll(int limit, int skip, String searchQuery) {
@@ -57,5 +60,22 @@ public class UserController implements UsersApi {
     @Override
     public UserWithAddressResponseDto changeBlockedStatus(Long userId, boolean isBlocked) {
         return userService.changeBlockedStatus(userId, isBlocked);
+    }
+
+    @Override
+    public Page<ProductWishlistDto> findProducts(Long userId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return wishlistService.findProducts(userId, pageRequest);
+    }
+
+    @Override
+    public Page<ProductWishlistDto> addProductToWishlist(Long userId, Long productId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return wishlistService.addProduct(userId, productId, pageRequest);
+    }
+
+    @Override
+    public void removeProductFromWishlist(Long userId, Long productId) {
+        wishlistService.removeProduct(userId, productId);
     }
 }

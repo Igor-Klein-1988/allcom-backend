@@ -1,6 +1,7 @@
 package de.allcom.controllers.api;
 
 import de.allcom.dto.StandardResponseDto;
+import de.allcom.dto.product.ProductWishlistDto;
 import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
 import de.allcom.validation.dto.ValidationErrorsDto;
@@ -18,13 +19,17 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 @Tags(@Tag(name = "Users"))
@@ -34,6 +39,8 @@ public interface UsersApi {
 
     String DEFAULT_SKIP = "0";
 
+    String DEFAULT_PAGE = "0";
+    String DEFAULT_SIZE = "20";
 
     @Operation(summary = "Get all users (ADMIN only)")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -197,5 +204,73 @@ public interface UsersApi {
     UserWithAddressResponseDto changeBlockedStatus(
             @PathVariable @Min(value = 1, message = "User ID must be greater than or equal to 1") Long userId,
             @RequestParam boolean isBlocked);
+
+    @Operation(summary = "Products in users wishlist", description = "Default role is Client")
+    @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"client"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWishlistDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/wishlist/{userId}")
+    Page<ProductWishlistDto> findProducts(@PathVariable Long userId,
+                                          @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) int page,
+                                          @RequestParam(name = "size", defaultValue = DEFAULT_SIZE) int size);
+
+    @Operation(summary = "Add product to wishlist", description = "Default role is Client")
+    @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"client"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Product added", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWishlistDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/wishlist/add/{userId}/{productId}")
+    Page<ProductWishlistDto> addProductToWishlist(@PathVariable @Min(value = 1,
+            message = "User ID must be greater than or equal to 1") Long userId,
+                                                  @PathVariable @Min(value = 1,
+                                                  message = "Product ID must be greater than or equal to 1")
+                                                  Long productId,
+                                                  @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) int page,
+                                                  @RequestParam(name = "size", defaultValue = DEFAULT_SIZE) int size);
+
+    @Operation(summary = "Remove product from wishlist", description = "Default role is Client")
+    @PreAuthorize("hasAnyAuthority('CLIENT', 'ADMIN')")
+    @SecurityRequirement(name = "bearerAuth", scopes = {"client"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Product removed", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWishlistDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Product did not found", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = StandardResponseDto.class)))}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/wishlist/remove/{userId}/{productId}")
+    void removeProductFromWishlist(@PathVariable @Min(value = 1,
+            message = "User ID must be greater than or equal to 1") Long userId,
+                                   @PathVariable @Min(value = 1,
+                                           message = "Product ID must be greater than or equal to 1") Long productId);
 
 }

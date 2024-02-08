@@ -52,7 +52,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                                            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                                                    "Product with id: " + id + " not found"));
-        return converters.convertToProductResponseDto(product);
+        return converters.convertToProductResponseDto(product, null);
     }
 
     @Transactional
@@ -91,7 +91,7 @@ public class ProductService {
         newAuction.setProduct(savedProductWithAllInfo);
         auctionRepository.save(newAuction);
 
-        return converters.convertToProductResponseDto(savedProductWithAllInfo);
+        return converters.convertToProductResponseDto(savedProductWithAllInfo, null);
     }
 
     @Transactional
@@ -139,7 +139,7 @@ public class ProductService {
         product.setUpdatedAt(LocalDateTime.now());
 
         Product savedProduct = productRepository.save(product);
-        return converters.convertToProductResponseDto(savedProduct);
+        return converters.convertToProductResponseDto(savedProduct, null);
     }
 
     public Page<ProductResponseDto> searchByCategoryOrName(Long categoryId, String searchQuery,
@@ -155,11 +155,11 @@ public class ProductService {
             products = isSearchQueryPresent ? productRepository.findAllByCategoryIdInAndNameContainingIgnoreCase(
                     categoryIds, searchQuery, pageRequest)
                     : productRepository.findAllByCategoryIdIn(categoryIds, pageRequest);
-            return products.map(converters::convertToProductResponseDto);
+            return products.map(p -> converters.convertToProductResponseDto(p, null));
         } else {
             products = isSearchQueryPresent ? productRepository.findAllByNameContainingIgnoreCase(searchQuery,
                     pageRequest) : productRepository.findAll(pageRequest);
-            return products.map(converters::convertToProductResponseDto);
+            return products.map(p -> converters.convertToProductResponseDto(p, null));
         }
     }
 }

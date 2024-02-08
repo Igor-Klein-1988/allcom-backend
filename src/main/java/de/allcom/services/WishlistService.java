@@ -1,14 +1,17 @@
 package de.allcom.services;
 
+import de.allcom.dto.product.ProductResponseDto;
 import de.allcom.dto.product.ProductWishlistDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Product;
-import de.allcom.models.ProductImage;
 import de.allcom.models.Wishlist;
 import de.allcom.models.WishlistItem;
+import de.allcom.repositories.AuctionRepository;
+import de.allcom.repositories.BetRepository;
 import de.allcom.repositories.ProductRepository;
 import de.allcom.repositories.WishlistItemRepository;
 import de.allcom.repositories.WishlistRepository;
+import de.allcom.services.utils.Converters;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,21 +27,28 @@ public class WishlistService {
     private final WishlistItemRepository wishlistItemRepository;
     private final ProductRepository productRepository;
     private final WishlistItemService wishlistItemService;
+    private final AuctionRepository auctionRepository;
+    private final BetRepository betRepository;
+    private final Converters converters;
 
     public Page<ProductWishlistDto> findProducts(Long userId, PageRequest pageRequest) {
         Wishlist wishlist = wishlistRepository.findByUserId(userId);
         if (wishlist != null) {
             Page<WishlistItem> wishlistItems =
                     wishlistItemRepository.findAllByWishlistId(wishlist.getId(), pageRequest);
-            return wishlistItems.map(p -> ProductWishlistDto.builder()
-                    .id(p.getProduct().getId())
-                    .name(p.getProduct().getName())
-                    .description(p.getProduct().getDescription())
-                    .weight(p.getProduct().getWeight())
-                    .color(p.getProduct().getColor())
-                    .categoryId(p.getProduct().getCategory().getId())
-                    .state(p.getProduct().getState().name())
-                    .imageLinks(p.getProduct().getImages().stream().map(ProductImage::getLink).toList())
+            Page<ProductResponseDto> productResponseDto = wishlistItems
+                    .map(wi -> converters.convertToProductResponseDto(wi.getProduct(), null));
+
+            return productResponseDto.map(p -> ProductWishlistDto.builder()
+                    .id(p.getId())
+                    .name(p.getName())
+                    .description(p.getDescription())
+                    .weight(p.getWeight())
+                    .color(p.getColor())
+                    .categoryId(p.getCategoryId())
+                    .state(p.getState())
+                    .imageLinks(p.getImageLinks())
+                    .lastCreatedAuction(p.getLastCreatedAuction())
                     .build());
         } else {
             return null;
