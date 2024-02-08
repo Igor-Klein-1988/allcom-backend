@@ -1,7 +1,7 @@
 package de.allcom.controllers;
 
 import de.allcom.controllers.api.UsersApi;
-import de.allcom.dto.product.ProductWishlistDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
 import de.allcom.dto.user.UserWithAddressUpdateDto;
 import de.allcom.exceptions.RestException;
@@ -63,13 +63,13 @@ public class UserController implements UsersApi {
     }
 
     @Override
-    public Page<ProductWishlistDto> findProducts(Long userId, int page, int size) {
+    public Page<ProductWithAuctionDto> findProducts(Long userId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return wishlistService.findProducts(userId, pageRequest);
     }
 
     @Override
-    public Page<ProductWishlistDto> addProductToWishlist(Long userId, Long productId, int page, int size) {
+    public Page<ProductWithAuctionDto> addProductToWishlist(Long userId, Long productId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return wishlistService.addProduct(userId, productId, pageRequest);
     }

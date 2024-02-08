@@ -1,7 +1,7 @@
 package de.allcom.controllers.api;
 
 import de.allcom.dto.StandardResponseDto;
-import de.allcom.dto.product.ProductWishlistDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
 import de.allcom.dto.user.UserWithAddressUpdateDto;
 import de.allcom.validation.dto.ValidationErrorsDto;
@@ -210,7 +210,7 @@ public interface UsersApi {
     @SecurityRequirement(name = "bearerAuth", scopes = {"client"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products found", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWishlistDto.class))),
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWithAuctionDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -220,7 +220,7 @@ public interface UsersApi {
     )
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/wishlist/{userId}")
-    Page<ProductWishlistDto> findProducts(@PathVariable Long userId,
+    Page<ProductWithAuctionDto> findProducts(@PathVariable Long userId,
                                           @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) int page,
                                           @RequestParam(name = "size", defaultValue = DEFAULT_SIZE) int size);
 
@@ -229,7 +229,7 @@ public interface UsersApi {
     @SecurityRequirement(name = "bearerAuth", scopes = {"client"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product added", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWishlistDto.class))),
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWithAuctionDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
@@ -243,7 +243,7 @@ public interface UsersApi {
     )
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/wishlist/add/{userId}/{productId}")
-    Page<ProductWishlistDto> addProductToWishlist(@PathVariable @Min(value = 1,
+    Page<ProductWithAuctionDto> addProductToWishlist(@PathVariable @Min(value = 1,
             message = "User ID must be greater than or equal to 1") Long userId,
                                                   @PathVariable @Min(value = 1,
                                                   message = "Product ID must be greater than or equal to 1")
@@ -256,7 +256,7 @@ public interface UsersApi {
     @SecurityRequirement(name = "bearerAuth", scopes = {"client"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product removed", content =
-            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWishlistDto.class))),
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductWithAuctionDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),

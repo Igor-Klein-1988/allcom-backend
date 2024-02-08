@@ -1,13 +1,11 @@
 package de.allcom.services;
 
 import de.allcom.dto.product.ProductResponseDto;
-import de.allcom.dto.product.ProductWishlistDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Product;
 import de.allcom.models.Wishlist;
 import de.allcom.models.WishlistItem;
-import de.allcom.repositories.AuctionRepository;
-import de.allcom.repositories.BetRepository;
 import de.allcom.repositories.ProductRepository;
 import de.allcom.repositories.WishlistItemRepository;
 import de.allcom.repositories.WishlistRepository;
@@ -26,12 +24,9 @@ public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final WishlistItemRepository wishlistItemRepository;
     private final ProductRepository productRepository;
-    private final WishlistItemService wishlistItemService;
-    private final AuctionRepository auctionRepository;
-    private final BetRepository betRepository;
     private final Converters converters;
 
-    public Page<ProductWishlistDto> findProducts(Long userId, PageRequest pageRequest) {
+    public Page<ProductWithAuctionDto> findProducts(Long userId, PageRequest pageRequest) {
         Wishlist wishlist = wishlistRepository.findByUserId(userId);
         if (wishlist != null) {
             Page<WishlistItem> wishlistItems =
@@ -39,23 +34,23 @@ public class WishlistService {
             Page<ProductResponseDto> productResponseDto = wishlistItems
                     .map(wi -> converters.convertToProductResponseDto(wi.getProduct(), null));
 
-            return productResponseDto.map(p -> ProductWishlistDto.builder()
-                    .id(p.getId())
-                    .name(p.getName())
-                    .description(p.getDescription())
-                    .weight(p.getWeight())
-                    .color(p.getColor())
-                    .categoryId(p.getCategoryId())
-                    .state(p.getState())
-                    .imageLinks(p.getImageLinks())
-                    .lastCreatedAuction(p.getLastCreatedAuction())
-                    .build());
+            return productResponseDto.map(p -> ProductWithAuctionDto.builder()
+                                                                    .id(p.getId())
+                                                                    .name(p.getName())
+                                                                    .description(p.getDescription())
+                                                                    .weight(p.getWeight())
+                                                                    .color(p.getColor())
+                                                                    .categoryId(p.getCategoryId())
+                                                                    .state(p.getState())
+                                                                    .imageLinks(p.getImageLinks())
+                                                                    .lastCreatedAuction(p.getLastCreatedAuction())
+                                                                    .build());
         } else {
             return null;
         }
     }
 
-    public Page<ProductWishlistDto> addProduct(Long userId, Long productId, PageRequest pageRequest) {
+    public Page<ProductWithAuctionDto> addProduct(Long userId, Long productId, PageRequest pageRequest) {
         Wishlist wishlist = wishlistRepository.findByUserId(userId);
         Product productForAdd = productRepository.findById(productId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,

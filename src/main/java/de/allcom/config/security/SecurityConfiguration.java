@@ -37,6 +37,7 @@ public class SecurityConfiguration {
             "/api/auth/check",
             "/api/categories/**",
             "/api/products/search",
+            "/api/products/one-per-category",
             "/api/products/{productId}",
             "/ws/**",
 
@@ -64,6 +65,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .requestMatchers("/api/auth/changePassword").hasAnyAuthority(
                                 ADMIN.name(), CLIENT.name(), STOREKEEPER.name())

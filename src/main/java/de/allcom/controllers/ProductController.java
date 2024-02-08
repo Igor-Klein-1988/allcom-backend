@@ -8,11 +8,13 @@ import de.allcom.dto.auction.AuctionRequestDto;
 import de.allcom.dto.product.ProductCreateRequestDto;
 import de.allcom.dto.product.ProductResponseDto;
 import de.allcom.dto.product.ProductUpdateRequestDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.dto.storage.StorageCreateDto;
 import de.allcom.dto.storage.StorageDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.services.ProductService;
 import de.allcom.validation.ValidationUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,5 +66,10 @@ public class ProductController implements ProductApi {
     public Page<ProductResponseDto> searchByCategoryOrName(Long id, String searchQuery, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return productService.searchByCategoryOrName(id, searchQuery, pageRequest);
+    }
+
+    @Override
+    public List<ProductWithAuctionDto> getOneItemPerCategory() {
+        return productService.getOneItemPerCategory();
     }
 }

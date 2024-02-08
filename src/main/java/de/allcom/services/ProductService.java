@@ -5,6 +5,7 @@ import de.allcom.dto.auction.AuctionRequestDto;
 import de.allcom.dto.product.ProductCreateRequestDto;
 import de.allcom.dto.product.ProductResponseDto;
 import de.allcom.dto.product.ProductUpdateRequestDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.dto.storage.StorageCreateDto;
 import de.allcom.dto.storage.StorageDto;
 import de.allcom.exceptions.RestException;
@@ -22,6 +23,7 @@ import de.allcom.services.utils.Converters;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ProductService {
 
+    public static final long PARENT_CATEGORY_ID = 0L;
     private final AuctionRepository auctionRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
@@ -63,6 +66,8 @@ public class ProductService {
                                                       "Category with id: " + productDto.getCategoryId()
                                                               + " not found"));
         Storage savedStorage = storageService.create(storageDto);
+        LocalDateTime timeNow = LocalDateTime.now();
+        Product.State state = auctionDto.getStartAt().isAfter(timeNow) ? Product.State.IN_STOCK : Product.State.SOLD;
 
         Product product = new Product();
         product.setName(productDto.getName());
@@ -71,9 +76,9 @@ public class ProductService {
         product.setColor(productDto.getColor());
         product.setCategory(category);
         product.setStorage(savedStorage);
-        product.setState(Product.State.IN_STOCK);
-        product.setUpdatedAt(LocalDateTime.now());
-        product.setCreatedAt(LocalDateTime.now());
+        product.setState(state);
+        product.setUpdatedAt(timeNow);
+        product.setCreatedAt(timeNow);
         Product savedProduct = productRepository.save(product);
 
         Auction newAuction = auctionService.create(auctionDto, savedProduct.getId());
@@ -152,14 +157,29 @@ public class ProductService {
             if (categoryIds.isEmpty()) {
                 throw new RestException(HttpStatus.BAD_REQUEST, "Category with id: " + categoryId + " not found");
             }
-            products = isSearchQueryPresent ? productRepository.findAllByCategoryIdInAndNameContainingIgnoreCase(
+            products = isSearchQueryPresent
+                    ? productRepository.findAllByCategoryIdInAndNameContainingIgnoreCaseOrderByCreatedAtDesc(
                     categoryIds, searchQuery, pageRequest)
-                    : productRepository.findAllByCategoryIdIn(categoryIds, pageRequest);
+                    : productRepository.findAllByCategoryIdInOrderByCreatedAtDesc(categoryIds, pageRequest);
             return products.map(p -> converters.convertToProductResponseDto(p, null));
         } else {
-            products = isSearchQueryPresent ? productRepository.findAllByNameContainingIgnoreCase(searchQuery,
-                    pageRequest) : productRepository.findAll(pageRequest);
+            products = isSearchQueryPresent ? productRepository.findAllByNameContainingIgnoreCaseOrderByCreatedAtDesc(
+                    searchQuery, pageRequest) : productRepository.findAllByOrderByCreatedAtDesc(pageRequest);
             return products.map(p -> converters.convertToProductResponseDto(p, null));
         }
+    }
+
+    public List<ProductWithAuctionDto> getOneItemPerCategory() {
+        List<Product> products = new ArrayList<>();
+        for (Category category : categoryRepository.findAllByParentId(PARENT_CATEGORY_ID)) {
+            Set<Long> categoryIds = categoryService.findAllSubcategoryIdsWithCurrentCategoryId(category.getId());
+            Optional<Product> product = productRepository.findFirstByStateAndCategoryIdsInNative(
+                    Product.State.SOLD.toString(), categoryIds);
+            if (product.isPresent()) {
+                products.add(product.get());
+            }
+        }
+
+        return products.stream().map(p -> converters.convertToProductWithAuctionDto(p)).toList();
     }
 }
