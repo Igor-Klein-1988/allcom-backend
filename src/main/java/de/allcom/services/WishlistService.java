@@ -12,6 +12,8 @@ import de.allcom.repositories.WishlistRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,31 +26,26 @@ public class WishlistService {
     private final ProductRepository productRepository;
     private final WishlistItemService wishlistItemService;
 
-    public List<ProductWishlistDto> findProducts(Long userId) {
+    public Page<ProductWishlistDto> findProducts(Long userId, PageRequest pageRequest) {
         Wishlist wishlist = wishlistRepository.findByUserId(userId);
         if (wishlist != null) {
-            List<WishlistItem> wishlistItems = wishlistItemRepository.findAllByWishlistId(wishlist.getId());
-            List<Product> wishProducts = wishlistItems.stream()
-                    .map(WishlistItem::getProduct)
-                    .toList();
-            return wishProducts.stream()
-                    .map(p -> ProductWishlistDto.builder()
-                            .id(p.getId())
-                            .name(p.getName())
-                            .description(p.getDescription())
-                            .weight(p.getWeight())
-                            .color(p.getColor())
-                            .categoryId(p.getCategory().getId())
-                            .state(p.getState().name())
-                            .imageLinks(p.getImages().stream().map(ProductImage::getLink).toList())
-                            .build())
-                    .toList();
+            Page<WishlistItem> wishlistItems = wishlistItemRepository.findAllByWishlistId(wishlist.getId(), pageRequest);
+            return wishlistItems.map(p -> ProductWishlistDto.builder()
+                    .id(p.getProduct().getId())
+                    .name(p.getProduct().getName())
+                    .description(p.getProduct().getDescription())
+                    .weight(p.getProduct().getWeight())
+                    .color(p.getProduct().getColor())
+                    .categoryId(p.getProduct().getCategory().getId())
+                    .state(p.getProduct().getState().name())
+                    .imageLinks(p.getProduct().getImages().stream().map(ProductImage::getLink).toList())
+                    .build());
         } else {
             return null;
         }
     }
 
-    public List<ProductWishlistDto> addProduct(Long userId, Long productId) {
+    public Page<ProductWishlistDto> addProduct(Long userId, Long productId, PageRequest pageRequest) {
         Wishlist wishlist = wishlistRepository.findByUserId(userId);
         Product productForAdd = productRepository.findById(productId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
@@ -63,7 +60,7 @@ public class WishlistService {
         newItem.setAddedAt(LocalDateTime.now());
         wishlistItemRepository.save(newItem);
         wishlistRepository.save(wishlist);
-        return findProducts(userId);
+        return findProducts(userId, pageRequest);
     }
 
     @Transactional

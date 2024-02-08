@@ -3,8 +3,9 @@ package de.allcom.controllers;
 import de.allcom.controllers.api.WishlistApi;
 import de.allcom.dto.product.ProductWishlistDto;
 import de.allcom.services.WishlistService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -13,13 +14,15 @@ public class WishlistController implements WishlistApi {
     private final WishlistService wishlistService;
 
     @Override
-    public List<ProductWishlistDto> findProducts(Long userId) {
-        return wishlistService.findProducts(userId);
+    public Page<ProductWishlistDto> findProducts(Long userId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return wishlistService.findProducts(userId, pageRequest);
     }
 
     @Override
-    public List<ProductWishlistDto> addProductToWishlist(Long userId, Long productId) {
-        return wishlistService.addProduct(userId, productId);
+    public Page<ProductWishlistDto> addProductToWishlist(Long userId, Long productId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return wishlistService.addProduct(userId, productId, pageRequest);
     }
 
     @Override
