@@ -1,8 +1,8 @@
 package de.allcom.services;
 
 import de.allcom.dto.user.AddressDto;
-import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
+import de.allcom.dto.user.UserWithAddressUpdateDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.User;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
-    private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
     private final MailTemplatesUtil mailTemplatesUtil;
 
@@ -50,7 +48,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserWithAddressResponseDto updateUser(UserWithAddressRegistrationDto request, Long userId) {
+    public UserWithAddressResponseDto updateUser(UserWithAddressUpdateDto request, Long userId) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "User with id " + userId + " not found!"));
         final boolean isCheckedBefore = existingUser.isChecked();
@@ -58,7 +56,6 @@ public class UserService {
         existingUser.setLastName(request.getLastName());
         existingUser.setEmail(request.getEmail());
         existingUser.setPhoneNumber(request.getPhoneNumber());
-        existingUser.setHashPassword(passwordEncoder.encode(request.getPassword()));
         existingUser.setCompanyName(request.getCompanyName());
         existingUser.setPosition(request.getPosition());
         existingUser.setTaxNumber(request.getTaxNumber());

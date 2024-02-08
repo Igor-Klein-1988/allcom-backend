@@ -2,8 +2,8 @@ package de.allcom.controllers.api;
 
 import de.allcom.dto.StandardResponseDto;
 import de.allcom.dto.product.ProductWishlistDto;
-import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
+import de.allcom.dto.user.UserWithAddressUpdateDto;
 import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -87,7 +87,7 @@ public interface UsersApi {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
-    UserWithAddressResponseDto updateUser(@Valid @RequestBody UserWithAddressRegistrationDto request,
+    UserWithAddressResponseDto updateUser(@Valid @RequestBody UserWithAddressUpdateDto request,
                                           @PathVariable @Min(value = 1,
                                                   message = "User ID must be greater than or equal to 1") Long userId);
 
