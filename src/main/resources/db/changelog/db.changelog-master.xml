@@ -32,6 +32,4 @@
     <include file="changes/202401311706-insert-auctions-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202401311707-bet-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202401311708-insert-bets-dev.xml" relativeToChangelogFile="true" context="@dev"/>
-    <include file="changes/202402021100-wishlist-table.xml" relativeToChangelogFile="true"/>
-    <include file="changes/202402021110-insert-wishlist-dev.xml" relativeToChangelogFile="true" context="@dev"/>
 </databaseChangeLog>

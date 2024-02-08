@@ -14,7 +14,11 @@ public class RestExceptionHandler {
     public ResponseEntity<StandardResponseDto> handleRestException(RestException e) {
         log.info(e.getMessage());
 
-        return ResponseEntity.status(e.getStatus()).body(StandardResponseDto.builder().message(e.getMessage()).build());
+        return ResponseEntity.status(e.getStatus()).body(
+                StandardResponseDto.builder()
+                                   .message(e.getMessage())
+                                   .build()
+        );
     }
 
 }

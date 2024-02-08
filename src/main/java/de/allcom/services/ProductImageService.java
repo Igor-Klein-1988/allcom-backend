@@ -26,6 +26,9 @@ public class ProductImageService {
     @Value("${image.upload.path}")
     private String uploadPath;
 
+    @Value("${image.upload.link}")
+    private String uploadLink;
+
     public List<ProductImage> uploadImages(List<MultipartFile> images, Product product) {
         if (images == null || images.isEmpty()) {
             return new ArrayList<>();
@@ -41,8 +44,9 @@ public class ProductImageService {
                 String uuid = UUID.randomUUID().toString();
                 String newFileName = uuid + "." + extension;
                 String newFilePath = uploadPath + "/" + product.getId() + "/" + newFileName;
+                String newFileLink = uploadLink + "/" + product.getId() + "/" + newFileName;
 
-                ProductImage productImage = ProductImage.builder().link(newFilePath).product(product).build();
+                ProductImage productImage = ProductImage.builder().link(newFileLink).product(product).build();
                 try {
                     createDirectoryIfNotExists(uploadPath + "/" + product.getId());
                     Files.copy(image.getInputStream(), Path.of(newFilePath), StandardCopyOption.REPLACE_EXISTING);

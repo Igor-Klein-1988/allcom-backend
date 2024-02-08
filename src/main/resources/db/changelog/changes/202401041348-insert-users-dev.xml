@@ -16,6 +16,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491757778899"/>
             <column name="role" value="ADMIN"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="2"/>
@@ -25,6 +27,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491151118800"/>
             <column name="role" value="ADMIN"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="3"/>
@@ -34,6 +38,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491753287491"/>
             <column name="role" value="STOREKEEPER"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="4"/>
@@ -43,6 +49,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491765253418"/>
             <column name="role" value="STOREKEEPER"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="5"/>
@@ -55,6 +63,8 @@
             <column name="company_name" value="Schnee GmBH"/>
             <column name="tax_number" value="6565161651"/>
             <column name="position" value="DIRECTOR"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="6"/>
@@ -67,6 +77,8 @@
             <column name="company_name" value="Regenboden GmBH"/>
             <column name="tax_number" value="8491689484"/>
             <column name="position" value="DIRECTOR"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="1"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="7"/>
@@ -79,6 +91,8 @@
             <column name="company_name" value="Eulen GmBH"/>
             <column name="tax_number" value="98489484654"/>
             <column name="position" value="DIRECTOR"/>
+            <column name="is_checked" value="0"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="8"/>
@@ -88,6 +102,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491756343457"/>
             <column name="role" value="CLIENT"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="9"/>
@@ -97,6 +113,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491753418911"/>
             <column name="role" value="CLIENT"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
         <insert tableName="account">
             <column name="id" valueNumeric="10"/>
@@ -106,6 +124,8 @@
             <column name="hash_password" value="$2a$10$g0.iMQ0YzlVgxZxKe5RNuOCszxz81LovGoXy7eEvKhLsoQibjcxIe"/>
             <column name="phone_number" value="491454472209"/>
             <column name="role" value="CLIENT"/>
+            <column name="is_checked" value="1"/>
+            <column name="is_blocked" value="0"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

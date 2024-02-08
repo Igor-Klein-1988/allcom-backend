@@ -59,9 +59,6 @@ public class User implements UserDetails {
     @Column
     private String companyName;
 
-    @Column(length = 13)
-    private String inn;
-
     @Column(length = 100)
     private String position;
 

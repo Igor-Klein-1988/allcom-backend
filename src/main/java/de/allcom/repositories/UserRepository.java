@@ -25,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     + "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%'))")
     Page<Object[]> searchUsersWithAddresses(String query, Pageable pageable);
 
-    Optional<Object> findByEmail(String userEmail);
+    Optional<User> findByEmail(String userEmail);
 }
