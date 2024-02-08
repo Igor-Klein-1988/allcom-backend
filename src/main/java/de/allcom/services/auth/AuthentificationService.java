@@ -68,18 +68,18 @@ public class AuthentificationService {
         }
         LocalDateTime now = LocalDateTime.now();
         User user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .phoneNumber(request.getPhoneNumber())
-                .companyName(request.getCompanyName())
-                .position(request.getPosition())
-                .hashPassword(passwordEncoder.encode(request.getPassword()))
-                .taxNumber(request.getTaxNumber())
-                .role(Role.CLIENT)
-                .createAt(now)
-                .updateAt(now)
-                .build();
+                        .firstName(request.getFirstName())
+                        .lastName(request.getLastName())
+                        .email(request.getEmail())
+                        .phoneNumber(request.getPhoneNumber())
+                        .companyName(request.getCompanyName())
+                        .position(request.getPosition())
+                        .hashPassword(passwordEncoder.encode(request.getPassword()))
+                        .taxNumber(request.getTaxNumber())
+                        .role(Role.CLIENT)
+                        .createAt(now)
+                        .updateAt(now)
+                        .build();
 
         User savedUser = userRepository.save(user);
         Wishlist wishlist = new Wishlist();
@@ -89,12 +89,12 @@ public class AuthentificationService {
         AddressDto addressDto = request.getAddress();
         if (addressDto != null) {
             Address address = Address.builder()
-                    .postIndex(addressDto.getPostIndex())
-                    .city(addressDto.getCity())
-                    .street(addressDto.getStreet())
-                    .houseNumber(addressDto.getHouseNumber())
-                    .user(savedUser)
-                    .build();
+                                     .postIndex(addressDto.getPostIndex())
+                                     .city(addressDto.getCity())
+                                     .street(addressDto.getStreet())
+                                     .houseNumber(addressDto.getHouseNumber())
+                                     .user(savedUser)
+                                     .build();
             addressRepository.save(address);
         }
 
@@ -110,6 +110,7 @@ public class AuthentificationService {
                                           .lastName(savedUser.getLastName())
                                           .email(savedUser.getEmail())
                                           .role(savedUser.getRole().toString())
+                                          .isAuthenticated(false)
                                           .token(jwtToken)
                                           .build();
     }
@@ -118,17 +119,15 @@ public class AuthentificationService {
         if (request.getEmail() == null || request.getPassword() == null) {
             throw new RestException(HttpStatus.BAD_REQUEST, "Email and password are required!");
         } else if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
-            throw new RestException(HttpStatus.UNAUTHORIZED,
-                    "User with email " + request.getEmail() + " not found!");
+            throw new RestException(HttpStatus.UNAUTHORIZED, "User with email " + request.getEmail() + " not found!");
         }
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        User user = (User) userRepository
-                .findByEmail(request.getEmail())
-                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-                        "User with email " + request.getEmail() + " not found!"));
+        User user = (User) userRepository.findByEmail(request.getEmail())
+                                         .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                                                 "User with email " + request.getEmail() + " not found!"));
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);
@@ -163,12 +162,12 @@ public class AuthentificationService {
 
     private void savedUserToken(User user, String jwtToken) {
         Token token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .revoked(false)
-                .expired(false)
-                .build();
+                           .user(user)
+                           .token(jwtToken)
+                           .tokenType(TokenType.BEARER)
+                           .revoked(false)
+                           .expired(false)
+                           .build();
         tokenRepository.save(token);
     }
 

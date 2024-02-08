@@ -132,14 +132,15 @@ public class AuctionService {
             betService.createBet(user, auction, betAmount);
             AuctionResponseDto response = AuctionResponseDto.from(auction, betAmount);
 
-            messagingTemplate.convertAndSend("/topic/auction/" + auction.getId(), response);
+            messagingTemplate.convertAndSend("/topic/auction/" + response.getId(), response);
+            messagingTemplate.convertAndSend("/topic/auction/info" , response);
         } catch (RestException e) {
             log.error("Error processing bet: " + e.getMessage());
             String username = headerAccessor.getUser().getName();
             Optional<User> user = userRepository.findByEmail(username);
             if (user.isPresent()) {
                 StandardResponseDto errorMessage = StandardResponseDto.builder().message(e.getMessage()).build();
-                messagingTemplate.convertAndSend("/error/" + user.get().getId() + "/errors", errorMessage);
+                messagingTemplate.convertAndSend("/topic/error/" + user.get().getId(), errorMessage);
             }
         }
     }

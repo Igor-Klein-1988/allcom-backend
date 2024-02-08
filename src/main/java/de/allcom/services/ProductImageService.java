@@ -4,6 +4,7 @@ import de.allcom.exceptions.RestException;
 import de.allcom.models.Product;
 import de.allcom.models.ProductImage;
 import de.allcom.repositories.ProductImageRepository;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ProductImageService {
 
+    public static final int BEGIN_INDEX = 0;
+    public static final int END_INDEX = 7;
     private final ProductImageRepository productImageRepository;
 
     @Value("${image.upload.path}")
@@ -43,12 +46,12 @@ public class ProductImageService {
                 String extension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
                 String uuid = UUID.randomUUID().toString();
                 String newFileName = uuid + "." + extension;
-                String newFilePath = uploadPath + "/" + product.getId() + "/" + newFileName;
+                String newFilePath = uploadPath + "/" + product.getId() + File.separator + newFileName;
                 String newFileLink = uploadLink + "/" + product.getId() + "/" + newFileName;
 
                 ProductImage productImage = ProductImage.builder().link(newFileLink).product(product).build();
                 try {
-                    createDirectoryIfNotExists(uploadPath + "/" + product.getId());
+                    createDirectoryIfNotExists(uploadPath + File.separator + product.getId());
                     Files.copy(image.getInputStream(), Path.of(newFilePath), StandardCopyOption.REPLACE_EXISTING);
                     productImages.add(productImage);
                     productImageRepository.save(productImage);
@@ -78,11 +81,13 @@ public class ProductImageService {
 
     public void deleteImages(List<String> imagesToRemove) {
         for (String imagePath : imagesToRemove) {
+            String correctPath = uploadPath.substring(BEGIN_INDEX, uploadPath.length() - END_INDEX) + imagePath;
             try {
-                Files.delete(Path.of(imagePath));
+
+                Files.delete(Path.of(correctPath));
             } catch (IOException e) {
                 throw new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Failed to delete file: " + imagePath + ", error " + e.getMessage());
+                        "Failed to delete file: " + correctPath + ", error " + e.getMessage());
             }
             productImageRepository.deleteByLink(imagePath)
                                   .orElseThrow(() -> new RestException(HttpStatus.UNPROCESSABLE_ENTITY,
