@@ -1,5 +1,6 @@
 package de.allcom.controllers;
 
+import de.allcom.controllers.api.AuctionApi;
 import de.allcom.dto.bet.NewBetDto;
 import de.allcom.services.AuctionService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-public class AuctionController {
+public class AuctionController implements AuctionApi {
     private final AuctionService auctionService;
     private final SimpMessagingTemplate messagingTemplate;
 

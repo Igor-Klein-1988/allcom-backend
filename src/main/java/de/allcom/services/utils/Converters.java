@@ -26,7 +26,7 @@ public class Converters {
     private final BetRepository betRepository;
     private final StorageRepository storageRepository;
 
-    public ProductResponseDto convertToProductResponseDto(Product product) {
+    public ProductResponseDto convertToProductResponseDto(Product product, Integer lastUsersBetAmount) {
         Storage storage = storageRepository.findFirstByProductId(product.getId())
                                            .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                                                    "Product with productId: " + product.getId()
@@ -52,7 +52,8 @@ public class Converters {
                                  .categoryId(product.getCategory().getId())
                                  .state(product.getState().toString())
                                  .imageLinks(imageLinks)
-                                 .lastCreatedAuction(AuctionDto.from(lastCreatedAuction, currentPrice))
+                                 .lastCreatedAuction(AuctionDto
+                                         .from(lastCreatedAuction, currentPrice, lastUsersBetAmount))
                                  .storage(StorageDto.from(storage))
                                  .build();
     }

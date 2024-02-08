@@ -10,11 +10,13 @@ import de.allcom.exceptions.RestException;
 import de.allcom.models.Address;
 import de.allcom.models.Role;
 import de.allcom.models.User;
+import de.allcom.models.Wishlist;
 import de.allcom.models.token.Token;
 import de.allcom.models.token.TokenType;
 import de.allcom.repositories.AddressRepository;
 import de.allcom.repositories.TokenRepository;
 import de.allcom.repositories.UserRepository;
+import de.allcom.repositories.WishlistRepository;
 import de.allcom.services.mail.EmailSender;
 import de.allcom.services.mail.MailTemplatesUtil;
 import jakarta.servlet.http.Cookie;
@@ -56,6 +58,7 @@ public class AuthentificationService {
     private final MailTemplatesUtil mailTemplatesUtil;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final WishlistRepository wishlistRepository;
 
 
     @Transactional
@@ -79,6 +82,9 @@ public class AuthentificationService {
                 .build();
 
         User savedUser = userRepository.save(user);
+        Wishlist wishlist = new Wishlist();
+        wishlist.setUser(savedUser);
+        wishlistRepository.save(wishlist);
 
         AddressDto addressDto = request.getAddress();
         if (addressDto != null) {

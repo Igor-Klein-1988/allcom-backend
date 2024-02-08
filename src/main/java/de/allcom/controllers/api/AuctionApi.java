@@ -11,6 +11,9 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
 @Tags(@Tag(name = "Auctions"))
 public interface AuctionApi {
+    String DEFAULT_PAGE = "0";
+    String DEFAULT_SIZE = "20";
+
     @Operation(summary = "Process a new bet on an auction",
             description = "Available for checked and not blocked Clients.")
     @MessageMapping("/makeBet")

@@ -26,6 +26,9 @@ public class AuctionResponseDto {
     @Schema(description = "LastBetAmount", example = "240")
     private Integer lastBetAmount;
 
+    @Schema(description = "User's bet", example = "240")
+    private Integer userLastBetAmount;
+
     public static AuctionResponseDto from(Auction auction, Integer lastBetAmount) {
         return AuctionResponseDto.builder()
                                  .id(auction.getId())
