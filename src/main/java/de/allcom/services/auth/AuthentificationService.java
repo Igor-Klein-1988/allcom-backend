@@ -63,14 +63,16 @@ public class AuthentificationService {
 
     @Transactional
     public AuthentificationResponseDto register(UserWithAddressRegistrationDto request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RestException(HttpStatus.CONFLICT, "User with email " + request.getEmail() + " already exists!");
+        String email = request.getEmail().toLowerCase();
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RestException(HttpStatus.CONFLICT, "User with email " + email + " already exists!");
         }
         LocalDateTime now = LocalDateTime.now();
         User user = User.builder()
                         .firstName(request.getFirstName())
                         .lastName(request.getLastName())
-                        .email(request.getEmail())
+                        .email(email)
                         .phoneNumber(request.getPhoneNumber())
                         .companyName(request.getCompanyName())
                         .position(request.getPosition())
@@ -118,16 +120,20 @@ public class AuthentificationService {
     public AuthentificationResponseDto login(AuthentificationRequestDto request, HttpServletResponse response) {
         if (request.getEmail() == null || request.getPassword() == null) {
             throw new RestException(HttpStatus.BAD_REQUEST, "Email and password are required!");
-        } else if (userRepository.findByEmail(request.getEmail()).isEmpty()) {
-            throw new RestException(HttpStatus.UNAUTHORIZED, "User with email " + request.getEmail() + " not found!");
+        }
+
+        String email = request.getEmail().toLowerCase();
+
+        if (userRepository.findByEmail(email).isEmpty()) {
+            throw new RestException(HttpStatus.UNAUTHORIZED, "User with email " + email + " not found!");
         }
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+                new UsernamePasswordAuthenticationToken(email, request.getPassword()));
 
-        User user = (User) userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(email)
                                          .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
-                                                 "User with email " + request.getEmail() + " not found!"));
+                                                 "User with email " + email + " not found!"));
         String jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         savedUserToken(user, jwtToken);

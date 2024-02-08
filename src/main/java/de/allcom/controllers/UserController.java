@@ -2,8 +2,8 @@ package de.allcom.controllers;
 
 import de.allcom.controllers.api.UsersApi;
 import de.allcom.dto.product.ProductWishlistDto;
-import de.allcom.dto.user.UserWithAddressRegistrationDto;
 import de.allcom.dto.user.UserWithAddressResponseDto;
+import de.allcom.dto.user.UserWithAddressUpdateDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.services.UserService;
 import de.allcom.services.WishlistService;
@@ -33,7 +33,7 @@ public class UserController implements UsersApi {
     }
 
     @Override
-    public UserWithAddressResponseDto updateUser(UserWithAddressRegistrationDto request, Long userId) {
+    public UserWithAddressResponseDto updateUser(UserWithAddressUpdateDto request, Long userId) {
         return userService.updateUser(request, userId);
     }
 

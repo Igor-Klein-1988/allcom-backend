@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Benachrichtigung über die Sperrung Ihres Kontos</title>
+    <title>Benachrichtigung &uuml;ber die Sperrung Ihres Kontos</title>
     <style>
         body {
             font-family: "Jost", sans-serif;
@@ -37,14 +37,14 @@
 <body>
 <h2>Guten Tag, ${firstName} ${lastName}!</h2>
 
-<h3>Wir möchten Sie informieren, dass Ihr Konto vorübergehend gesperrt wurde.</h3>
+<h3>Wir m&ouml;chten Sie informieren, dass Ihr Konto vor&uuml;bergehend gesperrt wurde.</h3>
 
-<p>Falls Sie Fragen zur Sperrung Ihres Kontos haben, zögern Sie bitte nicht, sich an die Administratoren zu wenden. Sie können uns über die folgenden Kontaktdaten erreichen:</p>
+<p>Falls Sie Fragen zur Sperrung Ihres Kontos haben, z&ouml;gern Sie bitte nicht, sich an die Administratoren zu wenden. Sie k&ouml;nnen uns &uuml;ber die folgenden Kontaktdaten erreichen:</p>
 
 <p><a href="http://allcom.itvm.com.ua:5173/contact">Kontakt</a></p>
 
-<p>Vielen Dank für Ihr Verständnis.</p>
+<p>Vielen Dank f&uuml;r Ihr Verst&auml;ndnis.</p>
 
-<p>Mit freundlichen Grüßen,<br> Allcom </p>
+<p>Mit freundlichen Gr&uuml;&szlig;en,<br> Allcom </p>
 </body>
 </html>

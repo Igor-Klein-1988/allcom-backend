@@ -37,14 +37,14 @@
 <body>
 <h2>Guten Tag, ${firstName} ${lastName}!</h2>
 
-<h3>Vielen Dank für die Registrierung auf unserer Auktionsplattform! Wir freuen uns, Sie als neues Mitglied begrüßen zu dürfen.</h3>
+<h3>Vielen Dank f&uuml;r die Registrierung auf unserer Auktionsplattform! Wir freuen uns, Sie als neues Mitglied begr&uuml;&szlig;en zu d&uuml;rfen.</h3>
 
-<p>Um Ihre Teilnahme zu aktivieren, bitten wir Sie, alle erforderlichen Unterlagen vorzulegen und einen Vertrag in unserem Büro zu unterzeichnen. Ihre Anmeldung wird nach erfolgreicher Prüfung und Abschluss dieser Schritte aktiviert.</p>
+<p>Um Ihre Teilnahme zu aktivieren, bitten wir Sie, alle erforderlichen Unterlagen vorzulegen und einen Vertrag in unserem B&uuml;ro zu unterzeichnen. Ihre Anmeldung wird nach erfolgreicher Pr&uuml;fung und Abschluss dieser Schritte aktiviert.</p>
 
-<p>Bitte besuchen Sie unser Büro unter folgendem <a href="#">Link</a>, um einen Termin zu vereinbaren und den Aktivierungsprozess abzuschließen.</p>
+<p>Bitte besuchen Sie unser B&uuml;ro unter folgendem <a href="http://allcom.itvm.com.ua:5173/contact">Link</a>, um einen Termin zu vereinbaren und den Aktivierungsprozess abzuschlie&szlig;en.</p>
 
-<p>Wir stehen Ihnen bei Fragen gerne zur Verfügung. Vielen Dank für Ihr Vertrauen in unsere Plattform.</p>
+<p>Wir stehen Ihnen bei Fragen gerne zur Verf&uuml;gung. Vielen Dank f&uuml;r Ihr Vertrauen in unsere Plattform.</p>
 
-<p>Mit freundlichen Grüßen,<br> Allcom </p>
+<p>Mit freundlichen Gr&uuml;&szlig;en,<br> Allcom </p>
 </body>
 </html>

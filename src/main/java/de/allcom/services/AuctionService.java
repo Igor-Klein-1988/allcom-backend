@@ -133,7 +133,7 @@ public class AuctionService {
             AuctionResponseDto response = AuctionResponseDto.from(auction, betAmount);
 
             messagingTemplate.convertAndSend("/topic/auction/" + response.getId(), response);
-            messagingTemplate.convertAndSend("/topic/auction/info" , response);
+            messagingTemplate.convertAndSend("/topic/auction/info", response);
         } catch (RestException e) {
             log.error("Error processing bet: " + e.getMessage());
             String username = headerAccessor.getUser().getName();
