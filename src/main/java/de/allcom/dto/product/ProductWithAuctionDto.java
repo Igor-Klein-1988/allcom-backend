@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ProductWishlistDto {
+public class ProductWithAuctionDto {
     @Schema(description = "Product identifier", example = "1")
     private Long id;
 

@@ -4,6 +4,7 @@ import de.allcom.dto.StandardResponseDto;
 import de.allcom.dto.product.ProductCreateRequestDto;
 import de.allcom.dto.product.ProductResponseDto;
 import de.allcom.dto.product.ProductUpdateRequestDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.validation.dto.ValidationErrorsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -93,4 +95,13 @@ public interface ProductApi {
             @RequestParam(required = false) String searchQuery,
             @RequestParam(name = "page", defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(name = "size", defaultValue = DEFAULT_SIZE) int size);
+
+    @Operation(summary = "Get one product from each category",
+            description = "Returns one product from each available category. Default role is Client")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The request was processed successfully", content =
+            @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseDto.class)))})
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/one-per-category")
+    List<ProductWithAuctionDto> getOneItemPerCategory();
 }

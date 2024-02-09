@@ -2,6 +2,7 @@ package de.allcom.services.utils;
 
 import de.allcom.dto.auction.AuctionDto;
 import de.allcom.dto.product.ProductResponseDto;
+import de.allcom.dto.product.ProductWithAuctionDto;
 import de.allcom.dto.storage.StorageDto;
 import de.allcom.exceptions.RestException;
 import de.allcom.models.Auction;
@@ -56,5 +57,32 @@ public class Converters {
                                          .from(lastCreatedAuction, currentPrice, lastUsersBetAmount))
                                  .storage(StorageDto.from(storage))
                                  .build();
+    }
+
+    public ProductWithAuctionDto convertToProductWithAuctionDto(Product product) {
+        Auction lastCreatedAuction = auctionRepository.findFirstByProductIdOrderByCreatedAtDesc(product.getId())
+                                                      .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
+                                                              "Product with productId: " + product.getId()
+                                                                      + " did not have Auctions"));
+
+        Optional<Bet> maxBet = betRepository.findFirstByAuctionIdOrderByBetAmountDesc(lastCreatedAuction.getId());
+        Integer currentPrice = maxBet.isPresent() ? maxBet.get().getBetAmount() : lastCreatedAuction.getStartPrice();
+
+        List<String> imageLinks = product.getImages() != null ? product.getImages()
+                                                                       .stream()
+                                                                       .map(ProductImage::getLink)
+                                                                       .toList() : null;
+        return ProductWithAuctionDto.builder()
+                                    .id(product.getId())
+                                    .name(product.getName())
+                                    .description(product.getDescription())
+                                    .weight(product.getWeight())
+                                    .color(product.getColor())
+                                    .categoryId(product.getCategory().getId())
+                                    .state(product.getState().toString())
+                                    .imageLinks(imageLinks)
+                                    .lastCreatedAuction(AuctionDto
+                                         .from(lastCreatedAuction, currentPrice, null))
+                                    .build();
     }
 }
