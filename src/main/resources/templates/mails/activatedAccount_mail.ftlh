@@ -39,7 +39,7 @@
 
 <h3>Vielen Dank f&uuml;r Ihre Registrierung auf unserer Auktionsplattform!</h3>
 
-<p>Nach erfolgreicher Verifizierung wurde Ihr Konto aktiviert, und Sie können nun alle Funktionen unserer Auktionsplattform nutzen. <a href="http://allcom.itvm.com.ua:5173/">Link</a></p>
+<p>Nach erfolgreicher Verifizierung wurde Ihr Konto aktiviert, und Sie k&ouml;nnen nun alle Funktionen unserer Auktionsplattform nutzen. <a href="http://allcom.itvm.com.ua:5173/">Link</a></p>
 
 <p>Wir stehen Ihnen bei Fragen gerne zur Verf&uuml;gung. Vielen Dank f&uuml;r Ihr Vertrauen in unsere Plattform.</p>
 
