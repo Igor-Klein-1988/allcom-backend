@@ -36,4 +36,8 @@
     <include file="changes/202402021110-insert-wishlist-dev.xml" relativeToChangelogFile="true" context="@dev"/>
     <include file="changes/202402081000-wishlist-item-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/202402081010-insert-wishlist-item-table-dev.xml" relativeToChangelogFile="true" context="@dev"/>
+    <include file="changes/202402031338-token-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/202402152256-insert-accounts-test.xml" relativeToChangelogFile="true" context="@test"/>
+
+
 </databaseChangeLog>
